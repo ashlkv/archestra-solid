@@ -8,6 +8,7 @@ import {
   getMcpServerCategories,
   searchMcpServerCatalog,
 } from '@ui/lib/clients/archestra/catalog/gen';
+import mockWhatsapp from '@ui/lib/clients/archestra/catalog/gen/mock-whatsapp.json';
 
 /**
  * NOTE: ideally should be divisible by 3 to make it look nice in the UI (as we tend to have 3 "columns" of servers)
@@ -83,6 +84,8 @@ export const useConnectorCatalogStore = create<ConnectorCatalogStore>((set, get)
       }
 
       const { data } = await searchMcpServerCatalog({ query: params });
+      // FIXME Remove when whatsapp mcp catalog entry is updated
+      data.servers.unshift(mockWhatsapp)
 
       if (data) {
         let filteredLocalServers: ArchestraMcpServerManifest[] = [];
