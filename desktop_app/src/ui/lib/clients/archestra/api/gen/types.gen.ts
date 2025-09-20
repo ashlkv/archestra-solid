@@ -163,6 +163,15 @@ export type WebSocketMessageInput =
       payload: SandboxStatusSummaryInput;
     }
   | {
+      type: 'mcp-setup';
+      payload: {
+        provider: 'whatsapp';
+        type: 'qrcode';
+        status: 'detected' | 'verified';
+        content?: string;
+      };
+    }
+  | {
       type: 'ollama-model-download-progress';
       payload: OllamaModelDownloadProgressInput;
     }
@@ -345,6 +354,10 @@ export type McpServerConfigInput = {
   inject_file?: {
     [key: string]: string;
   };
+  setup?: Array<{
+    type: 'log-monitor';
+    provider: 'whatsapp';
+  }>;
   [key: string]:
     | unknown
     | string
@@ -355,6 +368,10 @@ export type McpServerConfigInput = {
     | {
         [key: string]: string;
       }
+    | Array<{
+        type: 'log-monitor';
+        provider: 'whatsapp';
+      }>
     | undefined;
 };
 
@@ -679,6 +696,15 @@ export type WebSocketMessage =
       payload: SandboxStatusSummary;
     }
   | {
+      type: 'mcp-setup';
+      payload: {
+        provider: 'whatsapp';
+        type: 'qrcode';
+        status: 'detected' | 'verified';
+        content?: string;
+      };
+    }
+  | {
       type: 'ollama-model-download-progress';
       payload: OllamaModelDownloadProgress;
     }
@@ -861,6 +887,10 @@ export type McpServerConfig = {
   inject_file?: {
     [key: string]: string;
   };
+  setup?: Array<{
+    type: 'log-monitor';
+    provider: 'whatsapp';
+  }>;
   [key: string]:
     | unknown
     | string
@@ -871,6 +901,10 @@ export type McpServerConfig = {
     | {
         [key: string]: string;
       }
+    | Array<{
+        type: 'log-monitor';
+        provider: 'whatsapp';
+      }>
     | undefined;
 };
 

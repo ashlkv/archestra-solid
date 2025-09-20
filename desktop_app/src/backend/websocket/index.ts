@@ -88,10 +88,18 @@ const EnableToolsCalledPayloadSchema = z.object({
   enabledTools: z.array(z.string()),
 });
 
+const MCPSetupSchema = z.object({
+  provider: z.enum(['whatsapp']),
+  type: z.enum(['qrcode']),
+  status: z.enum(['detected', 'verified', 'timeout']),
+  content: z.string().optional(),
+});
+
 export const WebSocketMessageSchema = z.discriminatedUnion('type', [
   z.object({ type: z.literal('chat-title-updated'), payload: ChatTitleUpdatedPayloadSchema }),
   z.object({ type: z.literal('chat-tools-updated'), payload: ChatToolsUpdatedPayloadSchema }),
   z.object({ type: z.literal('sandbox-status-update'), payload: SandboxStatusSummarySchema }),
+  z.object({ type: z.literal('mcp-setup'), payload: MCPSetupSchema }),
   z.object({
     type: z.literal('ollama-model-download-progress'),
     payload: OllamaModelDownloadProgressWebsocketPayloadSchema,

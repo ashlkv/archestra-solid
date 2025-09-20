@@ -12,6 +12,7 @@ import { type McpTools } from '@backend/types';
 import log from '@backend/utils/logger';
 import WebSocketService from '@backend/websocket';
 import { constructToolId, deconstructToolId } from '@constants';
+import {mcpLogMonitorRegistry} from "@backend/server/plugins/mcp-setup/mcp-setup-registry";
 
 const { host: proxyMcpServerHost, port: proxyMcpServerPort } = config.server.http;
 
@@ -459,6 +460,21 @@ export default class SandboxedMcpServer {
 
         throw error;
       }
+
+      // Performs additional setup, if specified, after starting the server.
+      const setup = this.mcpServer.serverConfig.setup;
+      if (!setup) {
+        return;
+      }
+      setup.forEach((step) => {
+        if (step.type === 'log-monitor' && step.provider in mcpLogMonitorRegistry) {
+          const logMonitor = mcpLogMonitorRegistry[step.provider]
+          logMonitor(async (lines: number) => {
+            const { logs } = await this.getMcpServerLogs(lines);
+            return logs;
+          });
+        }
+      })
     }
   }
 
@@ -504,6 +520,9 @@ export default class SandboxedMcpServer {
 
   /**
    * Get the last N lines of logs from the MCP server
+   * with newest log entries in the bottom, e.g.:
+   * 2025-09-18T20:11:07+02:00 Error accessing keyring
+   * 2025-09-18T22:15:04+02:00 Installed 1 package in 4ms
    */
   async getMcpServerLogs(lines: number = 100) {
     if (this.isRemoteServer) {

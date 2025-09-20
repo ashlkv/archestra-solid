@@ -15,7 +15,11 @@
         ],
         "env": {
             "WHATSAPP_SESSION_PATH": "${user_config.session_path}"
-        }
+        },
+        "setup": [{
+            "type": "log-monitor",
+            "provider": "whatsapp"
+        }]
     },
     "tools": [],
     "prompts": [],

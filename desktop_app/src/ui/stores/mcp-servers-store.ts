@@ -26,6 +26,11 @@ interface McpServersState {
 
   uninstallingMcpServerId: string | null;
   errorUninstallingMcpServer: string | null;
+
+  /** Id of the MCP server which is currently being set up */
+  settingUpMcpServerId: string | null,
+  /** An error message, if MCP server setup failed */
+  errorSettingUpMcpServer: string | null,
 }
 
 interface McpServersActions {
@@ -77,6 +82,9 @@ export const useMcpServersStore = create<McpServersStore>((set, get) => ({
 
   uninstallingMcpServerId: null,
   errorUninstallingMcpServer: null,
+
+  settingUpMcpServerId: null,
+  errorSettingUpMcpServer: null,
 
   // Actions
   loadInstalledMcpServers: async () => {
