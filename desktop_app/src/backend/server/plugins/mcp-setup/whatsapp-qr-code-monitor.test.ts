@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { whatsAppLogMonitor } from './whatsapp-log-monitor';
+import { whatsappQrCodeMonitor } from './whatsapp-qr-code-monitor';
 
 const logsWithQRCode = `2025-09-19T09:39:56+02:00 Scan this QR code with your WhatsApp app:
 2025-09-19T09:39:56+02:00 █████████████████████████████████████████████████████████████████
@@ -124,7 +124,7 @@ describe('whatsAppLogMonitor', () => {
   it('broadcasts QR code from logs', async () => {
     const { default: WebSocketService } = await import('@backend/websocket');
     const mockGetLogs = vi.fn().mockResolvedValue(logsWithQRCode);
-    whatsAppLogMonitor(mockGetLogs, new Date('2025-09-19T09:39:55+02:00'));
+    whatsappQrCodeMonitor(mockGetLogs, new Date('2025-09-19T09:39:55+02:00'));
 
     await vi.waitFor(() => {
       expect(WebSocketService.broadcast).toHaveBeenCalledWith({
@@ -142,7 +142,7 @@ describe('whatsAppLogMonitor', () => {
   it('broadcasts latest QR code', async () => {
     const { default: WebSocketService } = await import('@backend/websocket');
     const mockGetLogs = vi.fn().mockResolvedValue(logsWith2QRCodes);
-    whatsAppLogMonitor(mockGetLogs, new Date('2025-09-19T09:39:55+02:00'));
+    whatsappQrCodeMonitor(mockGetLogs, new Date('2025-09-19T09:39:55+02:00'));
 
     await vi.waitFor(() => {
       expect(WebSocketService.broadcast).toHaveBeenCalledWith({
@@ -158,7 +158,7 @@ describe('whatsAppLogMonitor', () => {
     const mockGetLogs = vi.fn()
       .mockResolvedValueOnce(noQRCodeLogs)
       .mockResolvedValue(logsWithQRCode);
-    whatsAppLogMonitor(mockGetLogs, new Date('2025-09-19T09:39:55+02:00'));
+    whatsappQrCodeMonitor(mockGetLogs, new Date('2025-09-19T09:39:55+02:00'));
 
     await vi.advanceTimersByTimeAsync(1000);
     await vi.waitFor(() => {
@@ -172,7 +172,7 @@ describe('whatsAppLogMonitor', () => {
     vi.useFakeTimers();
     const { default: WebSocketService } = await import('@backend/websocket');
     const mockGetLogs = vi.fn().mockResolvedValue(noQRCodeLogs);
-    whatsAppLogMonitor(mockGetLogs, new Date('2025-09-19T09:39:55+02:00'));
+    whatsappQrCodeMonitor(mockGetLogs, new Date('2025-09-19T09:39:55+02:00'));
 
     await vi.advanceTimersByTimeAsync(1000);
     await vi.waitFor(() => {
@@ -189,7 +189,7 @@ describe('whatsAppLogMonitor', () => {
       .mockResolvedValueOnce(logsWithQRCode) // First call finds QR code
       .mockResolvedValue(pairedAfterCode);   // Subsequent calls find "Successfully paired"
 
-    whatsAppLogMonitor(mockGetLogs, new Date('2025-09-19T09:39:55+02:00'));
+    whatsappQrCodeMonitor(mockGetLogs, new Date('2025-09-19T09:39:55+02:00'));
 
     await vi.waitFor(() => {
       expect(WebSocketService.broadcast).toHaveBeenCalledWith({
@@ -214,7 +214,7 @@ describe('whatsAppLogMonitor', () => {
 
     // Use a date after the "Successfully paired" message but before the QR code
     const startAt = new Date('2025-09-18T00:00:00+02:00');
-    whatsAppLogMonitor(mockGetLogs, startAt);
+    whatsappQrCodeMonitor(mockGetLogs, startAt);
 
     await vi.waitFor(() => {
       expect(WebSocketService.broadcast).toHaveBeenCalledWith({
@@ -233,7 +233,7 @@ describe('whatsAppLogMonitor', () => {
       .mockResolvedValueOnce(logsWithQRCode)
       .mockResolvedValue(timeoutLogs);
 
-    whatsAppLogMonitor(mockGetLogs, new Date('2025-09-19T09:39:55+02:00'));
+    whatsappQrCodeMonitor(mockGetLogs, new Date('2025-09-19T09:39:55+02:00'));
 
     await vi.waitFor(() => {
       expect(WebSocketService.broadcast).toHaveBeenCalledWith({

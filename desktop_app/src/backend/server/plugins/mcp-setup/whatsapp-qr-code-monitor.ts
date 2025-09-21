@@ -46,7 +46,7 @@ export const getLogsFromDate = (logs: string, cutoffAt: Date): string => {
   }
 }
 
-export const whatsAppLogMonitor: LogMonitor = function (serverId: string, getLogs: GetLogs, { startAt: startAtDefault }: { startAt?: Date } = {}) {
+export const whatsappQrCodeMonitor: LogMonitor = function (serverId: string, getLogs: GetLogs, { startAt: startAtDefault }: { startAt?: Date } = {}) {
   const startAt = startAtDefault || new Date(Date.now() - 60000);
   log.info('WhatsApp MCP log monitor: get logs starting at date', startAt);
   const waitFor = (lookup: string | MatcherFunction, timeout = 20000, cutoffAt = undefined)
