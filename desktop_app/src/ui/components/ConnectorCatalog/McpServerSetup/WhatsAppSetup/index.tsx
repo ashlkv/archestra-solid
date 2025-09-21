@@ -1,8 +1,10 @@
 /** WhatsApp setup wizard, which shows a QR code and waits for it to be scanned */
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { DialogTitle, DialogDescription } from "@ui/components/ui/dialog";
-import { CheckCircle } from 'lucide-react';
+import { CheckCircle, AlertCircle, RefreshCw } from 'lucide-react';
+import { Button } from "@ui/components/ui/button";
+import { restartSandbox } from "@ui/lib/clients/archestra/api/gen";
 
 /**
  * Converts ASCII QR code to SVG React component
@@ -103,6 +105,8 @@ function asciiQrToSvg(asciiQr: string, cellSize: number = 10): React.ReactElemen
 export default function WhatsAppSetup({ content: ascii, status, onClose }: { content: string, status?: string, onClose?: () => void }) {
   const SvgQrCode = ascii ? asciiQrToSvg(ascii) : '';
   const isSuccess = status === 'success';
+  const isError = status === 'error' || status === 'timeout' || status === 'failed';
+  const [isRestarting, setIsRestarting] = useState(false);
 
   // Auto-close dialog after 3 seconds on success
   useEffect(() => {
@@ -113,6 +117,22 @@ export default function WhatsAppSetup({ content: ascii, status, onClose }: { con
       return () => clearTimeout(timer);
     }
   }, [isSuccess, onClose]);
+
+  const handleRetry = async () => {
+    try {
+      setIsRestarting(true);
+      await restartSandbox();
+      // Close dialog after restart - the setup should reinitialize
+      if (onClose) {
+        onClose();
+      }
+    } catch (error) {
+      console.error('Failed to restart sandbox:', error);
+      // Could show an error toast here
+    } finally {
+      setIsRestarting(false);
+    }
+  };
 
   if (isSuccess) {
     return <>
@@ -129,6 +149,41 @@ export default function WhatsAppSetup({ content: ascii, status, onClose }: { con
           <CheckCircle className="h-12 w-12 text-green-500 mx-auto animate-pulse" />
           <p className="text-sm text-muted-foreground">Connection established!</p>
           <p className="text-xs text-muted-foreground opacity-75">This dialog will close automatically...</p>
+        </div>
+      </div>
+
+      <div className="text-sm text-muted-foreground text-center invisible">
+        <p>Open WhatsApp → Settings → Linked Devices → Tap "Link device", then scan this code.</p>
+        <p className="text-xs mt-2 opacity-75">QR code expires after a few minutes for security.</p>
+      </div>
+    </>
+  }
+
+  if (isError) {
+    return <>
+      <DialogTitle className="flex items-center gap-2">
+        <AlertCircle className="h-5 w-5 text-red-500" />
+        WhatsApp Setup Failed
+      </DialogTitle>
+      <DialogDescription>
+        {status === 'timeout'
+          ? 'The QR code has expired. Please try again to generate a new code.'
+          : 'The pairing process has expired or failed. Restarting the servers will start a fresh pairing session.'
+        }
+      </DialogDescription>
+
+      <div className="flex justify-center p-4 rounded-md min-h-[200px] items-center">
+        <div className="text-center space-y-4">
+          <AlertCircle className="h-12 w-12 text-red-500 mx-auto" />
+          <div className="space-y-2">
+            <p className="text-sm text-muted-foreground">
+              {status === 'timeout' ? 'QR code expired' : 'Setup failed'}
+            </p>
+            <Button onClick={handleRetry} disabled={isRestarting} className="flex items-center gap-2">
+              <RefreshCw className={`h-4 w-4 ${isRestarting ? 'animate-spin' : ''}`} />
+              {isRestarting ? 'Restarting...' : 'Restart All Servers'}
+            </Button>
+          </div>
         </div>
       </div>
 

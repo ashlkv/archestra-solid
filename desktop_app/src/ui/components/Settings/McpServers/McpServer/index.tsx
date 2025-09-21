@@ -70,18 +70,35 @@ export default function McpServer({
   };
 
   const getSetupBadge = () => {
-    if (!setup || setup.status !== 'pending') return null;
+    if (!setup) return null;
 
-    return (
-      <Badge
-        variant="outline"
-        className="text-orange-600 border-orange-500 cursor-pointer hover:bg-orange-50 hover:text-orange-700"
-        onClick={() => setShowSetup(true)}
-        title="Open MCP setup"
-      >
-        Setup Required
-      </Badge>
-    );
+    if (setup.status === 'pending') {
+      return (
+        <Badge
+          variant="outline"
+          className="text-orange-600 border-orange-500 cursor-pointer hover:bg-orange-50 hover:text-orange-700"
+          onClick={() => setShowSetup(true)}
+          title="Open MCP setup"
+        >
+          Setup Required
+        </Badge>
+      );
+    }
+
+    if (setup.status === 'error') {
+      return (
+        <Badge
+          variant="outline"
+          className="text-red-600 border-red-500 cursor-pointer hover:bg-red-50 hover:text-red-700"
+          onClick={() => setShowSetup(true)}
+          title="Setup failed - click to retry"
+        >
+          Setup Failed
+        </Badge>
+      );
+    }
+
+    return null;
   };
 
   const Tools = () => {
@@ -165,6 +182,9 @@ export default function McpServer({
                     </Button>
                     {setup.status === 'pending' && (
                       <div className="absolute top-0 right-0 h-2 w-2 bg-orange-500 rounded-full"></div>
+                    )}
+                    {(setup.status === 'error') && (
+                      <div className="absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full"></div>
                     )}
                   </div>
                 )}
