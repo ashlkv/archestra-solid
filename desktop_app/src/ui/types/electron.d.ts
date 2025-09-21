@@ -32,6 +32,7 @@ declare global {
         properties: Array<'openDirectory' | 'openFile' | 'multiSelections'>;
       }) => Promise<{ canceled: boolean; filePaths: string[] }>;
     };
+    DEBUG: Record<string, any>;
   }
 }
 

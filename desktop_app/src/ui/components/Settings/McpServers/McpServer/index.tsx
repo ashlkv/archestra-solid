@@ -1,4 +1,4 @@
-import { AlertCircle, CheckCircle, FileText, Loader2, Trash2, Wrench } from 'lucide-react';
+import { AlertCircle, CheckCircle, FileText, Loader2, Settings, Trash2, Wrench } from 'lucide-react';
 import { useState } from 'react';
 
 import ReportIssueWithCatalogEntry from '@ui/components/ReportIssueWithCatalogEntry';
@@ -12,6 +12,7 @@ import { useMcpServersStore, useToolsStore } from '@ui/stores';
 import { ConnectedMcpServer } from '@ui/types';
 
 import LogViewerDialog from './LogViewerDialog';
+import McpServerSetup from "@ui/components/ConnectorCatalog/McpServerSetup";
 
 interface McpServerProps {
   mcpServer: ConnectedMcpServer;
@@ -21,8 +22,9 @@ export default function McpServer({
   mcpServer: { id, name, state, error, startupPercentage, message, remoteUrl },
 }: McpServerProps) {
   const [showLogs, setShowLogs] = useState(false);
+  const [showSetup, setShowSetup] = useState(false);
   const [showUninstallDialog, setShowUninstallDialog] = useState(false);
-  const { uninstallMcpServer, uninstallingMcpServerId } = useMcpServersStore();
+  const { uninstallMcpServer, uninstallingMcpServerId, mcpServerSetup } = useMcpServersStore();
   const { availableTools } = useToolsStore();
 
   const url = `${config.archestra.mcpProxyUrl}/${id}`;
@@ -31,6 +33,7 @@ export default function McpServer({
   const tools = availableTools.filter((tool) => tool.mcpServerId === id);
   const hasFetchedTools = tools.length > 0;
   const isRemoteMcp = !!remoteUrl;
+  const setup = mcpServerSetup[id];
 
   const getStateIcon = (state: ConnectedMcpServer['state']) => {
     switch (state) {
@@ -133,6 +136,17 @@ export default function McpServer({
                     <FileText className="h-3 w-3" />
                   </Button>
                 )}
+                {setup && (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-6 w-6 cursor-pointer"
+                    onClick={() => setShowSetup(true)}
+                    title="Open MCP setup"
+                  >
+                    <Settings className="h-3 w-3" />
+                  </Button>
+                )}
                 {(state === 'running' || isRemoteMcp) && (
                   <Button
                     variant="ghost"
@@ -219,6 +233,7 @@ export default function McpServer({
       </Dialog>
 
       <LogViewerDialog open={showLogs} onOpenChange={setShowLogs} mcpServerId={id} mcpServerName={name} />
+      {setup && <McpServerSetup open={setup && showSetup} onOpenChange={setShowSetup} provider={setup.provider} content={setup.content} />}
     </>
   );
 }

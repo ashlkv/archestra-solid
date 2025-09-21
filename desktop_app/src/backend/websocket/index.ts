@@ -89,9 +89,9 @@ const EnableToolsCalledPayloadSchema = z.object({
 });
 
 const MCPSetupSchema = z.object({
+  serverId: z.string(),
   provider: z.enum(['whatsapp']),
-  type: z.enum(['qrcode']),
-  status: z.enum(['detected', 'verified', 'timeout']),
+  status: z.enum(['pending', 'success', 'error']),
   content: z.string().optional(),
 });
 

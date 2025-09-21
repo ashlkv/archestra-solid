@@ -3,6 +3,7 @@
  */
 import WebSocketService from "@backend/websocket";
 import {type LogMonitor, type GetLogs} from "./mcp-setup-registry";
+import log from "@backend/utils/logger";
 
 type MatcherFunction = (logs: string) => { match: string, date?: Date } | false
 const qrCodeMatcher: MatcherFunction = (logs: string): { match: string, date?: Date } | false => {
@@ -10,7 +11,7 @@ const qrCodeMatcher: MatcherFunction = (logs: string): { match: string, date?: D
   if (chunk) {
     const code = chunk.split("\n").reverse().map(line => line.replace(/[^█▄▀ \n]/g, '').trim()).filter(Boolean).join("\n")
     const date = new Date(chunk.split("\n")[0]?.split(/\s/)?.[0]);
-    return { match: code, date: date && !isNaN(date.getTime()) ? date : undefined }
+    return code ? { match: code, date: date && !isNaN(date.getTime()) ? date : undefined } : false;
   } else {
     return false;
   }
@@ -45,10 +46,13 @@ export const getLogsFromDate = (logs: string, cutoffAt: Date): string => {
   }
 }
 
-export const whatsAppLogMonitor: LogMonitor = function (getLogs: GetLogs, startAtDefault?: Date) {
+export const whatsAppLogMonitor: LogMonitor = function (serverId: string, getLogs: GetLogs, { startAt: startAtDefault }: { startAt?: Date } = {}) {
   const startAt = startAtDefault || new Date(Date.now() - 60000);
-  const waitFor = (lookup: string | MatcherFunction, timeout = 20000, cutoffAt = undefined): Promise<{ match: string, date: string }> => {
-    const fulfilled = new Promise((resolve) => {
+  log.info('WhatsApp MCP log monitor: get logs starting at date', startAt);
+  const waitFor = (lookup: string | MatcherFunction, timeout = 20000, cutoffAt = undefined)
+    : Promise<{ match: string, date: string }> => {
+    return new Promise((resolve, reject) => {
+      let timer;
       function pollLogs() {
         getLogs(100).then((log) => {
           const matcher = typeof lookup === 'function' ? lookup : defaultMatcher.bind(null, lookup);
@@ -57,53 +61,68 @@ export const whatsAppLogMonitor: LogMonitor = function (getLogs: GetLogs, startA
           if (match) {
             resolve(match);
           } else {
-            setTimeout(pollLogs, 1000);
+            timer = setTimeout(pollLogs, 1000);
           }
         });
       }
       pollLogs();
+      setTimeout(() => {
+        clearTimeout(timer);
+        const lookupString = lookup === qrCodeMatcher
+          ? 'qrCodeMatcher'
+          : typeof lookup === 'string'
+            ? lookup
+            : 'function'
+
+        reject(`WhatsApp MCP log monitor: timeout out waiting for ${lookupString}`)
+      }, timeout)
     })
-    const timedOut = new Promise((resolve, reject) => setTimeout(reject, timeout))
-    return Promise.race([fulfilled, timedOut])
   }
 
   waitFor(qrCodeMatcher, 60000, startAt)
-    .then(({ match: qrCodeASCII, date: startingAt }) => {
+    .then(({ match: qrCodeASCII, date }) => {
+      log.info('WhatsApp MCP log monitor: QR Code detected', { code: qrCodeASCII, date});
       if (!qrCodeASCII) {
         return;
       }
       WebSocketService.broadcast({
         type: 'mcp-setup',
         payload: {
+          serverId,
           provider: 'whatsapp',
-          type: 'qrcode',
-          status: 'detected',
+          status: 'pending',
           content: qrCodeASCII
         },
       });
 
-      waitFor('Successfully paired', 300000, startingAt).then(() => {
-        WebSocketService.broadcast({
-          type: 'mcp-setup',
-          payload: {
-            provider: 'whatsapp',
-            type: 'qrcode',
-            status: 'verified',
-          },
-        })
-      });
+      // FIXME Also wait for and broadcast QR code updates, which occur every minute or so.
 
-      waitFor('Timeout waiting for QR code scan', 1000000, startingAt).then(() => {
+      waitFor('Successfully paired', 300000, date).then(({ date }) => {
+        log.info('WhatsApp MCP log monitor: device paired', { date });
         WebSocketService.broadcast({
           type: 'mcp-setup',
           payload: {
+            serverId,
             provider: 'whatsapp',
-            type: 'qrcode',
-            status: 'timeout',
+            status: 'success',
           },
         })
-      })
-    });
+      }).catch(log.error);
+
+      waitFor('Timeout waiting for QR code scan', 1000000, date).then(({ date }) => {
+        log.info('WhatsApp MCP log monitor: QR code timeout', { date });
+        WebSocketService.broadcast({
+          type: 'mcp-setup',
+          payload: {
+            serverId,
+            provider: 'whatsapp',
+            status: 'error',
+          },
+        })
+      }).catch(log.error);
+
+    })
+    .catch(log.error);
 }
 
 

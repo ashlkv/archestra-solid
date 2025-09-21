@@ -1,6 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { AlertCircle, MessageSquare, Package, Plus, Search } from 'lucide-react';
 import { useState } from 'react';
+import {createPortal} from "react-dom";
 
 import AuthConfirmationDialog from '@ui/components/AuthConfirmationDialog';
 import McpServer from '@ui/components/ConnectorCatalog/McpServer';
@@ -38,6 +39,8 @@ function ConnectorCatalogPage() {
     installMcpServer: _installMcpServer,
     uninstallMcpServer,
     cancelMcpServerInstallation,
+    mcpServerSetup,
+    closeSetup
   } = useMcpServersStore();
 
   const installMcpServer = async (

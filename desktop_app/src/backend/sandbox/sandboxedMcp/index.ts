@@ -466,10 +466,12 @@ export default class SandboxedMcpServer {
       if (!setup) {
         return;
       }
+      log.info(`Performing MCP server setup: ${this.mcpServer.name}`, setup);
       setup.forEach((step) => {
         if (step.type === 'log-monitor' && step.provider in mcpLogMonitorRegistry) {
           const logMonitor = mcpLogMonitorRegistry[step.provider]
-          logMonitor(async (lines: number) => {
+          log.info(`Initializing log monitor for MCP server: ${this.mcpServer.name}`);
+          logMonitor(this.mcpServer.id, async (lines: number) => {
             const { logs } = await this.getMcpServerLogs(lines);
             return logs;
           });

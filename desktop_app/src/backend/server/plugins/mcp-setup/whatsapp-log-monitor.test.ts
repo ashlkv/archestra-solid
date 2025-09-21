@@ -251,4 +251,6 @@ describe('whatsAppLogMonitor', () => {
 
     expect(WebSocketService.broadcast).toHaveBeenCalledTimes(2);
   })
+
+  it.todo('stops polling after timeout')
 });
