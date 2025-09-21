@@ -65,6 +65,8 @@ export const whatsappQrCodeMonitor: LogMonitor = function (serverId: string, get
           } else {
             timer = setTimeout(pollLogs, 1000);
           }
+        }).catch(() => {
+          timer = setTimeout(pollLogs, 1000);
         });
       }
       pollLogs();

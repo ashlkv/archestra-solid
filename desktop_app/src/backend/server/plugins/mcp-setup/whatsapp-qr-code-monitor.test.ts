@@ -140,13 +140,13 @@ describe('whatsAppLogMonitor', () => {
   it('broadcasts QR code from logs', async () => {
     const { default: WebSocketService } = await import('@backend/websocket');
     const mockGetLogs = vi.fn().mockResolvedValue(logsWithQRCode);
-    whatsappQrCodeMonitor('test-server', mockGetLogs, { startAt: new Date('2025-09-19T09:39:55+02:00') });
+    whatsappQrCodeMonitor('s1', mockGetLogs, { startAt: new Date('2025-09-19T09:39:55+02:00') });
 
     await vi.waitFor(() => {
       expect(WebSocketService.broadcast).toHaveBeenCalledWith({
         type: 'mcp-setup',
         payload: {
-          serverId: 'test-server',
+          serverId: 's1',
           provider: 'whatsapp',
           status: 'pending',
           content: qrCode
@@ -158,13 +158,13 @@ describe('whatsAppLogMonitor', () => {
   it('broadcasts latest QR code', async () => {
     const { default: WebSocketService } = await import('@backend/websocket');
     const mockGetLogs = vi.fn().mockResolvedValue(logsWith2QRCodes);
-    whatsappQrCodeMonitor('test-server', mockGetLogs, { startAt: new Date('2025-09-19T09:39:55+02:00') });
+    whatsappQrCodeMonitor('s1', mockGetLogs, { startAt: new Date('2025-09-19T09:39:55+02:00') });
 
     await vi.waitFor(() => {
       expect(WebSocketService.broadcast).toHaveBeenCalledWith({
         type: 'mcp-setup',
         payload: expect.objectContaining({
-          serverId: 'test-server',
+          serverId: 's1',
           provider: 'whatsapp',
           status: 'pending',
           content: lastQRCode
@@ -179,7 +179,7 @@ describe('whatsAppLogMonitor', () => {
     const mockGetLogs = vi.fn()
       .mockResolvedValueOnce(noQRCodeLogs)
       .mockResolvedValue(logsWithQRCode);
-    whatsappQrCodeMonitor('test-server', mockGetLogs, { startAt: new Date('2025-09-19T09:39:55+02:00') });
+    whatsappQrCodeMonitor('s1', mockGetLogs, { startAt: new Date('2025-09-19T09:39:55+02:00') });
 
     await vi.advanceTimersByTimeAsync(1000);
     await vi.waitFor(() => {
@@ -193,7 +193,7 @@ describe('whatsAppLogMonitor', () => {
     vi.useFakeTimers();
     const { default: WebSocketService } = await import('@backend/websocket');
     const mockGetLogs = vi.fn().mockResolvedValue(noQRCodeLogs);
-    whatsappQrCodeMonitor('test-server', mockGetLogs, { startAt: new Date('2025-09-19T09:39:55+02:00') });
+    whatsappQrCodeMonitor('s1', mockGetLogs, { startAt: new Date('2025-09-19T09:39:55+02:00') });
 
     await vi.advanceTimersByTimeAsync(1000);
     await vi.waitFor(() => {
@@ -210,13 +210,13 @@ describe('whatsAppLogMonitor', () => {
       .mockResolvedValueOnce(logsWithQRCode) // First call finds QR code
       .mockResolvedValue(pairedAfterCode);   // Subsequent calls find "Successfully paired"
 
-    whatsappQrCodeMonitor('test-server', mockGetLogs, { startAt: new Date('2025-09-19T09:39:55+02:00') });
+    whatsappQrCodeMonitor('s1', mockGetLogs, { startAt: new Date('2025-09-19T09:39:55+02:00') });
 
     await vi.waitFor(() => {
       expect(WebSocketService.broadcast).toHaveBeenCalledWith({
         type: 'mcp-setup',
         payload: expect.objectContaining({
-          serverId: 'test-server',
+          serverId: 's1',
           provider: 'whatsapp',
           status: 'pending'
         }),
@@ -227,7 +227,7 @@ describe('whatsAppLogMonitor', () => {
       expect(WebSocketService.broadcast).toHaveBeenCalledWith({
         type: 'mcp-setup',
         payload: expect.objectContaining({
-          serverId: 'test-server',
+          serverId: 's1',
           provider: 'whatsapp',
           status: 'success'
         }),
@@ -243,13 +243,13 @@ describe('whatsAppLogMonitor', () => {
 
     // Use a date after the "Successfully paired" message but before the QR code
     const startAt = new Date('2025-09-18T00:00:00+02:00');
-    whatsappQrCodeMonitor('test-server', mockGetLogs, { startAt });
+    whatsappQrCodeMonitor('s1', mockGetLogs, { startAt });
 
     await vi.waitFor(() => {
       expect(WebSocketService.broadcast).toHaveBeenCalledWith({
         type: 'mcp-setup',
         payload: expect.objectContaining({
-          serverId: 'test-server',
+          serverId: 's1',
           provider: 'whatsapp',
           status: 'pending'
         }),
@@ -266,13 +266,13 @@ describe('whatsAppLogMonitor', () => {
       .mockResolvedValueOnce(logsWithQRCode)
       .mockResolvedValue(timeoutLogs);
 
-    whatsappQrCodeMonitor('test-server', mockGetLogs, { startAt: new Date('2025-09-19T09:39:55+02:00') });
+    whatsappQrCodeMonitor('s1', mockGetLogs, { startAt: new Date('2025-09-19T09:39:55+02:00') });
 
     await vi.waitFor(() => {
       expect(WebSocketService.broadcast).toHaveBeenCalledWith({
         type: 'mcp-setup',
         payload: expect.objectContaining({
-          serverId: 'test-server',
+          serverId: 's1',
           provider: 'whatsapp',
           status: 'pending'
         }),
@@ -283,7 +283,7 @@ describe('whatsAppLogMonitor', () => {
       expect(WebSocketService.broadcast).toHaveBeenCalledWith({
         type: 'mcp-setup',
         payload: expect.objectContaining({
-          serverId: 'test-server',
+          serverId: 's1',
           provider: 'whatsapp',
           status: 'error'
         }),
@@ -306,6 +306,81 @@ describe('whatsAppLogMonitor', () => {
     expect(WebSocketService.broadcast).not.toHaveBeenCalled();
     vi.useRealTimers();
   })
-  it.todo('stops polling after timeout')
-  it.todo('polls for updates until they are exhausted') // at least 2 more times
+  it('stops polling after timeout', async () => {
+    vi.useFakeTimers();
+    const { default: WebSocketService } = await import('@backend/websocket');
+
+    const mockGetLogs = vi.fn()
+      .mockResolvedValueOnce(logsWithQRCode) // First call finds initial QR code
+      .mockResolvedValue(timeoutLogs); // All subsequent calls show timeout
+
+    whatsappQrCodeMonitor('s1', mockGetLogs, { startAt: new Date('2025-09-19T09:39:55+02:00') });
+
+    // Wait for initial QR code broadcast
+    await vi.waitFor(() => {
+      expect(WebSocketService.broadcast).toHaveBeenCalledWith({
+        type: 'mcp-setup',
+        payload: expect.objectContaining({
+          serverId: 's1',
+          provider: 'whatsapp',
+          status: 'pending'
+        }),
+      });
+    });
+
+    // Wait for timeout broadcast
+    await vi.waitFor(() => {
+      expect(WebSocketService.broadcast).toHaveBeenCalledWith({
+        type: 'mcp-setup',
+        payload: expect.objectContaining({
+          serverId: 's1',
+          provider: 'whatsapp',
+          status: 'error'
+        }),
+      });
+    });
+
+    // Should have exactly 2 broadcasts: initial QR code + timeout
+    expect(WebSocketService.broadcast).toHaveBeenCalledTimes(2);
+
+    vi.useRealTimers();
+  })
+
+  it('continues polling for qr code updates', async () => {
+    const { default: WebSocketService } = await import('@backend/websocket');
+
+    const initialLogs = `2025-09-19T09:39:56+02:00 Scan this QR code with your WhatsApp app:
+2025-09-19T09:39:56+02:00 ████████
+2025-09-19T09:39:56+02:00 ████████
+2025-09-19T09:39:56+02:00 ████████`;
+
+    const updatedLogs = `2025-09-19T09:39:56+02:00 Scan this QR code with your WhatsApp app:
+2025-09-19T09:39:56+02:00 ████████
+2025-09-19T09:39:56+02:00 ████████
+2025-09-19T09:39:56+02:00 ████████
+2025-09-19T09:40:00+02:00 Scan this QR code with your WhatsApp app:
+2025-09-19T09:40:00+02:00 ████████
+2025-09-19T09:40:00+02:00 █ ▄▄▄▄ █
+2025-09-19T09:40:00+02:00 ████████`;
+
+    let callCount = 0;
+    const mockGetLogs = vi.fn().mockImplementation(() => {
+      callCount++;
+      if (callCount === 1) {
+        return Promise.resolve(initialLogs);
+      } else {
+        return Promise.resolve(updatedLogs);
+      }
+    });
+
+    whatsappQrCodeMonitor('s1', mockGetLogs, { startAt: new Date('2025-09-19T09:39:55+02:00') });
+
+    // Wait for both QR codes to be broadcast (initial + update)
+    await vi.waitFor(() => {
+      expect(WebSocketService.broadcast).toHaveBeenCalledTimes(2);
+    }, { timeout: 3000 });
+
+    // Verify polling happened to find updates
+    expect(mockGetLogs).toHaveBeenCalled();
+  })
 });
