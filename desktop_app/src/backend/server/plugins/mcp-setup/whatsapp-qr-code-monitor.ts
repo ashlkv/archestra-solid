@@ -74,7 +74,7 @@ export const whatsappQrCodeMonitor: LogMonitor = function (serverId: string, get
             ? lookup
             : 'function'
 
-        reject(`WhatsApp MCP log monitor: timeout out waiting for ${lookupString}`)
+        reject(`WhatsApp MCP log monitor: timeout out waiting for "${lookupString}"`)
       }, timeout)
     })
   }
