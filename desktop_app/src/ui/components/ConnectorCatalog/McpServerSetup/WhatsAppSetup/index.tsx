@@ -1,6 +1,6 @@
 /** WhatsApp setup wizard, which shows a QR code and waits for it to be scanned */
 
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import { DialogTitle, DialogDescription } from "@ui/components/ui/dialog";
 import { CheckCircle, AlertCircle, RefreshCw } from 'lucide-react';
 import { Button } from "@ui/components/ui/button";
