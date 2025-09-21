@@ -1,15 +1,16 @@
 /** WhatsApp setup wizard, which shows a QR code and waits for it to be scanned */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { DialogTitle, DialogDescription } from "@ui/components/ui/dialog";
+import { CheckCircle } from 'lucide-react';
 
 /**
  * Converts ASCII QR code to SVG React component
  * @param asciiQr - The ASCII QR code string
- * @param cellSize - Size of each QR code cell in pixels (default: 4)
+ * @param cellSize - Size of each QR code cell in pixels
  * @returns React SVG component
  */
-function convertAsciiQrToSvg(asciiQr: string, cellSize: number = 4): React.ReactElement | null {
+function asciiQrToSvg(asciiQr: string, cellSize: number = 10): React.ReactElement | null {
   const lines = asciiQr.trim().split('\n');
   if (lines.length === 0) return null;
 
@@ -99,8 +100,44 @@ function convertAsciiQrToSvg(asciiQr: string, cellSize: number = 4): React.React
 }
 
 /** Renders WhatsApp QR Code from ASCII symbols */
-export default function WhatsAppSetup({ content: ascii }: { content: string }) {
-  const SvgQrCode = ascii ? convertAsciiQrToSvg(ascii, 10) : '';
+export default function WhatsAppSetup({ content: ascii, status, onClose }: { content: string, status?: string, onClose?: () => void }) {
+  const SvgQrCode = ascii ? asciiQrToSvg(ascii) : '';
+  const isSuccess = status === 'success';
+
+  // Auto-close dialog after 3 seconds on success
+  useEffect(() => {
+    if (isSuccess && onClose) {
+      const timer = setTimeout(() => {
+        onClose();
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [isSuccess, onClose]);
+
+  if (isSuccess) {
+    return <>
+      <DialogTitle className="flex items-center gap-2">
+        <CheckCircle className="h-5 w-5 text-green-500" />
+        WhatsApp Connected Successfully
+      </DialogTitle>
+      <DialogDescription>
+        Your WhatsApp account has been linked to Archestra. You can now use WhatsApp tools in your conversations.
+      </DialogDescription>
+
+      <div className="flex justify-center p-4 rounded-md min-h-[200px] items-center">
+        <div className="text-center space-y-2">
+          <CheckCircle className="h-12 w-12 text-green-500 mx-auto animate-pulse" />
+          <p className="text-sm text-muted-foreground">Connection established!</p>
+          <p className="text-xs text-muted-foreground opacity-75">This dialog will close automatically...</p>
+        </div>
+      </div>
+
+      <div className="text-sm text-muted-foreground text-center invisible">
+        <p>Open WhatsApp → Settings → Linked Devices → Tap "Link device", then scan this code.</p>
+        <p className="text-xs mt-2 opacity-75">QR code expires after a few minutes for security.</p>
+      </div>
+    </>
+  }
 
   return <>
     <DialogTitle className="flex items-center gap-2">
@@ -110,7 +147,7 @@ export default function WhatsAppSetup({ content: ascii }: { content: string }) {
       Scan this QR code with your phone to connect your WhatsApp account to Archestra.
     </DialogDescription>
 
-    <div className="flex justify-center p-4 rounded-md">
+    <div className="flex justify-center p-4 rounded-md min-h-[200px] items-center">
       {SvgQrCode}
     </div>
 
