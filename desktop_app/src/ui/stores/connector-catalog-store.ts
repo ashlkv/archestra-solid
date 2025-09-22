@@ -85,7 +85,7 @@ export const useConnectorCatalogStore = create<ConnectorCatalogStore>((set, get)
 
       const { data } = await searchMcpServerCatalog({ query: params });
       // FIXME Remove when whatsapp mcp catalog entry is updated
-      data.servers.unshift(mockWhatsapp)
+      data.servers.unshift(mockWhatsapp);
 
       if (data) {
         let filteredLocalServers: ArchestraMcpServerManifest[] = [];

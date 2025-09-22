@@ -9,6 +9,7 @@ import PodmanContainer from '@backend/sandbox/podman/container';
 import { type AvailableTool, type SandboxedMcpServerStatusSummary } from '@backend/sandbox/schemas';
 import { areTokensExpired } from '@backend/server/plugins/mcp-oauth';
 import { type McpTools } from '@backend/types';
+import { mcpLogMonitorRegistry } from '@backend/server/plugins/mcp-setup/mcp-setup-registry';
 import log from '@backend/utils/logger';
 import WebSocketService from '@backend/websocket';
 import { constructToolId, deconstructToolId } from '@constants';
@@ -469,14 +470,14 @@ export default class SandboxedMcpServer {
       log.info(`Performing MCP server setup: ${this.mcpServer.name}`, setup);
       setup.forEach((step) => {
         if (step.type === 'log-monitor' && step.provider in mcpLogMonitorRegistry) {
-          const logMonitor = mcpLogMonitorRegistry[step.provider]
+          const logMonitor = mcpLogMonitorRegistry[step.provider];
           log.info(`Initializing log monitor for MCP server: ${this.mcpServer.name}`);
           logMonitor(this.mcpServer.id, async (lines: number) => {
             const { logs } = await this.getMcpServerLogs(lines);
             return logs;
           });
         }
-      })
+      });
     }
   }
 

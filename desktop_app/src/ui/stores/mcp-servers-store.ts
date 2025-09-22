@@ -11,9 +11,9 @@ import {
   uninstallMcpServer,
 } from '@ui/lib/clients/archestra/api/gen';
 import posthogClient from '@ui/lib/posthog';
+import websocketService from '@ui/lib/websocket';
 import { useStatusBarStore } from '@ui/stores/status-bar-store';
 import { ConnectedMcpServer } from '@ui/types';
-import websocketService from "@ui/lib/websocket";
 
 interface McpServersState {
   archestraMcpServer: ConnectedMcpServer;
@@ -29,7 +29,7 @@ interface McpServersState {
   errorUninstallingMcpServer: string | null;
 
   /** Data for MCP server setup, such as pair with QR code */
-  mcpServerSetup: Record<string, { status: string, provider: string, content: string }>,
+  mcpServerSetup: Record<string, { status: string; provider: string; content: string }>;
 }
 
 interface McpServersActions {
@@ -446,22 +446,22 @@ export const useMcpServersStore = create<McpServersStore>((set, get) => ({
   },
 
   closeSetup: (serverId: string) => {
-    const setupUpdate = {...get().mcpServerSetup};
-    delete setupUpdate[serverId]
-    set({ mcpServerSetup: setupUpdate })
-  }
+    const setupUpdate = { ...get().mcpServerSetup };
+    delete setupUpdate[serverId];
+    set({ mcpServerSetup: setupUpdate });
+  },
 }));
 
 websocketService.subscribe('mcp-setup', ({ payload }) => {
   const { serverId, provider, status, content } = payload;
   useMcpServersStore.setState((state) => ({
-    mcpServerSetup: { ...state.mcpServerSetup, [serverId]: { status, provider, content } }
-  }))
+    mcpServerSetup: { ...state.mcpServerSetup, [serverId]: { status, provider, content } },
+  }));
 });
 
 // Initialize data on store creation
 useMcpServersStore.getState().loadInstalledMcpServers();
 
 if (typeof window !== 'undefined') {
-  window.DEBUG = { useMcpServersStore }
+  window.DEBUG = { useMcpServersStore };
 }

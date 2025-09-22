@@ -1,6 +1,7 @@
 import { AlertCircle, CheckCircle, FileText, Loader2, Settings, Trash2, Wrench } from 'lucide-react';
 import { useState } from 'react';
 
+import McpServerSetup from '@ui/components/ConnectorCatalog/McpServerSetup';
 import ReportIssueWithCatalogEntry from '@ui/components/ReportIssueWithCatalogEntry';
 import { Badge } from '@ui/components/ui/badge';
 import { Button } from '@ui/components/ui/button';
@@ -12,7 +13,6 @@ import { useMcpServersStore, useToolsStore } from '@ui/stores';
 import { ConnectedMcpServer } from '@ui/types';
 
 import LogViewerDialog from './LogViewerDialog';
-import McpServerSetup from "@ui/components/ConnectorCatalog/McpServerSetup";
 
 interface McpServerProps {
   mcpServer: ConnectedMcpServer;
@@ -183,7 +183,7 @@ export default function McpServer({
                     {setup.status === 'pending' && (
                       <div className="absolute top-0 right-0 h-2 w-2 bg-orange-500 rounded-full"></div>
                     )}
-                    {(setup.status === 'error') && (
+                    {setup.status === 'error' && (
                       <div className="absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full"></div>
                     )}
                   </div>
@@ -274,7 +274,15 @@ export default function McpServer({
       </Dialog>
 
       <LogViewerDialog open={showLogs} onOpenChange={setShowLogs} mcpServerId={id} mcpServerName={name} />
-      {setup && <McpServerSetup open={setup && showSetup} onOpenChange={setShowSetup} provider={setup.provider} content={setup.content} status={setup.status} />}
+      {setup && (
+        <McpServerSetup
+          open={setup && showSetup}
+          onOpenChange={setShowSetup}
+          provider={setup.provider}
+          content={setup.content}
+          status={setup.status}
+        />
+      )}
     </>
   );
 }
