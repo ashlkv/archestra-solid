@@ -387,11 +387,16 @@ describe('whatsAppLogMonitor', () => {
   it('stops waiting for QR code if connected', async () => {
     const { default: WebSocketService } = await import('@backend/websocket');
 
-    const connectedLogs = `2025-09-19T09:39:56+02:00 Starting WhatsApp bridge...
-2025-09-19T09:39:57+02:00 Connected to WhatsApp`;
+    const connectedLogs = `2025-09-22T10:06:54+02:00 08:06:54.018 [Client INFO] Starting WhatsApp client...
+2025-09-22T10:06:54+02:00 08:06:54.458 [Client INFO] Successfully authenticated
+2025-09-22T10:06:54+02:00 08:06:54.772 [Client INFO] Connected to WhatsApp
+2025-09-22T10:06:56+02:00
+2025-09-22T10:06:56+02:00 ✓ Connected to WhatsApp! Type 'help' for commands.
+2025-09-22T10:06:56+02:00 Starting REST API server on :8080...
+2025-09-22T10:06:56+02:00 REST server is running. Press Ctrl+C to disconnect and exit.`;
 
     const mockGetLogs = vi.fn().mockResolvedValue(connectedLogs);
-    whatsappQrCodeMonitor('s1', mockGetLogs, { startAt: new Date('2025-09-19T09:39:55+02:00') });
+    whatsappQrCodeMonitor('s1', mockGetLogs, { startAt: new Date('2025-09-22T08:00:04.937Z') });
 
     // Should broadcast success when connected
     await vi.waitFor(() => {

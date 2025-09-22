@@ -84,35 +84,31 @@ function asciiQrToSvg(asciiQr: string, cellSize: number = 10): React.ReactElemen
 export default function WhatsAppSetup({
   content: ascii,
   status,
-  onClose,
+  closeDialog,
 }: {
   content: string;
-  status?: string;
-  onClose?: () => void;
+  status: string;
+  closeDialog: () => void;
 }) {
   const SvgQrCode = ascii ? asciiQrToSvg(ascii) : '';
   const isSuccess = status === 'success';
   const isError = status === 'error' || status === 'timeout' || status === 'failed';
+
   const [isRestarting, setIsRestarting] = useState(false);
 
-  // Auto-close dialog after 3 seconds on success
+  // Auto-close dialog after 2 seconds on success
   useEffect(() => {
-    if (isSuccess && onClose) {
-      const timer = setTimeout(() => {
-        onClose();
-      }, 3000);
+    if (isSuccess) {
+      const timer = setTimeout(closeDialog, 2000);
       return () => clearTimeout(timer);
     }
-  }, [isSuccess, onClose]);
+  }, [isSuccess]);
 
   const handleRetry = async () => {
     try {
       setIsRestarting(true);
       await restartSandbox();
-      // Close dialog after restart - the setup should reinitialize
-      if (onClose) {
-        onClose();
-      }
+      closeDialog();
     } catch (error) {
       console.error('Failed to restart sandbox:', error);
       // Could show an error toast here

@@ -20,17 +20,13 @@ export default function McpServerSetup({
   provider: string;
   status?: string;
 }) {
-  const handleClose = () => {
-    onOpenChange(false);
-  };
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md max-h-[80vh] overflow-y-auto">
         {(() => {
           switch (provider) {
             case 'whatsapp':
-              return <WhatsAppSetup content={content} status={status} onClose={handleClose} />;
+              return <WhatsAppSetup content={content} status={status} closeDialog={() => onOpenChange(false)} />;
             default:
               return null;
           }

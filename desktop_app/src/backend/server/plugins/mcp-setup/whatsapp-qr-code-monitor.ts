@@ -9,15 +9,19 @@ import { type GetLogs, type LogMonitor } from './mcp-setup-registry';
 type MatcherFunction = (logs: string) => { match: string; date?: Date } | false;
 
 /**
- * Monitors WhatsApp container logs for QR code and other statuses of the device pairing process.
- *
+ * Monitors WhatsApp container logs for QR code and other statuses of the device pairing process
+ * by polling them for specific strings or patterns.
+ * Starts from specified date to avoid matching the outdated patterns.
+ * Smart enough to stop polling if mutually exclusive patterns encountered.
  */
 export const whatsappQrCodeMonitor: LogMonitor = function (
   serverId: string,
   getLogs: GetLogs,
   { startAt: startAtDefault }: { startAt?: Date } = {}
 ) {
-  const startAt = startAtDefault || new Date(Date.now() - 5000);
+  // It may be a few seconds before the container is started and the log monitor is attached.
+  // We are subtracting a few seconds just to be sure we don't miss any logs.
+  const startAt = startAtDefault || new Date(Date.now() - 30000);
   log.info('WhatsApp MCP log monitor: get logs starting at date', startAt);
   const waitFor = (
     lookup: string | MatcherFunction,
@@ -28,6 +32,8 @@ export const whatsappQrCodeMonitor: LogMonitor = function (
     let timeoutTimer;
     const promise = new Promise((resolve, reject) => {
       function pollLogs() {
+        const lookupString =
+          lookup === qrCodeMatcher ? 'qrCodeMatcher' : typeof lookup === 'string' ? lookup : 'function';
         getLogs(100)
           .then((log) => {
             const matcher = typeof lookup === 'function' ? lookup : defaultMatcher.bind(null, lookup);
