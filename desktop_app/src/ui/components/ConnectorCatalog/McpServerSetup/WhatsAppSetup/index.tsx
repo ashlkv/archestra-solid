@@ -2,6 +2,7 @@
 import { AlertCircle, CheckCircle, RefreshCw } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
 
+import { type MCPSetup } from '@backend/websocket';
 import { Button } from '@ui/components/ui/button';
 import { DialogDescription, DialogTitle } from '@ui/components/ui/dialog';
 import { restartSandbox } from '@ui/lib/clients/archestra/api/gen';
@@ -87,12 +88,12 @@ export default function WhatsAppSetup({
   closeDialog,
 }: {
   content: string;
-  status: string;
+  status: MCPSetup['status'];
   closeDialog: () => void;
 }) {
   const SvgQrCode = ascii ? asciiQrToSvg(ascii) : '';
   const isSuccess = status === 'success';
-  const isError = status === 'error' || status === 'timeout' || status === 'failed';
+  const isError = status === 'error';
 
   const [isRestarting, setIsRestarting] = useState(false);
 
@@ -152,18 +153,14 @@ export default function WhatsAppSetup({
           WhatsApp Setup Failed
         </DialogTitle>
         <DialogDescription>
-          {status === 'timeout'
-            ? 'The QR code has expired. Please try again to generate a new code.'
-            : 'The pairing process has expired or failed. Restarting the servers will start a fresh pairing session.'}
+          The pairing process has expired or failed. Restarting the servers will start a fresh pairing session.
         </DialogDescription>
 
         <div className="flex justify-center p-4 rounded-md min-h-[200px] items-center">
           <div className="text-center space-y-4">
             <AlertCircle className="h-12 w-12 text-red-500 mx-auto" />
             <div className="space-y-2">
-              <p className="text-sm text-muted-foreground">
-                {status === 'timeout' ? 'QR code expired' : 'Setup failed'}
-              </p>
+              <p className="text-sm text-muted-foreground">Setup failed</p>
               <Button onClick={handleRetry} disabled={isRestarting} className="flex items-center gap-2">
                 <RefreshCw className={`h-4 w-4 ${isRestarting ? 'animate-spin' : ''}`} />
                 {isRestarting ? 'Restarting...' : 'Restart All Servers'}

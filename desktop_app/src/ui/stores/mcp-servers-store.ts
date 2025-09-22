@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { create } from 'zustand';
 
+import { type MCPSetup } from '@backend/websocket';
 import { ARCHESTRA_MCP_SERVER_ID } from '@constants';
 import {
   type InstallMcpServerData,
@@ -29,7 +30,14 @@ interface McpServersState {
   errorUninstallingMcpServer: string | null;
 
   /** Data for MCP server setup, such as pair with QR code */
-  mcpServerSetup: Record<string, { status: string; provider: string; content: string }>;
+  mcpServerSetup: Record<
+    string,
+    {
+      status: MCPSetup['status'];
+      provider: MCPSetup['provider'];
+      content: string;
+    }
+  >;
 }
 
 interface McpServersActions {

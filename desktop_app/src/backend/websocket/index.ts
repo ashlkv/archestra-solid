@@ -88,12 +88,14 @@ const EnableToolsCalledPayloadSchema = z.object({
   enabledTools: z.array(z.string()),
 });
 
-const MCPSetupSchema = z.object({
+export const MCPSetupSchema = z.object({
   serverId: z.string(),
   provider: z.enum(['whatsapp']),
   status: z.enum(['pending', 'success', 'error']),
   content: z.string().optional(),
 });
+
+export type MCPSetup = z.infer<typeof MCPSetupSchema>;
 
 export const WebSocketMessageSchema = z.discriminatedUnion('type', [
   z.object({ type: z.literal('chat-title-updated'), payload: ChatTitleUpdatedPayloadSchema }),

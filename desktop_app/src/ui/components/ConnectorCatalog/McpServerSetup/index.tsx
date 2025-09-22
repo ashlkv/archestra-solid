@@ -4,6 +4,7 @@
  */
 import React from 'react';
 
+import { type MCPSetup } from '@backend/websocket';
 import WhatsAppSetup from '@ui/components/ConnectorCatalog/McpServerSetup/WhatsAppSetup';
 import { Dialog, DialogContent } from '@ui/components/ui/dialog';
 
@@ -11,14 +12,14 @@ export default function McpServerSetup({
   open,
   onOpenChange,
   provider,
-  content,
   status,
+  content,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  provider: MCPSetup['provider'];
+  status: MCPSetup['status'];
   content: string;
-  provider: string;
-  status?: string;
 }) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
