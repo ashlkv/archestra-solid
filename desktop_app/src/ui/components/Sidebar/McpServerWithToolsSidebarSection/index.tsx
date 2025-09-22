@@ -24,7 +24,7 @@ export default function McpServerWithToolsSidebarSection(_props: McpServerWithTo
 
   const { availableTools, loadingAvailableTools, selectedToolIds, addSelectedTool, removeSelectedTool } =
     useToolsStore();
-  const { installedMcpServers } = useMcpServersStore();
+  const { installedMcpServers, mcpServerSetup } = useMcpServersStore();
 
   const [expandedServers, setExpandedServers] = useState<Set<string>>(new Set());
   const [hasInitialized, setHasInitialized] = useState(false);
@@ -43,6 +43,12 @@ export default function McpServerWithToolsSidebarSection(_props: McpServerWithTo
       mcpServer.state === 'initializing' ||
       mcpServer.state === 'error'
     );
+  };
+
+  // Helper function to check if setup is pending
+  const isSetupPending = (serverId: string): boolean => {
+    const setup = mcpServerSetup[serverId];
+    return setup?.status === 'pending';
   };
 
   // Helper function to find common prefix
@@ -255,12 +261,14 @@ export default function McpServerWithToolsSidebarSection(_props: McpServerWithTo
           ) : (
             <>
               {Object.entries(toolsByServer).map(([serverName, serverData]) => {
+                const mcpId = `${serverData.serverId}__${serverName}`;
                 const isExpanded = expandedServers.has(serverName);
                 const isInitializing = isServerInitializing(serverData.serverId);
                 const serverState = installedMcpServers.find((s) => s.id === serverData.serverId)?.state;
                 const isError = serverState === 'error';
                 const hasTools = serverData.tools.length > 0;
-
+                const setupPending = isSetupPending(mcpId);
+                const isDiabled = isServerInitializing(serverData.serverId) || isSetupPending(mcpId);
                 return (
                   <Collapsible
                     key={serverName}
@@ -358,10 +366,10 @@ export default function McpServerWithToolsSidebarSection(_props: McpServerWithTo
                     </SidebarMenuItem>
 
                     <CollapsibleContent>
-                      {!hasTools && isError ? (
+                      {!hasTools && (isError || setupPending) ? (
                         <SidebarMenuItem>
                           <div className="px-4 py-2 text-xs text-muted-foreground italic">
-                            Server error - check Settings
+                            { setupPending ? 'Setup pending' : 'Server error - check Settings' }
                           </div>
                         </SidebarMenuItem>
                       ) : (
@@ -383,26 +391,36 @@ export default function McpServerWithToolsSidebarSection(_props: McpServerWithTo
                                 tool={tool}
                                 side="right"
                                 align="start"
-                                showInstructions={!isInitializing}
+                                showInstructions={!isDiabled}
                                 instructionText={
-                                  isInitializing
-                                    ? 'Server is still initializing'
-                                    : 'Click to add this tool to your chat'
+                                  setupPending
+                                    ? 'Server setup is pending'
+                                    : isInitializing
+                                      ? 'Server is still initializing'
+                                      : 'Click to add this tool to your chat'
                                 }
                               >
                                 <div
-                                  className={`flex items-center gap-2 px-2 py-1.5 text-sm rounded-md w-full ${isInitializing ? 'opacity-50 cursor-not-allowed' : 'hover:bg-muted/50 cursor-pointer'}`}
+                                  className={`flex items-center gap-2 px-2 py-1.5 text-sm rounded-md w-full ${isDiabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-muted/50 cursor-pointer'}`}
                                   onClick={() => {
-                                    if (!isInitializing) {
+                                    if (!isDiabled) {
                                       handleToolToggle(id, true);
                                     }
                                   }}
-                                  title={isInitializing ? `${serverName} is still initializing` : fullName}
+                                  title={
+                                    setupPending
+                                      ? `${serverName} setup is pending`
+                                      : isInitializing
+                                        ? `${serverName} is still initializing`
+                                        : fullName
+                                  }
                                 >
                                   {status === 'awaiting_ollama_model' || status === 'in_progress' ? (
                                     <div className="w-2 h-2 border border-muted-foreground rounded-full animate-spin border-t-transparent flex-shrink-0" />
                                   ) : status === 'error' ? (
                                     <div className="w-2 h-2 bg-red-500 rounded-full flex-shrink-0" />
+                                  ) : setupPending ? (
+                                    <div className="w-2 h-2 bg-orange-500 rounded-full flex-shrink-0" />
                                   ) : isInitializing ? (
                                     <div className="w-2 h-2 bg-yellow-500 rounded-full flex-shrink-0" />
                                   ) : (
