@@ -68,6 +68,8 @@ export const whatsappQrCodeMonitor: LogMonitor = function (
   const { promise: whenQRCodeFound, cancel: cancelQRCodeWait } = waitFor(qrCodeMatcher, 60000, startAt);
   whenQRCodeFound
     .then(async ({ match: qrCodeASCII, date }) => {
+      let paired = false;
+      let timedOut = false;
       cancelConnectionWait();
       log.info('WhatsApp MCP log monitor: QR code detected', { code: qrCodeASCII, date });
       WebSocketService.broadcast({
@@ -80,8 +82,10 @@ export const whatsappQrCodeMonitor: LogMonitor = function (
       whenPaired
         .then(({ date }) => {
           log.info('WhatsApp MCP log monitor: device paired', { date });
+          paired = true;
           cancelTimeoutWait();
           cancelUpdateWait();
+          cancelConnectionWait();
           WebSocketService.broadcast({
             type: 'mcp-setup',
             payload: { serverId, provider: 'whatsapp', status: 'success' },
@@ -98,8 +102,10 @@ export const whatsappQrCodeMonitor: LogMonitor = function (
       whenTimedOut
         .then(({ date }) => {
           log.info('WhatsApp MCP log monitor: QR code timeout', { date });
+          timedOut = false;
           cancelPairWait();
           cancelUpdateWait();
+          cancelConnectionWait();
           WebSocketService.broadcast({
             type: 'mcp-setup',
             payload: { serverId, provider: 'whatsapp', status: 'error' },
@@ -112,7 +118,7 @@ export const whatsappQrCodeMonitor: LogMonitor = function (
       // to avoid matching the same QR code over and over.
       let startQRCodeAt = new Date(date.getTime() + 3000);
       let cancelUpdateWait = () => {};
-      while (!updatesExhausted) {
+      while (!updatesExhausted && !paired && !timedOut) {
         try {
           const { promise: whenQRCodeUpdated, cancel } = waitFor(qrCodeMatcher, 300000, startQRCodeAt);
           cancelUpdateWait = cancel;
