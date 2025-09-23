@@ -59,6 +59,14 @@ export default function McpServerWithToolsSidebarSection(_props: McpServerWithTo
     return setup?.status === 'error';
   };
 
+  // Helper function to check if server needs setup but has not received setup info yet
+  const isWaitingForSetup = (serverId: string): boolean => {
+    const mcpServer = installedMcpServers.find((s) => s.id === serverId);
+    if (!mcpServer) return false;
+    const needsSetup = mcpServer.serverConfig.setup?.length > 0;
+    return needsSetup && !mcpServerSetup[serverId];
+  };
+
   // Helper function to find common prefix
   const findCommonPrefix = (tools: typeof availableTools): string => {
     if (tools.length === 0) return '';
@@ -276,10 +284,12 @@ export default function McpServerWithToolsSidebarSection(_props: McpServerWithTo
                 const hasTools = serverData.tools.length > 0;
                 const setupPending = isSetupPending(serverData.serverId);
                 const setupError = isSetupError(serverData.serverId);
-                const isDiabled =
+                const setupWaiting = isWaitingForSetup(serverData.serverId);
+                const isDisabled =
                   isServerInitializing(serverData.serverId) ||
                   isSetupPending(serverData.serverId) ||
-                  isSetupError(serverData.serverId);
+                  isSetupError(serverData.serverId) ||
+                  isWaitingForSetup(serverData.serverId);
                 return (
                   <Collapsible
                     key={serverName}
@@ -287,11 +297,11 @@ export default function McpServerWithToolsSidebarSection(_props: McpServerWithTo
                     onOpenChange={() => toggleServerExpansion(serverName)}
                   >
                     <SidebarMenuItem
-                      className={`flex items-center gap-1 px-2 py-1.5 rounded transition-colors bg-muted/50 ${setupPending ? 'hover:bg-orange-100/20 cursor-pointer' : setupError ? 'hover:bg-red-100/20 cursor-pointer' : hasTools ? 'hover:bg-muted/70' : 'opacity-60'}`}
+                      className={`flex items-center gap-1 px-2 py-1.5 rounded transition-colors bg-muted/50 ${setupPending ? 'hover:bg-orange-100/20 cursor-pointer' : setupError ? 'hover:bg-red-100/20 cursor-pointer' : (hasTools && !setupWaiting) ? 'hover:bg-muted/70' : 'opacity-60'}`}
                     >
                       <CollapsibleTrigger
-                        className={`w-full flex-1 ${setupPending || setupError ? 'cursor-pointer' : hasTools ? 'cursor-pointer' : 'cursor-not-allowed'}`}
-                        disabled={!hasTools && !setupPending && !setupError}
+                        className={`w-full flex-1 ${setupPending || setupError ? 'cursor-pointer' : (hasTools && !setupWaiting) ? 'cursor-pointer' : 'cursor-not-allowed'}`}
+                        disabled={!(hasTools && !setupWaiting) && !setupPending && !setupError}
                         onClick={(e) => {
                           if (setupPending || setupError) {
                             e.preventDefault();
@@ -331,13 +341,11 @@ export default function McpServerWithToolsSidebarSection(_props: McpServerWithTo
                           {(() => {
                             if (isError) {
                               return 'Error';
-                            }
-
-                            if (setupPending) {
+                            } else if (setupWaiting) {
+                              return 'Setting up...';
+                            } else if (setupPending) {
                               return 'Setup required';
-                            }
-
-                            if (setupError) {
+                            } else if (setupError) {
                               return 'Setup failed';
                             }
 
@@ -370,7 +378,7 @@ export default function McpServerWithToolsSidebarSection(_props: McpServerWithTo
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
-                          if (hasTools && !setupPending && !setupError) {
+                          if (hasTools && !setupPending && !setupError && !setupWaiting) {
                             // Add all tools from this server
                             serverData.tools.forEach((tool) => addSelectedTool(tool.id));
                           }
@@ -386,7 +394,7 @@ export default function McpServerWithToolsSidebarSection(_props: McpServerWithTo
                                   ? `${serverName} is loading tools`
                                   : `Add all ${serverName} tools`
                         }
-                        disabled={!hasTools || setupPending || setupError}
+                        disabled={!hasTools || setupPending || setupError || setupWaiting}
                       >
                         <PlusCircle className="h-4 w-4 cursor-pointer" />
                       </button>
@@ -427,9 +435,9 @@ export default function McpServerWithToolsSidebarSection(_props: McpServerWithTo
                                 tool={tool}
                                 side="right"
                                 align="start"
-                                showInstructions={!isDiabled}
+                                showInstructions={!isDisabled}
                                 instructionText={
-                                  setupPending
+                                  setupPending || setupWaiting
                                     ? 'Server setup is pending'
                                     : setupError
                                       ? 'Server setup failed'
@@ -439,9 +447,9 @@ export default function McpServerWithToolsSidebarSection(_props: McpServerWithTo
                                 }
                               >
                                 <div
-                                  className={`flex items-center gap-2 px-2 py-1.5 text-sm rounded-md w-full ${isDiabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-muted/50 cursor-pointer'}`}
+                                  className={`flex items-center gap-2 px-2 py-1.5 text-sm rounded-md w-full ${isDisabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-muted/50 cursor-pointer'}`}
                                   onClick={() => {
-                                    if (!isDiabled) {
+                                    if (!isDisabled) {
                                       handleToolToggle(id, true);
                                     }
                                   }}
@@ -450,9 +458,11 @@ export default function McpServerWithToolsSidebarSection(_props: McpServerWithTo
                                       ? `${serverName} setup is pending`
                                       : setupError
                                         ? `${serverName} setup failed`
-                                        : isInitializing
-                                          ? `${serverName} is still initializing`
-                                          : fullName
+                                        : setupWaiting
+                                          ? `${serverName} setup required`
+                                          : isInitializing
+                                            ? `${serverName} is still initializing`
+                                            : fullName
                                   }
                                 >
                                   {status === 'awaiting_ollama_model' || status === 'in_progress' ? (
