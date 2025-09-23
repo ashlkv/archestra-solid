@@ -48,6 +48,10 @@ export default class SandboxedMcpServer {
     }
   > = new Map();
 
+  // A list of cleanup functions added by MCP setup. They should be called when MCP is stopped.
+  // For example, for a custom MCP log poller, a cleanup function would stop polling the logs.
+  private mcpTeardownCallbacks: (() => void)[] = [];
+
   constructor(mcpServer: McpServer, podmanSocketPath?: string) {
     this.mcpServer = mcpServer;
     this.mcpServerId = mcpServer.id;
@@ -472,10 +476,11 @@ export default class SandboxedMcpServer {
         if (step.type === 'log-monitor' && step.provider in mcpLogMonitorRegistry) {
           const logMonitor = mcpLogMonitorRegistry[step.provider];
           log.info(`Initializing log monitor for MCP server: ${this.mcpServer.name}`);
-          logMonitor(this.mcpServer.id, async (lines: number) => {
+          const cleanup = logMonitor(this.mcpServer.id, async (lines: number) => {
             const { logs } = await this.getMcpServerLogs(lines);
             return logs;
           });
+          this.mcpTeardownCallbacks.push(cleanup);
         }
       });
     }
@@ -500,6 +505,12 @@ export default class SandboxedMcpServer {
     }
 
     await this.disconnectMcpClient();
+
+    // Perform custom teardown, if any
+    while (this.mcpTeardownCallbacks.length > 0) {
+      const teardown = this.mcpTeardownCallbacks.pop();
+      teardown?.();
+    }
   }
 
   async delete() {

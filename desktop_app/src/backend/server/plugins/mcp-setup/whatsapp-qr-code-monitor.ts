@@ -65,6 +65,8 @@ export const whatsappQrCodeMonitor: LogMonitor = function (
     return { promise, cancel };
   };
 
+  const cleanupCallbacks: Record<string, () => void> = {};
+
   const { promise: whenQRCodeFound, cancel: cancelQRCodeWait } = waitFor(qrCodeMatcher, 60000, startAt);
   whenQRCodeFound
     .then(async ({ match: qrCodeASCII, date }) => {
@@ -79,6 +81,7 @@ export const whatsappQrCodeMonitor: LogMonitor = function (
 
       // Waits for the indication of device pair success
       const { promise: whenPaired, cancel: cancelPairWait } = waitFor('Successfully paired', 300000, date);
+      cleanupCallbacks.pair = cancelPairWait;
       whenPaired
         .then(({ date }) => {
           log.info('WhatsApp MCP log monitor: device paired', { date });
@@ -99,6 +102,7 @@ export const whatsappQrCodeMonitor: LogMonitor = function (
         1000000,
         date
       );
+      cleanupCallbacks.timeout = cancelTimeoutWait;
       whenTimedOut
         .then(({ date }) => {
           log.info('WhatsApp MCP log monitor: QR code timeout', { date });
@@ -122,6 +126,7 @@ export const whatsappQrCodeMonitor: LogMonitor = function (
         try {
           const { promise: whenQRCodeUpdated, cancel } = waitFor(qrCodeMatcher, 300000, startQRCodeAt);
           cancelUpdateWait = cancel;
+          cleanupCallbacks.update = cancel;
           const { match: qrCodeASCII, date } = await whenQRCodeUpdated;
           log.info('WhatsApp MCP log monitor: QR code update', { code: qrCodeASCII, date: startQRCodeAt });
           startQRCodeAt = new Date(date.getTime() + 3000);
@@ -136,6 +141,7 @@ export const whatsappQrCodeMonitor: LogMonitor = function (
       }
     })
     .catch(log.error);
+  cleanupCallbacks.qrcode = cancelQRCodeWait;
 
   // Waits for "Connected to WhatsApp" message.
   // This message indicates that the device is already paired and no QR code is needed.
@@ -150,6 +156,11 @@ export const whatsappQrCodeMonitor: LogMonitor = function (
       });
     })
     .catch(log.error);
+  cleanupCallbacks.connection = cancelConnectionWait;
+
+  return function cleanup() {
+    Object.values(cleanupCallbacks).forEach((callback) => callback());
+  };
 };
 
 const qrCodeMatcher: MatcherFunction = (logs: string): { match: string; date?: Date } | false => {

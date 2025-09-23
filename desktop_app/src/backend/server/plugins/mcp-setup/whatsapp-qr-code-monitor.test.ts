@@ -513,4 +513,24 @@ describe('whatsAppLogMonitor', () => {
     // Should only broadcast once (QR code found, connection waiting cancelled)
     expect(WebSocketService.broadcast).toHaveBeenCalledTimes(1);
   });
+
+  it('cleanup function stops all polling', async () => {
+    vi.useFakeTimers();
+    const { default: WebSocketService } = await import('@backend/websocket');
+    const mockGetLogs = vi.fn().mockResolvedValue(logsWithQRCode);
+
+    const cleanup = whatsappQrCodeMonitor('s1', mockGetLogs, { startAt: new Date('2025-09-19T09:39:55+02:00') });
+
+    await vi.waitFor(() => {
+      expect(WebSocketService.broadcast).toHaveBeenCalledTimes(1);
+    });
+
+    const callCountBeforeCleanup = mockGetLogs.mock.calls.length;
+    cleanup();
+
+    await vi.advanceTimersByTimeAsync(5000);
+
+    expect(mockGetLogs.mock.calls.length).toBe(callCountBeforeCleanup);
+    vi.useRealTimers();
+  });
 });
