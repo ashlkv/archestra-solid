@@ -528,6 +528,7 @@ export default function McpServerWithToolsSidebarSection(_props: McpServerWithTo
           provider={mcpServerSetup[openSetupServerId].provider}
           status={mcpServerSetup[openSetupServerId].status}
           content={mcpServerSetup[openSetupServerId].content}
+          serverId={openSetupServerId}
         />
       )}
     </SidebarGroup>

@@ -281,6 +281,7 @@ export default function McpServer({
           provider={setup.provider}
           content={setup.content}
           status={setup.status}
+          serverId={id}
         />
       )}
     </>

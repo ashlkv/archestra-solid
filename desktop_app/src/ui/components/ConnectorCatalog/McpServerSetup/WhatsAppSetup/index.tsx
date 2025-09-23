@@ -5,7 +5,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { type MCPSetup } from '@backend/websocket';
 import { Button } from '@ui/components/ui/button';
 import { DialogDescription, DialogTitle } from '@ui/components/ui/dialog';
-import { restartSandbox } from '@ui/lib/clients/archestra/api/gen';
+import { restartMcpServer } from '@ui/lib/clients/archestra/api/gen';
 
 /**
  * Converts ASCII QR code to SVG React component
@@ -85,10 +85,12 @@ function asciiQrToSvg(asciiQr: string, cellSize: number = 10): React.ReactElemen
 export default function WhatsAppSetup({
   content: ascii,
   status,
+  serverId,
   closeDialog,
 }: {
   content: string;
   status: MCPSetup['status'];
+  serverId: string;
   closeDialog: () => void;
 }) {
   const SvgQrCode = ascii ? asciiQrToSvg(ascii) : '';
@@ -108,10 +110,10 @@ export default function WhatsAppSetup({
   const handleRetry = async () => {
     try {
       setIsRestarting(true);
-      await restartSandbox();
+      await restartMcpServer({ path: { id: serverId } });
       closeDialog();
     } catch (error) {
-      console.error('Failed to restart sandbox:', error);
+      console.error('Failed to restart server:', error);
       // Could show an error toast here
     } finally {
       setIsRestarting(false);
@@ -163,7 +165,7 @@ export default function WhatsAppSetup({
               <p className="text-sm text-muted-foreground">Setup failed</p>
               <Button onClick={handleRetry} disabled={isRestarting} className="flex items-center gap-2">
                 <RefreshCw className={`h-4 w-4 ${isRestarting ? 'animate-spin' : ''}`} />
-                {isRestarting ? 'Restarting...' : 'Restart All Servers'}
+                {isRestarting ? 'Restarting...' : 'Restart Server'}
               </Button>
             </div>
           </div>

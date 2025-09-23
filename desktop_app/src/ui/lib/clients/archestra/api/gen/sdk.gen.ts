@@ -576,6 +576,18 @@ export const uninstallMcpServer = <ThrowOnError extends boolean = false>(
 };
 
 /**
+ * Restart a single MCP server
+ */
+export const restartMcpServer = <ThrowOnError extends boolean = false>(
+  options: Options<{ path: { id: string } }, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).post<{ success: boolean; message: string }, unknown, ThrowOnError>({
+    url: '/api/mcp_server/{id}/restart',
+    ...options,
+  });
+};
+
+/**
  * Get logs for a specific MCP server container
  */
 export const getMcpServerLogs = <ThrowOnError extends boolean = false>(

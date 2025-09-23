@@ -348,6 +348,7 @@ function ConnectorCatalogPage() {
           provider={mcpServerSetup[setupServerId].provider}
           status={mcpServerSetup[setupServerId].status}
           content={mcpServerSetup[setupServerId].content}
+          serverId={setupServerId}
         />
       )}
     </div>
