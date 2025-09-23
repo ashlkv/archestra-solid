@@ -276,7 +276,10 @@ export default function McpServerWithToolsSidebarSection(_props: McpServerWithTo
                 const hasTools = serverData.tools.length > 0;
                 const setupPending = isSetupPending(serverData.serverId);
                 const setupError = isSetupError(serverData.serverId);
-                const isDiabled = isServerInitializing(serverData.serverId) || isSetupPending(serverData.serverId) || isSetupError(serverData.serverId);
+                const isDiabled =
+                  isServerInitializing(serverData.serverId) ||
+                  isSetupPending(serverData.serverId) ||
+                  isSetupError(serverData.serverId);
                 return (
                   <Collapsible
                     key={serverName}

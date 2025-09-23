@@ -165,9 +165,9 @@ export type WebSocketMessageInput =
   | {
       type: 'mcp-setup';
       payload: {
+        serverId: string;
         provider: 'whatsapp';
-        type: 'qrcode';
-        status: 'detected' | 'verified';
+        status: 'pending' | 'success' | 'error';
         content?: string;
       };
     }
@@ -698,9 +698,9 @@ export type WebSocketMessage =
   | {
       type: 'mcp-setup';
       payload: {
+        serverId: string;
         provider: 'whatsapp';
-        type: 'qrcode';
-        status: 'detected' | 'verified';
+        status: 'pending' | 'success' | 'error';
         content?: string;
       };
     }
