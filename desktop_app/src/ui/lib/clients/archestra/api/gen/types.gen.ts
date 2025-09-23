@@ -1915,6 +1915,44 @@ export type UninstallMcpServerResponses = {
 
 export type UninstallMcpServerResponse = UninstallMcpServerResponses[keyof UninstallMcpServerResponses];
 
+export type RestartMcpServerData = {
+  body?: never;
+  path: {
+    id: string;
+  };
+  query?: never;
+  url: '/api/mcp_server/{id}/restart';
+};
+
+export type RestartMcpServerErrors = {
+  /**
+   * Default Response
+   */
+  404: {
+    error: string;
+  };
+  /**
+   * Default Response
+   */
+  500: {
+    error: string;
+  };
+};
+
+export type RestartMcpServerError = RestartMcpServerErrors[keyof RestartMcpServerErrors];
+
+export type RestartMcpServerResponses = {
+  /**
+   * Default Response
+   */
+  200: {
+    success: boolean;
+    message: string;
+  };
+};
+
+export type RestartMcpServerResponse = RestartMcpServerResponses[keyof RestartMcpServerResponses];
+
 export type GetMcpServerLogsData = {
   body?: never;
   path: {

@@ -94,6 +94,9 @@ import type {
   ResetSandboxData,
   ResetSandboxErrors,
   ResetSandboxResponses,
+  RestartMcpServerData,
+  RestartMcpServerErrors,
+  RestartMcpServerResponses,
   RestartSandboxData,
   RestartSandboxErrors,
   RestartSandboxResponses,
@@ -579,9 +582,9 @@ export const uninstallMcpServer = <ThrowOnError extends boolean = false>(
  * Restart a single MCP server
  */
 export const restartMcpServer = <ThrowOnError extends boolean = false>(
-  options: Options<{ path: { id: string } }, ThrowOnError>
+  options: Options<RestartMcpServerData, ThrowOnError>
 ) => {
-  return (options.client ?? _heyApiClient).post<{ success: boolean; message: string }, unknown, ThrowOnError>({
+  return (options.client ?? _heyApiClient).post<RestartMcpServerResponses, RestartMcpServerErrors, ThrowOnError>({
     url: '/api/mcp_server/{id}/restart',
     ...options,
   });

@@ -29,7 +29,14 @@ export default function McpServerSetup({
         {(() => {
           switch (provider) {
             case 'whatsapp':
-              return <WhatsAppSetup content={content} status={status} serverId={serverId} closeDialog={() => onOpenChange(false)} />;
+              return (
+                <WhatsAppSetup
+                  content={content}
+                  status={status}
+                  serverId={serverId}
+                  closeDialog={() => onOpenChange(false)}
+                />
+              );
             default:
               return null;
           }

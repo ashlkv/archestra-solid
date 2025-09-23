@@ -115,7 +115,7 @@ const mcpServerRoutes: FastifyPluginAsyncZod = async (fastify) => {
         response: {
           200: z.object({
             success: z.boolean(),
-            message: z.string()
+            message: z.string(),
           }),
           404: ErrorResponseSchema,
           500: ErrorResponseSchema,
@@ -127,7 +127,7 @@ const mcpServerRoutes: FastifyPluginAsyncZod = async (fastify) => {
         await McpServerSandboxManager.restartServer(id);
         return reply.code(200).send({
           success: true,
-          message: `MCP server ${id} restarted successfully`
+          message: `MCP server ${id} restarted successfully`,
         });
       } catch (error: any) {
         log.error(`Failed to restart MCP server ${id}:`, error);
@@ -137,7 +137,7 @@ const mcpServerRoutes: FastifyPluginAsyncZod = async (fastify) => {
         }
 
         return reply.code(500).send({
-          error: error instanceof Error ? error.message : 'Failed to restart MCP server'
+          error: error instanceof Error ? error.message : 'Failed to restart MCP server',
         });
       }
     }

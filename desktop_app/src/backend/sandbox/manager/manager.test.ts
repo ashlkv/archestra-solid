@@ -5,7 +5,6 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import McpServerModel from '@backend/models/mcpServer';
 import McpServerSandboxManager from '@backend/sandbox/manager';
-
 import mcpServerRoutes from '@backend/server/plugins/mcpServer';
 
 vi.mock('@backend/models/mcpServer');
@@ -53,12 +52,14 @@ describe('POST /api/mcp_server/:id/restart', () => {
     expect(response.statusCode).toBe(200);
     expect(response.json()).toEqual({
       success: true,
-      message: 'MCP server test-server-id restarted successfully'
+      message: 'MCP server test-server-id restarted successfully',
     });
   });
 
   it('should return 404 when server does not exist', async () => {
-    mockedMcpServerSandboxManager.restartServer.mockRejectedValue(new Error('MCP server with ID nonexistent-id not found'));
+    mockedMcpServerSandboxManager.restartServer.mockRejectedValue(
+      new Error('MCP server with ID nonexistent-id not found')
+    );
 
     const response = await app.inject({
       method: 'POST',
