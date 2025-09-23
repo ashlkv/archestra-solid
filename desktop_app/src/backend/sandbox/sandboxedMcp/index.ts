@@ -8,12 +8,11 @@ import { type Tool, ToolModel } from '@backend/models/tools';
 import PodmanContainer from '@backend/sandbox/podman/container';
 import { type AvailableTool, type SandboxedMcpServerStatusSummary } from '@backend/sandbox/schemas';
 import { areTokensExpired } from '@backend/server/plugins/mcp-oauth';
-import { type McpTools } from '@backend/types';
 import { mcpLogMonitorRegistry } from '@backend/server/plugins/mcp-setup/mcp-setup-registry';
+import { type McpTools } from '@backend/types';
 import log from '@backend/utils/logger';
 import WebSocketService from '@backend/websocket';
 import { constructToolId, deconstructToolId } from '@constants';
-import {mcpLogMonitorRegistry} from "@backend/server/plugins/mcp-setup/mcp-setup-registry";
 
 const { host: proxyMcpServerHost, port: proxyMcpServerPort } = config.server.http;
 

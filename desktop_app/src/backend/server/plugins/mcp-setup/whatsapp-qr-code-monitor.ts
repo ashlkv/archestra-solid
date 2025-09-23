@@ -26,10 +26,10 @@ export const whatsappQrCodeMonitor: LogMonitor = function (
   const waitFor = (
     lookup: string | MatcherFunction,
     timeout = 20000,
-    cutoffAt = undefined
+    cutoffAt: Date | undefined = undefined
   ): { promise: Promise<{ match: string; date: Date }>; cancel: () => void } => {
-    const timers = { poll: 0, timeout: 0 };
-    const promise = new Promise((resolve, reject) => {
+    const timers = { poll: 0 as NodeJS.Timeout | 0, timeout: 0 as NodeJS.Timeout | 0 };
+    const promise = new Promise<{ match: string; date: Date }>((resolve, reject) => {
       function pollLogs() {
         const lookupString =
           lookup === qrCodeMatcher ? 'qrCodeMatcher' : typeof lookup === 'string' ? lookup : 'function';

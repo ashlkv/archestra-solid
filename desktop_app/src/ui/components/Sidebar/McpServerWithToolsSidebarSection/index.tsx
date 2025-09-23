@@ -63,7 +63,7 @@ export default function McpServerWithToolsSidebarSection(_props: McpServerWithTo
   const isWaitingForSetup = (serverId: string): boolean => {
     const mcpServer = installedMcpServers.find((s) => s.id === serverId);
     if (!mcpServer) return false;
-    const needsSetup = mcpServer.serverConfig.setup?.length > 0;
+    const needsSetup = (mcpServer.serverConfig.setup?.length ?? 0) > 0;
     return needsSetup && !mcpServerSetup[serverId];
   };
 

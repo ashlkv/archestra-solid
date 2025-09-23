@@ -207,8 +207,8 @@ describe('SandboxedMcpServer', () => {
   });
 
   describe('custom setup', () => {
-    let mockMcpWithSetup;
-    let sandboxedMcpServer;
+    let mockMcpWithSetup: McpServer;
+    let sandboxedMcpServer: SandboxedMcpServer;
     beforeEach(() => {
       vi.clearAllMocks();
 
@@ -236,11 +236,11 @@ describe('SandboxedMcpServer', () => {
       } as McpServer;
 
       sandboxedMcpServer = new SandboxedMcpServer(mockMcpWithSetup, '/mock/socket/path');
-      vi.spyOn(sandboxedMcpServer, 'fetchCachedTools').mockResolvedValue();
-      vi.spyOn(sandboxedMcpServer, 'pingMcpServerContainerUntilHealthy').mockResolvedValue();
-      vi.spyOn(sandboxedMcpServer, 'createMcpClient').mockResolvedValue();
-      vi.spyOn(sandboxedMcpServer, 'fetchTools').mockResolvedValue();
-      vi.spyOn(sandboxedMcpServer, 'stopPeriodicAnalysisUpdates').mockImplementation(() => {});
+      vi.spyOn(sandboxedMcpServer as any, 'fetchCachedTools').mockResolvedValue(undefined);
+      vi.spyOn(sandboxedMcpServer as any, 'pingMcpServerContainerUntilHealthy').mockResolvedValue(undefined);
+      vi.spyOn(sandboxedMcpServer as any, 'createMcpClient').mockResolvedValue(undefined);
+      vi.spyOn(sandboxedMcpServer as any, 'fetchTools').mockResolvedValue(undefined);
+      vi.spyOn(sandboxedMcpServer as any, 'stopPeriodicAnalysisUpdates').mockImplementation(() => {});
     });
 
     it('should perform custom setup on server start', async () => {
@@ -248,7 +248,10 @@ describe('SandboxedMcpServer', () => {
       const mockWhatsAppLogMonitor = vi.mocked(mcpLogMonitorRegistry.whatsapp);
       mockWhatsAppLogMonitor.mockReturnValue(cleanup);
 
-      vi.spyOn(sandboxedMcpServer, 'getMcpServerLogs').mockResolvedValue({ logs: 'test logs' });
+      vi.spyOn(sandboxedMcpServer, 'getMcpServerLogs').mockResolvedValue({
+        logs: 'test logs',
+        containerName: 'test-container',
+      });
 
       await sandboxedMcpServer.start();
       expect(sandboxedMcpServer['mcpTeardownCallbacks']).toHaveLength(1);

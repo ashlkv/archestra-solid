@@ -464,7 +464,7 @@ export const useMcpServersStore = create<McpServersStore>((set, get) => ({
 websocketService.subscribe('mcp-setup', ({ payload }) => {
   const { serverId, provider, status, content } = payload;
   useMcpServersStore.setState((state) => ({
-    mcpServerSetup: { ...state.mcpServerSetup, [serverId]: { status, provider, content } },
+    mcpServerSetup: { ...state.mcpServerSetup, [serverId]: { status, provider, content: content || '' } },
   }));
 });
 

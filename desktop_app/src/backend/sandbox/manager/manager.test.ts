@@ -39,6 +39,16 @@ describe('POST /api/mcp_server/:id/restart', () => {
       id: 'test-server-id',
       name: 'Test Server',
       serverConfig: { command: 'test', args: [], env: {} },
+      userConfigValues: null,
+      oauthTokens: null,
+      oauthClientInfo: null,
+      oauthServerMetadata: null,
+      oauthResourceMetadata: null,
+      oauthConfig: null,
+      status: 'installed' as const,
+      serverType: 'local' as const,
+      remoteUrl: null,
+      createdAt: new Date().toISOString(),
     };
 
     mockedMcpServerModel.getById.mockResolvedValue([mockServer]);

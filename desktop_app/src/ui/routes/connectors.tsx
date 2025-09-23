@@ -169,7 +169,7 @@ function ConnectorCatalogPage() {
     }
   };
 
-  const setup = mcpServerSetup[setupServerId];
+  const setup = setupServerId ? mcpServerSetup[setupServerId] : null;
 
   return (
     <div className="space-y-3">

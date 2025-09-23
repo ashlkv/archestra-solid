@@ -29,7 +29,7 @@ export const LogMonitorSchema = z.object({
   type: z.enum(['log-monitor']),
   provider: z.enum(['whatsapp']),
 });
-export type LogMonitorProvider = z.infer<(typeof LogMonitorSchema)['provider']>;
+export type LogMonitorProvider = z.infer<typeof LogMonitorSchema>['provider'];
 
 /**
  * Borrowed from @anthropic-ai/dxt
