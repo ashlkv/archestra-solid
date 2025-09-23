@@ -21,6 +21,7 @@ interface McpServersState {
 
   installedMcpServers: ConnectedMcpServer[];
   loadingInstalledMcpServers: boolean;
+  installedMcpServersLoaded: boolean;
   errorLoadingInstalledMcpServers: string | null;
 
   installingMcpServerId: string | null;
@@ -82,6 +83,7 @@ export const useMcpServersStore = create<McpServersStore>((set, get) => ({
 
   installedMcpServers: [],
   loadingInstalledMcpServers: false,
+  installedMcpServersLoaded: false,
   errorLoadingInstalledMcpServers: null,
 
   installingMcpServerId: null,
@@ -110,7 +112,7 @@ export const useMcpServersStore = create<McpServersStore>((set, get) => ({
       const errorMessage = error instanceof Error ? error.message : String(error);
       set({ errorLoadingInstalledMcpServers: errorMessage });
     } finally {
-      set({ loadingInstalledMcpServers: false });
+      set({ loadingInstalledMcpServers: false, installedMcpServersLoaded: true });
     }
   },
 
@@ -131,9 +133,14 @@ export const useMcpServersStore = create<McpServersStore>((set, get) => ({
   },
 
   removeMcpServerFromInstalledMcpServers: (mcpServerId: string) => {
-    set((state) => ({
-      installedMcpServers: state.installedMcpServers.filter((mcpServer) => mcpServer.id !== mcpServerId),
-    }));
+    set((state) => {
+      const setupUpdate = { ...state.mcpServerSetup };
+      delete setupUpdate[mcpServerId];
+      return {
+        installedMcpServers: state.installedMcpServers.filter((mcpServer) => mcpServer.id !== mcpServerId),
+        mcpServerSetup: setupUpdate,
+      };
+    });
   },
 
   updateMcpServer: (mcpServerId: string, data: Partial<ConnectedMcpServer>) => {
@@ -451,12 +458,6 @@ export const useMcpServersStore = create<McpServersStore>((set, get) => ({
     set({
       installedMcpServers: [],
     });
-  },
-
-  closeSetup: (serverId: string) => {
-    const setupUpdate = { ...get().mcpServerSetup };
-    delete setupUpdate[serverId];
-    set({ mcpServerSetup: setupUpdate });
   },
 }));
 

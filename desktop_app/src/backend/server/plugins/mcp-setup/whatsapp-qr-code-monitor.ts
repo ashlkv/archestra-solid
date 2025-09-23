@@ -33,7 +33,7 @@ export const whatsappQrCodeMonitor: LogMonitor = function (
       function pollLogs() {
         const lookupString =
           lookup === qrCodeMatcher ? 'qrCodeMatcher' : typeof lookup === 'string' ? lookup : 'function';
-        log.info(`WhatsApp MCP log monitor: polling for ${lookupString}`);
+        log.info(`WhatsApp MCP log monitor: polling for "${lookupString}"`);
         getLogs(100)
           .then((log) => {
             const matcher = typeof lookup === 'function' ? lookup : defaultMatcher.bind(null, lookup);

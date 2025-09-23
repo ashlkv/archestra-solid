@@ -297,10 +297,10 @@ export default function McpServerWithToolsSidebarSection(_props: McpServerWithTo
                     onOpenChange={() => toggleServerExpansion(serverName)}
                   >
                     <SidebarMenuItem
-                      className={`flex items-center gap-1 px-2 py-1.5 rounded transition-colors bg-muted/50 ${setupPending ? 'hover:bg-orange-100/20 cursor-pointer' : setupError ? 'hover:bg-red-100/20 cursor-pointer' : (hasTools && !setupWaiting) ? 'hover:bg-muted/70' : 'opacity-60'}`}
+                      className={`flex items-center gap-1 px-2 py-1.5 rounded transition-colors bg-muted/50 ${setupPending ? 'hover:bg-orange-100/20 cursor-pointer' : setupError ? 'hover:bg-red-100/20 cursor-pointer' : hasTools && !setupWaiting ? 'hover:bg-muted/70' : 'opacity-60'}`}
                     >
                       <CollapsibleTrigger
-                        className={`w-full flex-1 ${setupPending || setupError ? 'cursor-pointer' : (hasTools && !setupWaiting) ? 'cursor-pointer' : 'cursor-not-allowed'}`}
+                        className={`w-full flex-1 ${setupPending || setupError ? 'cursor-pointer' : hasTools && !setupWaiting ? 'cursor-pointer' : 'cursor-not-allowed'}`}
                         disabled={!(hasTools && !setupWaiting) && !setupPending && !setupError}
                         onClick={(e) => {
                           if (setupPending || setupError) {
