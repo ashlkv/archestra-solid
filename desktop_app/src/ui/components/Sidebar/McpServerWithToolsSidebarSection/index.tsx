@@ -395,8 +395,9 @@ export default function McpServerWithToolsSidebarSection(_props: McpServerWithTo
                                   : `Add all ${serverName} tools`
                         }
                         disabled={!hasTools || setupPending || setupError || setupWaiting}
+                        className={`${(!hasTools || setupPending || setupError || setupWaiting) ? 'opacity-50 cursor-not-allowed' : ''}`}
                       >
-                        <PlusCircle className="h-4 w-4 cursor-pointer" />
+                        <PlusCircle className={`h-4 w-4 ${(!hasTools || setupPending || setupError || setupWaiting) ? 'cursor-not-allowed' : 'cursor-pointer'}`} />
                       </button>
                       <CollapsibleTrigger className={` ${hasTools ? 'cursor-pointer' : 'cursor-not-allowed'}`}>
                         <div className="flex items-center gap-1 flex-shrink-0">
