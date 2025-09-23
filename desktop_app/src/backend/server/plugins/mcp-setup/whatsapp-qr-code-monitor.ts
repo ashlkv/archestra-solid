@@ -28,12 +28,12 @@ export const whatsappQrCodeMonitor: LogMonitor = function (
     timeout = 20000,
     cutoffAt = undefined
   ): { promise: Promise<{ match: string; date: Date }>; cancel: () => void } => {
-    let pollTimer;
-    let timeoutTimer;
+    const timers = { poll: 0, timeout: 0 };
     const promise = new Promise((resolve, reject) => {
       function pollLogs() {
         const lookupString =
           lookup === qrCodeMatcher ? 'qrCodeMatcher' : typeof lookup === 'string' ? lookup : 'function';
+        log.info(`WhatsApp MCP log monitor: polling for ${lookupString}`);
         getLogs(100)
           .then((log) => {
             const matcher = typeof lookup === 'function' ? lookup : defaultMatcher.bind(null, lookup);
@@ -42,16 +42,16 @@ export const whatsappQrCodeMonitor: LogMonitor = function (
             if (match) {
               resolve(match);
             } else {
-              pollTimer = setTimeout(pollLogs, 1000);
+              timers.poll = setTimeout(pollLogs, 1000);
             }
           })
           .catch(() => {
-            pollTimer = setTimeout(pollLogs, 1000);
+            timers.poll = setTimeout(pollLogs, 1000);
           });
       }
       pollLogs();
-      timeoutTimer = setTimeout(() => {
-        clearTimeout(pollTimer);
+      timers.timeout = setTimeout(() => {
+        clearTimeout(timers.poll);
         const lookupString =
           lookup === qrCodeMatcher ? 'qrCodeMatcher' : typeof lookup === 'string' ? lookup : 'function';
 
@@ -59,15 +59,22 @@ export const whatsappQrCodeMonitor: LogMonitor = function (
       }, timeout);
     });
     const cancel = () => {
-      clearTimeout(pollTimer);
-      clearTimeout(timeoutTimer);
+      Object.values(timers).forEach((timer) => clearTimeout(timer));
     };
     return { promise, cancel };
   };
 
-  const cleanupCallbacks: Record<string, () => void> = {};
+  const cleanupCallbacks = {
+    qrcode: () => {},
+    pair: () => {},
+    timeout: () => {},
+    update: () => {},
+    connection: () => {},
+  };
+  const stopAllPolling = () => Object.values(cleanupCallbacks).forEach((callback) => callback());
 
   const { promise: whenQRCodeFound, cancel: cancelQRCodeWait } = waitFor(qrCodeMatcher, 60000, startAt);
+  cleanupCallbacks.qrcode = cancelQRCodeWait;
   whenQRCodeFound
     .then(async ({ match: qrCodeASCII, date }) => {
       let paired = false;
@@ -86,9 +93,7 @@ export const whatsappQrCodeMonitor: LogMonitor = function (
         .then(({ date }) => {
           log.info('WhatsApp MCP log monitor: device paired', { date });
           paired = true;
-          cancelTimeoutWait();
-          cancelUpdateWait();
-          cancelConnectionWait();
+          stopAllPolling();
           WebSocketService.broadcast({
             type: 'mcp-setup',
             payload: { serverId, provider: 'whatsapp', status: 'success' },
@@ -107,9 +112,7 @@ export const whatsappQrCodeMonitor: LogMonitor = function (
         .then(({ date }) => {
           log.info('WhatsApp MCP log monitor: QR code timeout', { date });
           timedOut = false;
-          cancelPairWait();
-          cancelUpdateWait();
-          cancelConnectionWait();
+          stopAllPolling();
           WebSocketService.broadcast({
             type: 'mcp-setup',
             payload: { serverId, provider: 'whatsapp', status: 'error' },
@@ -121,11 +124,9 @@ export const whatsappQrCodeMonitor: LogMonitor = function (
       // Waits for QR code updates. Make sure to start looking from entries which are at least some second newer
       // to avoid matching the same QR code over and over.
       let startQRCodeAt = new Date(date.getTime() + 3000);
-      let cancelUpdateWait = () => {};
       while (!updatesExhausted && !paired && !timedOut) {
         try {
           const { promise: whenQRCodeUpdated, cancel } = waitFor(qrCodeMatcher, 300000, startQRCodeAt);
-          cancelUpdateWait = cancel;
           cleanupCallbacks.update = cancel;
           const { match: qrCodeASCII, date } = await whenQRCodeUpdated;
           log.info('WhatsApp MCP log monitor: QR code update', { code: qrCodeASCII, date: startQRCodeAt });
@@ -141,7 +142,6 @@ export const whatsappQrCodeMonitor: LogMonitor = function (
       }
     })
     .catch(log.error);
-  cleanupCallbacks.qrcode = cancelQRCodeWait;
 
   // Waits for "Connected to WhatsApp" message.
   // This message indicates that the device is already paired and no QR code is needed.
@@ -149,7 +149,7 @@ export const whatsappQrCodeMonitor: LogMonitor = function (
   whenConnected
     .then(() => {
       log.info('WhatsApp MCP log monitor: WhatsApp connected', { date: startAt });
-      cancelQRCodeWait();
+      stopAllPolling();
       WebSocketService.broadcast({
         type: 'mcp-setup',
         payload: { serverId, provider: 'whatsapp', status: 'success' },
@@ -158,9 +158,7 @@ export const whatsappQrCodeMonitor: LogMonitor = function (
     .catch(log.error);
   cleanupCallbacks.connection = cancelConnectionWait;
 
-  return function cleanup() {
-    Object.values(cleanupCallbacks).forEach((callback) => callback());
-  };
+  return stopAllPolling;
 };
 
 const qrCodeMatcher: MatcherFunction = (logs: string): { match: string; date?: Date } | false => {

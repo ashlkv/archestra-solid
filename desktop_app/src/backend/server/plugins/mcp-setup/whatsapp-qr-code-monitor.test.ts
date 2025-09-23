@@ -414,82 +414,6 @@ describe('whatsAppLogMonitor', () => {
     expect(WebSocketService.broadcast).toHaveBeenCalledTimes(1);
   });
 
-  it('stops waiting for QR code updates if paired', async () => {
-    const { default: WebSocketService } = await import('@backend/websocket');
-
-    const mockGetLogs = vi
-      .fn()
-      .mockResolvedValueOnce(logsWithQRCode) // First call finds QR code
-      .mockResolvedValue(pairedAfterCode); // Subsequent calls find "Successfully paired"
-
-    whatsappQrCodeMonitor('s1', mockGetLogs, { startAt: new Date('2025-09-19T09:39:55+02:00') });
-
-    // Wait for QR code broadcast
-    await vi.waitFor(() => {
-      expect(WebSocketService.broadcast).toHaveBeenCalledWith({
-        type: 'mcp-setup',
-        payload: expect.objectContaining({
-          serverId: 's1',
-          provider: 'whatsapp',
-          status: 'pending',
-        }),
-      });
-    });
-
-    // Wait for success broadcast (pairing found, updates should stop)
-    await vi.waitFor(() => {
-      expect(WebSocketService.broadcast).toHaveBeenCalledWith({
-        type: 'mcp-setup',
-        payload: expect.objectContaining({
-          serverId: 's1',
-          provider: 'whatsapp',
-          status: 'success',
-        }),
-      });
-    });
-
-    // Should have exactly 2 broadcasts: QR code + success
-    expect(WebSocketService.broadcast).toHaveBeenCalledTimes(2);
-  });
-
-  it('stops waiting for QR code updates if timed out', async () => {
-    const { default: WebSocketService } = await import('@backend/websocket');
-
-    const mockGetLogs = vi
-      .fn()
-      .mockResolvedValueOnce(logsWithQRCode) // First call finds QR code
-      .mockResolvedValue(timeoutLogs); // Subsequent calls find timeout
-
-    whatsappQrCodeMonitor('s1', mockGetLogs, { startAt: new Date('2025-09-19T09:39:55+02:00') });
-
-    // Wait for QR code broadcast
-    await vi.waitFor(() => {
-      expect(WebSocketService.broadcast).toHaveBeenCalledWith({
-        type: 'mcp-setup',
-        payload: expect.objectContaining({
-          serverId: 's1',
-          provider: 'whatsapp',
-          status: 'pending',
-        }),
-      });
-    });
-
-    // Wait for error broadcast (timeout found, updates should stop)
-    await vi.waitFor(() => {
-      expect(WebSocketService.broadcast).toHaveBeenCalledWith({
-        type: 'mcp-setup',
-        payload: expect.objectContaining({
-          serverId: 's1',
-          provider: 'whatsapp',
-          status: 'error',
-        }),
-      });
-    });
-
-    // Should have exactly 2 broadcasts: QR code + error
-    expect(WebSocketService.broadcast).toHaveBeenCalledTimes(2);
-  });
-
   it('stops waiting for connection if QR code', async () => {
     const { default: WebSocketService } = await import('@backend/websocket');
 
@@ -512,6 +436,112 @@ describe('whatsAppLogMonitor', () => {
 
     // Should only broadcast once (QR code found, connection waiting cancelled)
     expect(WebSocketService.broadcast).toHaveBeenCalledTimes(1);
+  });
+
+  it('stops all polling if paired', async () => {
+    vi.useFakeTimers();
+    const { default: WebSocketService } = await import('@backend/websocket');
+
+    const mockGetLogs = vi
+      .fn()
+      .mockResolvedValueOnce(logsWithQRCode) // First call finds QR code
+      .mockResolvedValue(pairedAfterCode); // Subsequent calls find "Successfully paired"
+
+    whatsappQrCodeMonitor('s1', mockGetLogs, { startAt: new Date('2025-09-19T09:39:55+02:00') });
+
+    // Wait for QR code broadcast
+    await vi.waitFor(() => {
+      expect(WebSocketService.broadcast).toHaveBeenCalledWith({
+        type: 'mcp-setup',
+        payload: expect.objectContaining({
+          status: 'pending',
+        }),
+      });
+    });
+
+    // Wait for success broadcast (pairing found, updates should stop)
+    await vi.waitFor(() => {
+      expect(WebSocketService.broadcast).toHaveBeenCalledWith({
+        type: 'mcp-setup',
+        payload: expect.objectContaining({
+          status: 'success',
+        }),
+      });
+    });
+
+    // Should have exactly 2 broadcasts: QR code + success
+    expect(WebSocketService.broadcast).toHaveBeenCalledTimes(2);
+
+    // Advance time by 5 seconds to verify polling has stopped
+    await vi.advanceTimersByTimeAsync(5000);
+
+    // Should still have exactly 2 broadcasts (no additional ones)
+    expect(WebSocketService.broadcast).toHaveBeenCalledTimes(2);
+
+    vi.useRealTimers();
+  });
+
+  it('stops all polling if timed out', async () => {
+    vi.useFakeTimers();
+    const { default: WebSocketService } = await import('@backend/websocket');
+
+    const mockGetLogs = vi
+      .fn()
+      .mockResolvedValueOnce(logsWithQRCode) // First call finds QR code
+      .mockResolvedValue(timeoutLogs); // Subsequent calls find timeout
+
+    whatsappQrCodeMonitor('s1', mockGetLogs, { startAt: new Date('2025-09-19T09:39:55+02:00') });
+
+    // Wait for QR code broadcast
+    await vi.waitFor(() => {
+      expect(WebSocketService.broadcast).toHaveBeenCalledWith({
+        type: 'mcp-setup',
+        payload: expect.objectContaining({ status: 'pending' }),
+      });
+    });
+
+    // Wait for error broadcast (timeout found, updates should stop)
+    await vi.waitFor(() => {
+      expect(WebSocketService.broadcast).toHaveBeenCalledWith({
+        type: 'mcp-setup',
+        payload: expect.objectContaining({ status: 'error' }),
+      });
+    });
+
+    // Should have exactly 2 broadcasts: QR code + error
+    expect(WebSocketService.broadcast).toHaveBeenCalledTimes(2);
+    await vi.advanceTimersByTimeAsync(5000);
+    expect(WebSocketService.broadcast).toHaveBeenCalledTimes(2);
+
+    vi.useRealTimers();
+  });
+
+  it('stops all polling if connected', async () => {
+    vi.useFakeTimers();
+    const { default: WebSocketService } = await import('@backend/websocket');
+
+    const connectedLogs = `2025-09-22T10:06:54+02:00 08:06:54.018 [Client INFO] Starting WhatsApp client...
+2025-09-22T10:06:54+02:00 08:06:54.458 [Client INFO] Successfully authenticated
+2025-09-22T10:06:54+02:00 08:06:54.772 [Client INFO] Connected to WhatsApp
+2025-09-22T10:06:56+02:00
+2025-09-22T10:06:56+02:00 ✓ Connected to WhatsApp! Type 'help' for commands.
+2025-09-22T10:06:56+02:00 Starting REST API server on :8080...
+2025-09-22T10:06:56+02:00 REST server is running. Press Ctrl+C to disconnect and exit.`;
+
+    const mockGetLogs = vi.fn().mockResolvedValue(connectedLogs);
+    whatsappQrCodeMonitor('s1', mockGetLogs, { startAt: new Date('2025-09-22T08:00:04.937Z') });
+
+    await vi.waitFor(() => {
+      expect(WebSocketService.broadcast).toHaveBeenCalledWith({
+        type: 'mcp-setup',
+        payload: expect.objectContaining({ status: 'success' }),
+      });
+    });
+    expect(WebSocketService.broadcast).toHaveBeenCalledTimes(1);
+    await vi.advanceTimersByTimeAsync(5000);
+    expect(WebSocketService.broadcast).toHaveBeenCalledTimes(1);
+
+    vi.useRealTimers();
   });
 
   it('cleanup function stops all polling', async () => {
