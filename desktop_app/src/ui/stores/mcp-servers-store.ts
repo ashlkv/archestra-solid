@@ -470,7 +470,3 @@ websocketService.subscribe('mcp-setup', ({ payload }) => {
 
 // Initialize data on store creation
 useMcpServersStore.getState().loadInstalledMcpServers();
-
-if (typeof window !== 'undefined') {
-  window.DEBUG = { useMcpServersStore };
-}
