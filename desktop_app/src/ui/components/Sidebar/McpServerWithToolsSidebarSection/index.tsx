@@ -282,14 +282,11 @@ export default function McpServerWithToolsSidebarSection(_props: McpServerWithTo
                 const serverState = installedMcpServers.find((s) => s.id === serverData.serverId)?.state;
                 const isError = serverState === 'error';
                 const hasTools = serverData.tools.length > 0;
-                const setupPending = isSetupPending(serverData.serverId);
-                const setupError = isSetupError(serverData.serverId);
-                const setupWaiting = isWaitingForSetup(serverData.serverId);
-                const isDisabled =
-                  isServerInitializing(serverData.serverId) ||
-                  isSetupPending(serverData.serverId) ||
-                  isSetupError(serverData.serverId) ||
-                  isWaitingForSetup(serverData.serverId);
+                const mcpId = `${serverData.serverId}${serverName}`;
+                const setupPending = isSetupPending(mcpId);
+                const setupError = isSetupError(mcpId);
+                const setupWaiting = isWaitingForSetup(mcpId);
+                const isDisabled = isServerInitializing(serverData.serverId) || setupPending || setupWaiting;
                 return (
                   <Collapsible
                     key={serverName}
@@ -305,7 +302,7 @@ export default function McpServerWithToolsSidebarSection(_props: McpServerWithTo
                         onClick={(e) => {
                           if (setupPending || setupError) {
                             e.preventDefault();
-                            setOpenSetupServerId(serverData.serverId);
+                            setOpenSetupServerId(mcpId);
                           }
                         }}
                       >
@@ -320,14 +317,11 @@ export default function McpServerWithToolsSidebarSection(_props: McpServerWithTo
                                   server.state === 'created' ||
                                   server.state === 'initializing');
 
-                              if (isError) {
+                              if (isError || setupError) {
                                 return <AlertCircle className="h-3 w-3 text-red-500 flex-shrink-0" />;
                               }
                               if (setupPending) {
                                 return <div className="w-3 h-3 bg-orange-500 rounded-full flex-shrink-0" />;
-                              }
-                              if (setupError) {
-                                return <div className="w-3 h-3 bg-red-500 rounded-full flex-shrink-0" />;
                               }
                               if (hasTools && isActuallyInitializing) {
                                 return <Loader2 className="h-3 w-3 animate-spin text-muted-foreground flex-shrink-0" />;
