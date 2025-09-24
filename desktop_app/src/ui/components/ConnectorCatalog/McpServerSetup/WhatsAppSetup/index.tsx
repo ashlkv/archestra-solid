@@ -107,17 +107,25 @@ export default function WhatsAppSetup({
     }
   }, [isSuccess]);
 
+  // Reset restarting state when status changes from error to pending (new QR code arrives)
+  useEffect(() => {
+    if (status === 'pending' && isRestarting) {
+      setIsRestarting(false);
+    }
+  }, [status, isRestarting]);
+
   const handleRetry = async () => {
     try {
       setIsRestarting(true);
       await restartMcpServer({ path: { id: serverId } });
-      closeDialog();
+      // Keep dialog open and show loading state - new QR code will arrive soon
     } catch (error) {
       console.error('Failed to restart server:', error);
       // Could show an error toast here
-    } finally {
       setIsRestarting(false);
     }
+    // Note: We don't set isRestarting to false here because we want to keep showing
+    // the loading state until a new QR code arrives (status changes from 'error')
   };
 
   if (isSuccess) {
@@ -152,22 +160,36 @@ export default function WhatsAppSetup({
       <>
         <DialogTitle className="flex items-center gap-2">
           <AlertCircle className="h-5 w-5 text-red-500" />
-          WhatsApp Setup Failed
+          {isRestarting ? 'Restarting WhatsApp Server...' : 'WhatsApp Setup Failed'}
         </DialogTitle>
         <DialogDescription>
-          The pairing process has expired or failed. Restarting the servers will start a fresh pairing session.
+          {isRestarting
+            ? 'Restarting the server to generate a new QR code. This may take a few moments.'
+            : 'The pairing process has expired or failed. Restarting the servers will start a fresh pairing session.'}
         </DialogDescription>
 
         <div className="flex justify-center p-4 rounded-md min-h-[200px] items-center">
           <div className="text-center space-y-4">
-            <AlertCircle className="h-12 w-12 text-red-500 mx-auto" />
-            <div className="space-y-2">
-              <p className="text-sm text-muted-foreground">Setup failed</p>
-              <Button onClick={handleRetry} disabled={isRestarting} className="flex items-center gap-2">
-                <RefreshCw className={`h-4 w-4 ${isRestarting ? 'animate-spin' : ''}`} />
-                {isRestarting ? 'Restarting...' : 'Restart Server'}
-              </Button>
-            </div>
+            {isRestarting ? (
+              <>
+                <RefreshCw className="h-12 w-12 text-blue-500 mx-auto animate-spin" />
+                <div className="space-y-2">
+                  <p className="text-sm text-muted-foreground">Restarting server...</p>
+                  <p className="text-xs text-muted-foreground opacity-75">A new QR code will appear shortly</p>
+                </div>
+              </>
+            ) : (
+              <>
+                <AlertCircle className="h-12 w-12 text-red-500 mx-auto" />
+                <div className="space-y-2">
+                  <p className="text-sm text-muted-foreground">Setup failed</p>
+                  <Button onClick={handleRetry} disabled={isRestarting} className="flex items-center gap-2">
+                    <RefreshCw className="h-4 w-4" />
+                    Restart Server
+                  </Button>
+                </div>
+              </>
+            )}
           </div>
         </div>
 
