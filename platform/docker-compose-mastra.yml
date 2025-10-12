@@ -83,6 +83,7 @@ services:
         cd mastra-app
         echo 'OPENAI_API_KEY='$OPENAI_API_KEY > .env
         echo 'GITHUB_TOKEN='$GITHUB_TOKEN >> .env
+        if [ ! -z \"$OPENAI_PROXY_URL\" ]; then echo 'OPENAI_PROXY_URL='$OPENAI_PROXY_URL >> .env; fi
         npx mastra dev
       "
 
