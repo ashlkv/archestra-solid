@@ -66,6 +66,8 @@ services:
       - traefik.http.middlewares.mastra.headers.STSIncludeSubdomains=true
       - traefik.http.middlewares.mastra.headers.STSPreload=true
       - traefik.http.routers.mastra.middlewares=mastra@docker
+    volumes:
+      - ./examples/mastra-ai:/app/mastra-ai
     environment:
       - MASTRA_HOST=${MASTRA_SUBDOMAIN}.${DOMAIN_NAME}
       - MASTRA_PORT=4111
@@ -75,12 +77,14 @@ services:
       - TZ=${GENERIC_TIMEZONE}
       - OPENAI_API_KEY=${OPENAI_API_KEY:?Please set OPENAI_API_KEY in .env file}
       - GITHUB_TOKEN=${GITHUB_TOKEN:?Please set GITHUB_TOKEN in .env file}
+      - OPENAI_PROXY_URL=${OPENAI_PROXY_URL:-}
     # FIXME Consider using mastra production build instead of `npm run dev`
     command: >
       sh -c "
         apk add --no-cache git
-        npx create-mastra@latest --project-name mastra-app --template https://github.com/ashlkv/mastra-github-agent
+        cp -r /app/mastra-ai mastra-app
         cd mastra-app
+        npm install
         echo 'OPENAI_API_KEY='$OPENAI_API_KEY > .env
         echo 'GITHUB_TOKEN='$GITHUB_TOKEN >> .env
         if [ ! -z \"$OPENAI_PROXY_URL\" ]; then echo 'OPENAI_PROXY_URL='$OPENAI_PROXY_URL >> .env; fi
