@@ -78,15 +78,15 @@ services:
       - OPENAI_API_KEY=${OPENAI_API_KEY:?Please set OPENAI_API_KEY in .env file}
       - GITHUB_TOKEN=${GITHUB_TOKEN:?Please set GITHUB_TOKEN in .env file}
       - OPENAI_PROXY_URL=${OPENAI_PROXY_URL:-}
-    # It's also possible to use @mastra/cli with template flag. However, the app has to be a standalone repo:
+    # It's also possible to use mastra cli with template flag. However, the app has to be a standalone repo:
     # npx create-mastra@latest --project-name mastra-app --template https://github.com/owner/mastra-github-agent
     # Note that degit folder syntax https://github.com/archestra/platform/examples/mastra-ai isn't recognized by cli.
     command: >
       sh -c "
-        apk add --no-cache git
-        cp -r /app/mastra-ai mastra-app
+        mkdir -p mastra-app
+        cp /app/mastra-ai/package*.json /app/mastra-ai/tsconfig.json mastra-app/
+        cp -r /app/mastra-ai/src mastra-app/
         cd mastra-app
-        rm -rf node_modules .mastra
         npm install
         echo 'OPENAI_API_KEY='$OPENAI_API_KEY > .env
         echo 'GITHUB_TOKEN='$GITHUB_TOKEN >> .env
