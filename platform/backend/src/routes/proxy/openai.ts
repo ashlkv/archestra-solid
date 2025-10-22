@@ -231,9 +231,15 @@ const openAiProxyRoutes: FastifyPluginAsyncZod = async (fastify) => {
         for await (const chunk of stream) {
           chunks.push(chunk);
           const delta = chunk.choices[0]?.delta;
+          const finishReason = chunk.choices[0]?.finish_reason;
 
-          // Stream text content immediately
-          if (delta?.content || delta?.refusal) {
+          // Stream text content and finish chunks immediately
+          if (
+            delta?.content !== undefined ||
+            delta?.refusal !== undefined ||
+            delta?.role ||
+            finishReason
+          ) {
             reply.raw.write(`data: ${JSON.stringify(chunk)}\n\n`);
 
             // Also accumulate for persistence
