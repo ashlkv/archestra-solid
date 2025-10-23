@@ -106,7 +106,9 @@ const MOCK_STREAMING_CHUNKS: OpenAI.Chat.Completions.ChatCompletionChunk[] = [
 export class MockOpenAIClient {
   chat = {
     completions: {
-      create: async (params: any) => {
+      create: async (
+        params: OpenAI.Chat.Completions.ChatCompletionCreateParams,
+      ) => {
         // Mock response in chat streaming mode
         if (params.stream) {
           return {

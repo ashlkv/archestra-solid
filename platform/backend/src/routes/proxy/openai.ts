@@ -232,7 +232,7 @@ const openAiProxyRoutes: FastifyPluginAsyncZod = async (fastify) => {
           const delta = chunk.choices[0]?.delta;
           const finishReason = chunk.choices[0]?.finish_reason;
 
-          // Stream text content and finish chunks immediately
+          // Stream text content immediately. Also stream first chunk with role. And last chunk with finish reason.
           if (
             delta?.content !== undefined ||
             delta?.refusal !== undefined ||

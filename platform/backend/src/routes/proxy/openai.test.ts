@@ -1,16 +1,16 @@
-import Fastify from "fastify";
-import { beforeEach, describe, expect, test } from "vitest";
-import type { z } from "zod";
-import { AgentModel, AgentToolModel, ToolModel } from "@/models";
-import { createTestUser } from "@/test-utils";
-import type { OpenAi } from "@/types";
-import { injectTools } from "./openai";
+import Fastify, { type FastifyInstance } from "fastify";
 import {
   serializerCompiler,
   validatorCompiler,
   type ZodTypeProvider,
 } from "fastify-type-provider-zod";
+import { beforeEach, describe, expect, test } from "vitest";
+import type { z } from "zod";
 import config from "@/config";
+import { AgentModel, AgentToolModel, ToolModel } from "@/models";
+import { createTestUser } from "@/test-utils";
+import type { OpenAi } from "@/types";
+import openAiProxyRoutes, { injectTools } from "./openai";
 
 describe("OpenAI injectTools", () => {
   let userId: string;
@@ -559,19 +559,15 @@ describe("OpenAI injectTools", () => {
 });
 
 describe("OpenAI proxy streaming", () => {
-  let response;
-  let chunks = []
+  let response: Awaited<ReturnType<FastifyInstance["inject"]>>;
+  let chunks: OpenAi.Types.ChatCompletionChunk[] = [];
   beforeEach(async () => {
     // Create a test Fastify app
     const app = Fastify().withTypeProvider<ZodTypeProvider>();
     app.setValidatorCompiler(validatorCompiler);
     app.setSerializerCompiler(serializerCompiler);
 
-    // Register the OpenAI proxy routes
     await app.register(openAiProxyRoutes);
-
-    // Enable mock mode for testing
-    const originalMockMode = config.benchmark.mockMode;
     config.benchmark.mockMode = true;
 
     // Make a streaming request to the route
@@ -585,27 +581,28 @@ describe("OpenAI proxy streaming", () => {
       },
       payload: {
         model: "gpt-4o-mini",
-        messages: [{role: "user", content: "Hello!"}],
+        messages: [{ role: "user", content: "Hello!" }],
         stream: true,
       },
     });
 
     chunks = response.body
       .split("\n")
-      .filter((line) => line.startsWith("data: ") && line !== "data: [DONE]")
-      .map((line) => JSON.parse(line.substring(6))); // Remove 'data: ' prefix
-  })
-  it("response has stream content type", async () => {
+      .filter(
+        (line: string) => line.startsWith("data: ") && line !== "data: [DONE]",
+      )
+      .map((line: string) => JSON.parse(line.substring(6))); // Remove 'data: ' prefix
+  });
+  test("response has stream content type", async () => {
     expect(response.statusCode).toBe(200);
     expect(response.headers["content-type"]).toContain("text/event-stream");
   });
-  it('first chunk has role', () => {
+  test("first chunk has role", () => {
     const firstChunk = chunks[0];
     expect(firstChunk.choices[0].delta).toHaveProperty("role", "assistant");
-
-  })
-  it('last chunk has finish reason', () => {
+  });
+  test("last chunk has finish reason", () => {
     const lastChunk = chunks[chunks.length - 1];
     expect(lastChunk.choices[0]).toHaveProperty("finish_reason");
-  })
+  });
 });
