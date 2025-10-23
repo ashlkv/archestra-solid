@@ -214,8 +214,10 @@ const openAiProxyRoutes: FastifyPluginAsyncZod = async (fastify) => {
         });
 
         // We are using reply.raw.writeHead because it sets headers immediately before the streaming starts
-        // unlike reply.header(key, value) which will set headers too late, after the chunks are written.
-        reply.raw.writeHead(200, {"Content-Type": "text/event-stream; charset=utf-8",});
+        // unlike reply.header(key, value) which will set headers too late, after the streaming is over.
+        reply.raw.writeHead(200, {
+          "Content-Type": "text/event-stream; charset=utf-8",
+        });
 
         // Accumulate tool calls and track content for persistence
         let accumulatedContent = "";
