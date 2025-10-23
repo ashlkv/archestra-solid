@@ -2,8 +2,8 @@ services:
   platform:
     image: archestra/platform:latest
     ports:
-      - "3003:3000"
-      - "9009:9000"
+      - "3000:3000"
+      - "9000:9000"
     environment:
       - OPENAI_API_KEY=${OPENAI_API_KEY}
 
