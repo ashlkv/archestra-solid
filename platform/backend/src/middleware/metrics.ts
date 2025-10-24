@@ -3,16 +3,24 @@
  * in addition to comprehensive metrics collected by fastify-metrics
  */
 
-import { FastifyReply, FastifyRequest } from 'fastify';
-import client from 'prom-client';
+import type {
+  DoneFuncWithErrOrRes,
+  FastifyReply,
+  FastifyRequest,
+} from "fastify";
+import client from "prom-client";
 
 const requestCounter = new client.Counter({
-  name: 'total_request_count',
-  help: 'An example of a custom metric which counts all requests. Feel free to remove it.',
+  name: "total_request_count",
+  help: "An example of a custom metric which counts all requests. Feel free to remove it.",
 });
 
 class RequestMetrics {
-  public handle(request: FastifyRequest, reply: FastifyReply, done) {
+  public handle(
+    request: FastifyRequest,
+    reply: FastifyReply,
+    done: DoneFuncWithErrOrRes,
+  ) {
     requestCounter.inc();
     done();
   }
@@ -20,5 +28,3 @@ class RequestMetrics {
 
 const requestMetrics = new RequestMetrics();
 export { requestMetrics };
-
-

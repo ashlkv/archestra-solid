@@ -1,6 +1,7 @@
 import fastifyCors from "@fastify/cors";
 import fastifySwagger from "@fastify/swagger";
 import Fastify from "fastify";
+import metricsPlugin from "fastify-metrics";
 import {
   jsonSchemaTransform,
   jsonSchemaTransformObject,
@@ -11,6 +12,7 @@ import {
 import { z } from "zod";
 import config from "@/config";
 import { authMiddleware } from "@/middleware/auth";
+import { requestMetrics } from "@/middleware/metrics";
 import {
   Anthropic,
   Gemini,
@@ -20,8 +22,6 @@ import {
 } from "@/types";
 import { seedDatabase } from "./database/seed";
 import * as routes from "./routes";
-import { requestMetrics } from '@/middleware/metrics';
-import metricsPlugin from 'fastify-metrics';
 
 const {
   api: { port, name, version, host, corsOrigins, authHeaderName },
@@ -75,7 +75,7 @@ const start = async () => {
     // Seed database with demo data
     await seedDatabase();
 
-    await fastify.register(metricsPlugin, { endpoint: '/metrics' });
+    await fastify.register(metricsPlugin, { endpoint: "/metrics" });
     fastify.addHook("onRequest", requestMetrics.handle);
 
     // Register CORS plugin to allow cross-origin requests
