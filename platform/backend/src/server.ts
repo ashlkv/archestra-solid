@@ -20,6 +20,8 @@ import {
 } from "@/types";
 import { seedDatabase } from "./database/seed";
 import * as routes from "./routes";
+import { requestMetrics } from '@/middleware/metrics';
+import metricsPlugin from 'fastify-metrics';
 
 const {
   api: { port, name, version, host, corsOrigins, authHeaderName },
@@ -72,6 +74,9 @@ const start = async () => {
   try {
     // Seed database with demo data
     await seedDatabase();
+
+    await fastify.register(metricsPlugin, { endpoint: '/metrics' });
+    fastify.addHook("onRequest", requestMetrics.handle);
 
     // Register CORS plugin to allow cross-origin requests
     await fastify.register(fastifyCors, {
