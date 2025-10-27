@@ -1,15 +1,13 @@
 import fastifyHttpProxy from "@fastify/http-proxy";
-import { GoogleGenAI } from "@google/genai";
 import { trace } from "@opentelemetry/api";
 import type { FastifyReply } from "fastify";
 import type { FastifyPluginAsyncZod } from "fastify-type-provider-zod";
 import { z } from "zod";
 import { AgentModel, InteractionModel } from "@/models";
+import { ObservableGenAiProvider } from "@/models/llm-metrics";
 import { ErrorResponseSchema, Gemini, UuidIdSchema } from "@/types";
 import { PROXY_API_PREFIX } from "./common";
-
 import * as utils from "./utils";
-import { ObservableGenAiProvider } from '@/models/llm-metrics';
 
 /**
  * Inject assigned MCP tools into Gemini tools object
@@ -137,7 +135,10 @@ const geminiProxyRoutes: FastifyPluginAsyncZod = async (fastify) => {
     }
 
     const { "x-goog-api-key": geminiApiKey } = headers;
-    const genAI = new ObservableGenAiProvider({ apiKey: geminiApiKey });
+    const genAI = ObservableGenAiProvider({
+      apiKey: geminiApiKey,
+      agentId: resolvedAgentId,
+    });
 
     // Use the model from the URL path or default to gemini-pro
     const modelName = model || "gemini-2.5-pro";

@@ -5,11 +5,11 @@
 import AnthropicProvider, {
   type ClientOptions as AnthropicClientOptions,
 } from "@anthropic-ai/sdk";
+import { GoogleGenAI, type GoogleGenAIOptions } from "@google/genai";
 import OpenAIProvider, {
   type ClientOptions as OpenAIClientOptions,
 } from "openai";
-import client, { LabelValues } from "prom-client";
-import { GoogleGenAI, type GoogleGenAIOptions } from '@google/genai';
+import client, { type LabelValues } from "prom-client";
 
 type Fetch = (
   input: string | URL | Request,
@@ -29,7 +29,6 @@ const llmRequestDuration = new client.Histogram({
 const llmTokensCounter = new client.Counter({
   name: "llm_tokens_total",
   help: "Total tokens used",
-  // FIXME Usage per agent
   labelNames: ["provider", "model", "agent", "type"], // type: input|output
 });
 
@@ -40,7 +39,10 @@ const llmNetworkErrorCounter = new client.Counter({
   labelNames: ["provider", "model"],
 });
 
-function getObservableFetch(provider: "openai" | "anthropic", agentId?: string): Fetch {
+function getObservableFetch(
+  provider: "openai" | "anthropic",
+  agentId?: string,
+): Fetch {
   return async function observableFetch(
     url: string | URL | Request,
     init?: RequestInit,
@@ -55,7 +57,7 @@ function getObservableFetch(provider: "openai" | "anthropic", agentId?: string):
         const requestBody = JSON.parse(init.body);
         model = requestBody.model || "unknown";
       }
-    } catch (parseError) {
+    } catch (_parseError) {
       console.error("Error parsing LLM request JSON for model");
     }
 
@@ -100,7 +102,10 @@ function getObservableFetch(provider: "openai" | "anthropic", agentId?: string):
           throw new Error("Unknown provider when logging usage token metrics");
         }
 
-        const labels: LabelValues<'provider' | 'model' | 'agent' | 'type'> = { provider, model };
+        const labels: LabelValues<"provider" | "model" | "agent" | "type"> = {
+          provider,
+          model,
+        };
         if (agentId) {
           labels.agent = agentId;
         }
@@ -110,7 +115,7 @@ function getObservableFetch(provider: "openai" | "anthropic", agentId?: string):
         if (outputTokens > 0) {
           llmTokensCounter.inc({ ...labels, type: "output" }, outputTokens);
         }
-      } catch (parseError) {
+      } catch (_parseError) {
         console.error("Error parsing LLM response JSON for tokens");
       }
     }
@@ -120,14 +125,20 @@ function getObservableFetch(provider: "openai" | "anthropic", agentId?: string):
 }
 
 // FIXME Don't instantiate providers. Just export fetch instead.
-export function ObservableOpenAIProvider({agentId, ...options}: OpenAIClientOptions & { agentId?: string }) {
+export function ObservableOpenAIProvider({
+  agentId,
+  ...options
+}: OpenAIClientOptions & { agentId?: string }) {
   return new OpenAIProvider({
     ...options,
     fetch: getObservableFetch("openai", agentId),
   });
 }
 
-export function ObservableAnthropicProvider({agentId, ...options}: AnthropicClientOptions & { agentId?: string }) {
+export function ObservableAnthropicProvider({
+  agentId,
+  ...options
+}: AnthropicClientOptions & { agentId?: string }) {
   return new AnthropicProvider({
     ...options,
     fetch: getObservableFetch("anthropic", agentId),
@@ -135,12 +146,15 @@ export function ObservableAnthropicProvider({agentId, ...options}: AnthropicClie
 }
 
 // FIXME Don't instantiate Gemini, wrap its instance instead.
-export function ObservableGenAiProvider({agentId, ...options}: GoogleGenAIOptions & { agentId?: string }) {
+export function ObservableGenAiProvider({
+  agentId,
+  ...options
+}: GoogleGenAIOptions & { agentId?: string }) {
   const genAI = new GoogleGenAI(options);
   const originalGenerateContent = genAI.models.generateContent;
-  genAI.models.generateContent = async function(...args) {
+  genAI.models.generateContent = async (...args) => {
     const startTime = Date.now();
-    const modelName = args[0]?.model || 'unknown';
+    const modelName = args[0]?.model || "unknown";
 
     try {
       const result = await originalGenerateContent.apply(genAI.models, args);
@@ -148,23 +162,29 @@ export function ObservableGenAiProvider({agentId, ...options}: GoogleGenAIOption
 
       // Assuming 200 status code. Gemini doesn't expose HTTP status, but unlike fetch, throws on 4xx & 5xx.
       llmRequestDuration.observe(
-        { provider: 'gemini', model: modelName, status_code: '200' },
-        duration
+        { provider: "gemini", model: modelName, status_code: "200" },
+        duration,
       );
 
       // Record token metrics
-      if (result.response?.usageMetadata) {
-        const { promptTokenCount, candidatesTokenCount } = result.response.usageMetadata;
-        const labels: LabelValues<'provider' | 'model' | 'agent' | 'type'> = { provider: 'gemini', model: modelName };
+      if (result.usageMetadata) {
+        const { promptTokenCount, candidatesTokenCount } = result.usageMetadata;
+        const labels: LabelValues<"provider" | "model" | "agent" | "type"> = {
+          provider: "gemini",
+          model: modelName,
+        };
         if (agentId) {
           labels.agent = agentId;
         }
 
-        if (promptTokenCount > 0) {
-          llmTokensCounter.inc({ ...labels, type: 'input' }, promptTokenCount);
+        if (promptTokenCount && promptTokenCount > 0) {
+          llmTokensCounter.inc({ ...labels, type: "input" }, promptTokenCount);
         }
-        if (candidatesTokenCount > 0) {
-          llmTokensCounter.inc({ ...labels, type: 'output' }, candidatesTokenCount);
+        if (candidatesTokenCount && candidatesTokenCount > 0) {
+          llmTokensCounter.inc(
+            { ...labels, type: "output" },
+            candidatesTokenCount,
+          );
         }
       }
 
@@ -172,18 +192,26 @@ export function ObservableGenAiProvider({agentId, ...options}: GoogleGenAIOption
     } catch (error) {
       const duration = Math.round((Date.now() - startTime) / 1000);
 
-      if (error instanceof Error && "status" in error && typeof error.status === "number") {
+      if (
+        error instanceof Error &&
+        "status" in error &&
+        typeof error.status === "number"
+      ) {
         llmRequestDuration.observe(
-          { provider: 'gemini', model: modelName, status_code: String(error.status) },
-          duration
+          {
+            provider: "gemini",
+            model: modelName,
+            status_code: String(error.status),
+          },
+          duration,
         );
       } else {
         // Network error (no HTTP response)
-        llmNetworkErrorCounter.inc({ provider: 'gemini', model: modelName });
+        llmNetworkErrorCounter.inc({ provider: "gemini", model: modelName });
       }
 
       throw error;
     }
-  }
+  };
   return genAI;
 }
