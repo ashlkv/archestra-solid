@@ -10,6 +10,7 @@ import { ErrorResponseSchema, OpenAi, RouteId, UuidIdSchema } from "@/types";
 import { PROXY_API_PREFIX } from "./common";
 import { MockOpenAIClient } from "./mock-openai-client";
 import * as utils from "./utils";
+import { ObservableOpenAIProvider } from '@/models/llm-metrics';
 
 /**
  * Inject assigned MCP tools into OpenAI tools array
@@ -145,7 +146,7 @@ const openAiProxyRoutes: FastifyPluginAsyncZod = async (fastify) => {
     const { authorization: openAiApiKey } = headers;
     const openAiClient = config.benchmark.mockMode
       ? (new MockOpenAIClient() as unknown as OpenAIProvider)
-      : new OpenAIProvider({
+      : new ObservableOpenAIProvider({
           apiKey: openAiApiKey,
           baseURL: config.llm.openai.baseUrl,
         });

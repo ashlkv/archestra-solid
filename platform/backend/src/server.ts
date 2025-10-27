@@ -15,7 +15,6 @@ import {
 import { z } from "zod";
 import config from "@/config";
 import { authMiddleware } from "@/middleware/auth";
-import { requestMetrics } from "@/middleware/metrics";
 import {
   Anthropic,
   Gemini,
@@ -85,8 +84,10 @@ const start = async () => {
     // Seed database with demo data
     await seedDatabase();
 
+    // TODO Consider excluding endpoint summary metrics, which fastify-metrics collects by default:
+    //  histogram is sufficient.
+    //  Also consider excluding most of the process metrics
     await fastify.register(metricsPlugin, { endpoint: "/metrics" });
-    fastify.addHook("onRequest", requestMetrics.handle);
 
     // Register CORS plugin to allow cross-origin requests
     await fastify.register(fastifyCors, {
