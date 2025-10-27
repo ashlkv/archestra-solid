@@ -149,6 +149,7 @@ const openAiProxyRoutes: FastifyPluginAsyncZod = async (fastify) => {
       : new ObservableOpenAIProvider({
           apiKey: openAiApiKey,
           baseURL: config.llm.openai.baseUrl,
+          agentId: resolvedAgentId,
         });
 
     try {

@@ -8,7 +8,7 @@ import OriginalAnthropicProvider, {
 import OriginalOpenAIProvider, {
   type ClientOptions as OpenAIClientOptions,
 } from "openai";
-import client from "prom-client";
+import client, { LabelValues } from "prom-client";
 
 type Fetch = (
   input: string | URL | Request,
@@ -29,7 +29,7 @@ const llmTokensCounter = new client.Counter({
   name: "llm_tokens_total",
   help: "Total tokens used",
   // FIXME Usage per agent
-  labelNames: ["provider", "model", "type"], // type: input|output
+  labelNames: ["provider", "model", "agent", "type"], // type: input|output
 });
 
 // Separate counter for network / DNS errors so that status code 0 does not skew request metrics
@@ -39,7 +39,7 @@ const llmNetworkErrorCounter = new client.Counter({
   labelNames: ["provider", "model"],
 });
 
-function getObservableFetch(provider: "openai" | "anthropic"): Fetch {
+function getObservableFetch(provider: "openai" | "anthropic", agentId?: string): Fetch {
   return async function observableFetch(
     url: string | URL | Request,
     init?: RequestInit,
@@ -99,14 +99,15 @@ function getObservableFetch(provider: "openai" | "anthropic"): Fetch {
           throw new Error("Unknown provider when logging usage token metrics");
         }
 
+        const labels: LabelValues<'provider' | 'model' | 'agent' | 'type'> = { provider, model };
+        if (agentId) {
+          labels.agent = agentId;
+        }
         if (inputTokens > 0) {
-          llmTokensCounter.inc({ provider, model, type: "input" }, inputTokens);
+          llmTokensCounter.inc({ ...labels, type: "input" }, inputTokens);
         }
         if (outputTokens > 0) {
-          llmTokensCounter.inc(
-            { provider, model, type: "output" },
-            outputTokens,
-          );
+          llmTokensCounter.inc({ ...labels, type: "output" }, outputTokens);
         }
       } catch (parseError) {
         console.error("Error parsing LLM response JSON for tokens");
@@ -117,16 +118,16 @@ function getObservableFetch(provider: "openai" | "anthropic"): Fetch {
   };
 }
 
-export function ObservableOpenAIProvider(options: OpenAIClientOptions) {
+export function ObservableOpenAIProvider({agentId, ...options}: OpenAIClientOptions & { agentId?: string }) {
   return new OriginalOpenAIProvider({
     ...options,
-    fetch: getObservableFetch("openai"),
+    fetch: getObservableFetch("openai", agentId),
   });
 }
 
-export function ObservableAnthropicProvider(options: AnthropicClientOptions) {
+export function ObservableAnthropicProvider({agentId, ...options}: AnthropicClientOptions & { agentId?: string }) {
   return new OriginalAnthropicProvider({
     ...options,
-    fetch: getObservableFetch("anthropic"),
+    fetch: getObservableFetch("anthropic", agentId),
   });
 }
