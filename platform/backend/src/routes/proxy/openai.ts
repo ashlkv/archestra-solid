@@ -2,11 +2,11 @@ import fastifyHttpProxy from "@fastify/http-proxy";
 import { trace } from "@opentelemetry/api";
 import type { FastifyReply } from "fastify";
 import type { FastifyPluginAsyncZod } from "fastify-type-provider-zod";
-import type OpenAIProvider from "openai";
+import OpenAIProvider from "openai";
 import { z } from "zod";
 import config from "@/config";
 import { AgentModel, InteractionModel } from "@/models";
-import { ObservableOpenAIProvider } from "@/models/llm-metrics";
+import { getObservableFetch } from "@/models/llm-metrics";
 import { ErrorResponseSchema, OpenAi, RouteId, UuidIdSchema } from "@/types";
 import { PROXY_API_PREFIX } from "./common";
 import { MockOpenAIClient } from "./mock-openai-client";
@@ -146,10 +146,10 @@ const openAiProxyRoutes: FastifyPluginAsyncZod = async (fastify) => {
     const { authorization: openAiApiKey } = headers;
     const openAiClient = config.benchmark.mockMode
       ? (new MockOpenAIClient() as unknown as OpenAIProvider)
-      : ObservableOpenAIProvider({
+      : new OpenAIProvider({
           apiKey: openAiApiKey,
           baseURL: config.llm.openai.baseUrl,
-          agentId: resolvedAgentId,
+          fetch: getObservableFetch("openai", resolvedAgentId),
         });
 
     try {

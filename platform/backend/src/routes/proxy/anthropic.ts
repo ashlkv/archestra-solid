@@ -1,4 +1,4 @@
-import type AnthropicProvider from "@anthropic-ai/sdk";
+import AnthropicProvider from "@anthropic-ai/sdk";
 import fastifyHttpProxy from "@fastify/http-proxy";
 import { trace } from "@opentelemetry/api";
 import type { FastifyReply } from "fastify";
@@ -6,7 +6,7 @@ import type { FastifyPluginAsyncZod } from "fastify-type-provider-zod";
 import { z } from "zod";
 import config from "@/config";
 import { AgentModel, InteractionModel } from "@/models";
-import { ObservableAnthropicProvider } from "@/models/llm-metrics";
+import { getObservableFetch } from "@/models/llm-metrics";
 import { Anthropic, ErrorResponseSchema, RouteId, UuidIdSchema } from "@/types";
 import { PROXY_API_PREFIX } from "./common";
 import * as utils from "./utils";
@@ -143,10 +143,11 @@ const anthropicProxyRoutes: FastifyPluginAsyncZod = async (fastify) => {
     }
 
     const { "x-api-key": anthropicApiKey } = headers;
-    const anthropicClient = ObservableAnthropicProvider({
+
+    const anthropicClient = new AnthropicProvider({
       apiKey: anthropicApiKey,
       baseURL: config.llm.anthropic.baseUrl,
-      agentId: resolvedAgentId,
+      fetch: getObservableFetch("anthropic", resolvedAgentId),
     });
 
     try {
