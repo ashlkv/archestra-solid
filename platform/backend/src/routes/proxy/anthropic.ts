@@ -9,6 +9,7 @@ import { AgentModel, InteractionModel } from "@/models";
 import { Anthropic, ErrorResponseSchema, RouteId, UuidIdSchema } from "@/types";
 import { PROXY_API_PREFIX } from "./common";
 import * as utils from "./utils";
+import { ObservableAnthropicProvider } from '@/models/llm-metrics';
 
 /**
  * Inject assigned MCP tools into Anthropic tools array
@@ -142,9 +143,10 @@ const anthropicProxyRoutes: FastifyPluginAsyncZod = async (fastify) => {
     }
 
     const { "x-api-key": anthropicApiKey } = headers;
-    const anthropicClient = new AnthropicProvider({
+    const anthropicClient = new ObservableAnthropicProvider({
       apiKey: anthropicApiKey,
       baseURL: config.llm.anthropic.baseUrl,
+      agentId: resolvedAgentId,
     });
 
     try {
