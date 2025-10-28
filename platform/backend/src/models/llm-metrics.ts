@@ -109,7 +109,6 @@ export function getObservableGenAI(
   agent: string = "unknown",
 ) {
   const originalGenerateContent = genAI.models.generateContent;
-  // FIXME Also instrument generateContentStream
   const provider = "gemini";
   genAI.models.generateContent = async (...args) => {
     const startTime = Date.now();
