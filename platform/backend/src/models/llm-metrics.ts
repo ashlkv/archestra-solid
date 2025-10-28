@@ -1,5 +1,7 @@
 /**
  * Custom observability metrics form LLMs: request metrics and token usage.
+ * To instrument OpenAI or Anthropic clients, pass observable fetch to the fetch option.
+ * To instrument Gemini, provide its instance to a getObservableGenAI, which will wrap around its model calls.
  */
 
 import type { GoogleGenAI } from "@google/genai";
@@ -26,13 +28,6 @@ const llmTokensCounter = new client.Counter({
   labelNames: ["provider", "agent", "type"], // type: input|output
 });
 
-// Separate counter for network / DNS errors so that status code 0 does not skew request metrics
-const llmNetworkErrorCounter = new client.Counter({
-  name: "llm_network_errors_total",
-  help: "Total LLM network errors (failed before HTTP response)",
-  labelNames: ["provider", "agent"],
-});
-
 export function getObservableFetch(
   provider: "openai" | "anthropic",
   agent: string,
@@ -46,8 +41,7 @@ export function getObservableFetch(
 
     try {
       response = await fetch(url, init);
-
-      const duration = (Date.now() - startTime) / 1000;
+      const duration = Math.round((Date.now() - startTime) / 1000);
       const status = response.status.toString();
       llmRequestDuration.observe(
         { provider, agent, status_code: status },
@@ -55,7 +49,11 @@ export function getObservableFetch(
       );
     } catch (error) {
       // Network errors only: fetch does not throw on 4xx or 5xx.
-      llmNetworkErrorCounter.inc({ provider, agent });
+      const duration = Math.round((Date.now() - startTime) / 1000);
+      llmRequestDuration.observe(
+        { provider, agent, status_code: "0" },
+        duration,
+      );
       throw error;
     }
 
@@ -142,20 +140,17 @@ export function getObservableGenAI(genAI: GoogleGenAI, agent: string) {
       return result;
     } catch (error) {
       const duration = Math.round((Date.now() - startTime) / 1000);
-
-      if (
+      const statusCode =
         error instanceof Error &&
         "status" in error &&
         typeof error.status === "number"
-      ) {
-        llmRequestDuration.observe(
-          { provider, status_code: error.status.toString(), agent },
-          duration,
-        );
-      } else {
-        // Network error (no HTTP response)
-        llmNetworkErrorCounter.inc({ provider, agent });
-      }
+          ? error.status.toString()
+          : 0;
+
+      llmRequestDuration.observe(
+        { provider, agent, status_code: statusCode },
+        duration,
+      );
 
       throw error;
     }
