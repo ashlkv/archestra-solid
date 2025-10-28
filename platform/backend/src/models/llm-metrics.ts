@@ -63,9 +63,7 @@ export function getObservableFetch(
     // Record token metrics
     if (
       response.ok &&
-      response.headers
-        .get("content-type")
-        ?.includes("application/json")
+      response.headers.get("content-type")?.includes("application/json")
     ) {
       const cloned = response.clone();
       try {
