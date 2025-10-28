@@ -63,7 +63,6 @@ export function getObservableFetch(
     // Record token metrics
     if (
       response.ok &&
-      // FIXME what about OpenAI streaming response?
       response.headers
         .get("content-type")
         ?.includes("application/json")
