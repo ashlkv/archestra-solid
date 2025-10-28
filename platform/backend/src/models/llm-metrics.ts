@@ -145,7 +145,7 @@ export function getObservableGenAI(genAI: GoogleGenAI, agent: string) {
         "status" in error &&
         typeof error.status === "number"
           ? error.status.toString()
-          : 0;
+          : "0";
 
       llmRequestDuration.observe(
         { provider, agent, status_code: statusCode },
