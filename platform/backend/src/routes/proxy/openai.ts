@@ -6,7 +6,7 @@ import OpenAIProvider from "openai";
 import { z } from "zod";
 import config from "@/config";
 import { AgentModel, InteractionModel } from "@/models";
-import { getObservableFetch } from "@/models/llm-metrics";
+import { getObservableFetch, reportLLMTokens } from "@/models/llm-metrics";
 import { ErrorResponseSchema, OpenAi, RouteId, UuidIdSchema } from "@/types";
 import { PROXY_API_PREFIX } from "./common";
 import { MockOpenAIClient } from "./mock-openai-client";
@@ -258,6 +258,7 @@ const openAiProxyRoutes: FastifyPluginAsyncZod = async (fastify) => {
                 messages: filteredMessages,
                 tools: mergedTools.length > 0 ? mergedTools : undefined,
                 stream: true,
+                stream_options: { include_usage: true },
               });
               llmSpan.end();
               return response;
@@ -282,9 +283,20 @@ const openAiProxyRoutes: FastifyPluginAsyncZod = async (fastify) => {
           [];
         const chunks: OpenAIProvider.Chat.Completions.ChatCompletionChunk[] =
           [];
+        let usageData:
+          | { prompt_tokens?: number; completion_tokens?: number }
+          | undefined;
 
         for await (const chunk of streamingResponse) {
           chunks.push(chunk);
+
+          // Capture usage information if present
+          if (chunk.usage) {
+            usageData = {
+              prompt_tokens: chunk.usage.prompt_tokens,
+              completion_tokens: chunk.usage.completion_tokens,
+            };
+          }
           const delta = chunk.choices[0]?.delta;
           const finishReason = chunk.choices[0]?.finish_reason;
 
@@ -481,6 +493,16 @@ const openAiProxyRoutes: FastifyPluginAsyncZod = async (fastify) => {
               }
             }
           }
+        }
+
+        // Report token usage metrics for streaming
+        if (usageData) {
+          reportLLMTokens(
+            "openai",
+            resolvedAgentId,
+            usageData.prompt_tokens,
+            usageData.completion_tokens,
+          );
         }
 
         // Store the complete interaction

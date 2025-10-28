@@ -1,7 +1,8 @@
 /**
- * Custom observability metrics form LLMs: request metrics and token usage.
+ * Custom observability metrics for LLMs: request metrics and token usage.
  * To instrument OpenAI or Anthropic clients, pass observable fetch to the fetch option.
- * To instrument Gemini, provide its instance to a getObservableGenAI, which will wrap around its model calls.
+ * For OpenAI or Anthropic streaming mode, proxy handlers call reportLLMTokens() after consuming the stream.
+ * To instrument Gemini, provide its instance to getObservableGenAI, which will wrap around its model calls.
  */
 
 import type { GoogleGenAI } from "@google/genai";
@@ -27,6 +28,23 @@ const llmTokensCounter = new client.Counter({
   help: "Total tokens used",
   labelNames: ["provider", "agent", "type"], // type: input|output
 });
+
+/**
+ * Reports LLM token usage
+ */
+export function reportLLMTokens(
+  provider: "openai" | "anthropic" | "gemini",
+  agent: string,
+  inputTokens?: number,
+  outputTokens?: number,
+): void {
+  if (inputTokens && inputTokens > 0) {
+    llmTokensCounter.inc({ provider, agent, type: "input" }, inputTokens);
+  }
+  if (outputTokens && outputTokens > 0) {
+    llmTokensCounter.inc({ provider, agent, type: "output" }, outputTokens);
+  }
+}
 
 /**
  * Returns a fetch wrapped in observability. Use it as OpenAI or Anthropic provider custom fetch implementation.
@@ -83,15 +101,7 @@ export function getObservableFetch(
           throw new Error("Unknown provider when logging usage token metrics");
         }
 
-        if (inputTokens > 0) {
-          llmTokensCounter.inc({ provider, agent, type: "input" }, inputTokens);
-        }
-        if (outputTokens > 0) {
-          llmTokensCounter.inc(
-            { provider, agent, type: "output" },
-            outputTokens,
-          );
-        }
+        reportLLMTokens(provider, agent, inputTokens, outputTokens);
       } catch (_parseError) {
         console.error("Error parsing LLM response JSON for tokens");
       }
