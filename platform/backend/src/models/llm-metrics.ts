@@ -135,19 +135,10 @@ export function getObservableGenAI(
       );
 
       // Record token metrics
-      const { promptTokenCount = 0, candidatesTokenCount = 0 } =
-        result.usageMetadata || {};
-      if (promptTokenCount > 0) {
-        llmTokensCounter.inc(
-          { provider, agent, type: "input" },
-          promptTokenCount,
-        );
-      }
-      if (candidatesTokenCount > 0) {
-        llmTokensCounter.inc(
-          { provider, agent, type: "output" },
-          candidatesTokenCount,
-        );
+      const usage = result.usageMetadata;
+      if (usage) {
+        const { input, output } = utils.adapters.gemini.getUsageTokens(usage);
+        reportLLMTokens("gemini", agent, input, output);
       }
 
       return result;
