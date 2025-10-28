@@ -404,12 +404,9 @@ const anthropicProxyRoutes: FastifyPluginAsyncZod = async (fastify) => {
         // Report token usage metrics for streaming
         const usage = messageStartEvent?.message.usage;
         if (usage) {
-          reportLLMTokens(
-            "anthropic",
-            resolvedAgentId,
-            usage.input_tokens,
-            usage.output_tokens,
-          );
+          const { input, output } =
+            utils.adapters.anthropic.getUsageTokens(usage);
+          reportLLMTokens("anthropic", resolvedAgentId, input, output);
         }
 
         // Store the complete interaction

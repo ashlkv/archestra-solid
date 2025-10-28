@@ -283,19 +283,14 @@ const openAiProxyRoutes: FastifyPluginAsyncZod = async (fastify) => {
           [];
         const chunks: OpenAIProvider.Chat.Completions.ChatCompletionChunk[] =
           [];
-        let usageData:
-          | { prompt_tokens?: number; completion_tokens?: number }
-          | undefined;
+        let usageTokens: { input?: number; output?: number } | undefined;
 
         for await (const chunk of streamingResponse) {
           chunks.push(chunk);
 
           // Capture usage information if present
           if (chunk.usage) {
-            usageData = {
-              prompt_tokens: chunk.usage.prompt_tokens,
-              completion_tokens: chunk.usage.completion_tokens,
-            };
+            usageTokens = utils.adapters.openai.getUsageTokens(chunk.usage);
           }
           const delta = chunk.choices[0]?.delta;
           const finishReason = chunk.choices[0]?.finish_reason;
@@ -496,12 +491,12 @@ const openAiProxyRoutes: FastifyPluginAsyncZod = async (fastify) => {
         }
 
         // Report token usage metrics for streaming
-        if (usageData) {
+        if (usageTokens) {
           reportLLMTokens(
             "openai",
             resolvedAgentId,
-            usageData.prompt_tokens,
-            usageData.completion_tokens,
+            usageTokens.input,
+            usageTokens.output,
           );
         }
 

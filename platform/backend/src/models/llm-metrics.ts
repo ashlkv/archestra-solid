@@ -7,6 +7,7 @@
 
 import type { GoogleGenAI } from "@google/genai";
 import client from "prom-client";
+import * as utils from "../routes/proxy/utils";
 
 type Fetch = (
   input: string | URL | Request,
@@ -86,22 +87,22 @@ export function getObservableFetch(
       const cloned = response.clone();
       try {
         const data = await cloned.json();
-
-        // OpenAI: prompt_tokens, completion_tokens
-        // Anthropic: input_tokens, output_tokens
-        let inputTokens = 0;
-        let outputTokens = 0;
+        if (!data.usage) {
+          return response;
+        }
         if (provider === "openai") {
-          inputTokens = data.usage?.prompt_tokens;
-          outputTokens = data.usage?.completion_tokens;
+          const { input, output } = utils.adapters.openai.getUsageTokens(
+            data.usage,
+          );
+          reportLLMTokens(provider, agent, input, output);
         } else if (provider === "anthropic") {
-          inputTokens = data.usage?.input_tokens;
-          outputTokens = data.usage?.output_tokens;
+          const { input, output } = utils.adapters.anthropic.getUsageTokens(
+            data.usage,
+          );
+          reportLLMTokens(provider, agent, input, output);
         } else {
           throw new Error("Unknown provider when logging usage token metrics");
         }
-
-        reportLLMTokens(provider, agent, inputTokens, outputTokens);
       } catch (_parseError) {
         console.error("Error parsing LLM response JSON for tokens");
       }
