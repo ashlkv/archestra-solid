@@ -84,9 +84,6 @@ const start = async () => {
     // Seed database with demo data
     await seedDatabase();
 
-    // TODO Consider excluding endpoint summary metrics, which fastify-metrics collects by default:
-    //  histogram is sufficient.
-    //  Also consider excluding most of the process metrics
     await fastify.register(metricsPlugin, { endpoint: "/metrics" });
 
     // Register CORS plugin to allow cross-origin requests
