@@ -28,6 +28,9 @@ const llmTokensCounter = new client.Counter({
   labelNames: ["provider", "agent", "type"], // type: input|output
 });
 
+/**
+ * Returns a fetch wrapped in observability. Use it as OpenAI or Anthropic provider custom fetch implementation.
+ */
 export function getObservableFetch(
   provider: "openai" | "anthropic",
   agent: string = "unknown",
