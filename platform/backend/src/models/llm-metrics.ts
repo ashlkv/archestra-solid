@@ -30,7 +30,7 @@ const llmTokensCounter = new client.Counter({
 
 export function getObservableFetch(
   provider: "openai" | "anthropic",
-  agent: string,
+  agent: string = "unknown",
 ): Fetch {
   return async function observableFetch(
     url: string | URL | Request,
@@ -104,7 +104,10 @@ export function getObservableFetch(
 /**
  * Wraps observability around GenAI's LLM request methods
  */
-export function getObservableGenAI(genAI: GoogleGenAI, agent: string) {
+export function getObservableGenAI(
+  genAI: GoogleGenAI,
+  agent: string = "unknown",
+) {
   const originalGenerateContent = genAI.models.generateContent;
   // FIXME Also instrument generateContentStream
   const provider = "gemini";
