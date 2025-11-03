@@ -357,7 +357,7 @@
     },
     {
       "type": "row",
-      "title": "OTEL Traces",
+      "title": "Application Metrics",
       "collapsed": false,
       "gridPos": {
         "h": 1,
@@ -431,7 +431,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 19
+        "y": 36
       },
       "id": 18,
       "options": {
@@ -460,13 +460,13 @@
     },
     {
       "type": "row",
-      "title": "Application Metrics",
+      "title": "OTEL Traces",
       "collapsed": false,
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 27
+        "y": 35
       }
     },
     {
@@ -530,7 +530,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 28
+        "y": 19
       },
       "id": 7,
       "options": {
@@ -664,7 +664,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 36
+        "y": 27
       },
       "id": 8,
       "options": {
@@ -767,7 +767,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 28
+        "y": 19
       },
       "id": 9,
       "options": {
