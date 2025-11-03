@@ -1,6 +1,17 @@
 {
   "panels": [
     {
+      "type": "row",
+      "title": "System Resources",
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
       "datasource": {
         "type": "prometheus",
         "uid": "Prometheus"
@@ -65,7 +76,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 0
+        "y": 1
       },
       "id": 1,
       "options": {
@@ -161,7 +172,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 0
+        "y": 1
       },
       "id": 2,
       "options": {
@@ -191,6 +202,17 @@
       ],
       "title": "Memory Usage (Resident)",
       "type": "timeseries"
+    },
+    {
+      "type": "row",
+      "title": "LLM Metrics",
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 9
+      }
     },
     {
       "datasource": {
@@ -284,7 +306,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 8
+        "y": 10
       },
       "id": 6,
       "options": {
@@ -325,6 +347,17 @@
       ],
       "title": "LLM Token Usage",
       "type": "timeseries"
+    },
+    {
+      "type": "row",
+      "title": "Application Metrics",
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 18
+      }
     },
     {
       "datasource": {
@@ -387,7 +420,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 16
+        "y": 19
       },
       "id": 7,
       "options": {
@@ -517,8 +550,8 @@
       "gridPos": {
         "h": 8,
         "w": 12,
-        "x": 12,
-        "y": 24
+        "x": 0,
+        "y": 27
       },
       "id": 8,
       "options": {
@@ -618,7 +651,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 16
+        "y": 19
       },
       "id": 9,
       "options": {
@@ -676,9 +709,10 @@
           "uid": "Prometheus"
         },
         "definition": "label_values(http_request_duration_seconds_count, route)",
+        "description": "Filter for Application Metrics only",
         "hide": 0,
         "includeAll": true,
-        "label": "Route",
+        "label": "Route (App Metrics)",
         "multi": false,
         "name": "route",
         "options": [],
