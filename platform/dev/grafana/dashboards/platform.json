@@ -872,7 +872,7 @@
         "type": "tempo",
         "uid": "P214B5B846CF3925F"
       },
-      "description": "Click on any Trace ID in the \"All Traces\" table to automatically load the trace details below.",
+      "description": "Click on any trace ID in the \"All Traces\" table above to automatically load detailed trace information.",
       "fieldConfig": {
         "defaults": {},
         "overrides": []
