@@ -140,7 +140,7 @@ From the dashboard, you can access detailed trace information in two ways:
 
 ### Environment Variables
 
-The OpenTelemetry exporter endpoint can be configured via environment variables:
+The OTEL exporter endpoint can be configured via environment variables:
 
 ```bash
 # In your .env file
