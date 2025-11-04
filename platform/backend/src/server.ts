@@ -19,7 +19,6 @@ import { initializeMetrics } from "@/llm-metrics";
 import logger from "@/logging";
 import { McpServerRuntimeManager } from "@/mcp-server-runtime";
 import { authMiddleware } from "@/middleware/auth";
-import { initializeTracing } from "@/tracing";
 import {
   Anthropic,
   Gemini,
@@ -79,11 +78,8 @@ const start = async () => {
   try {
     await seedRequiredStartingData();
 
-    // Fetch all unique agent label keys from the database
+    // Initialize metrics with keys of custom agent labels
     const labelKeys = await AgentLabelModel.getAllKeys();
-
-    // Initialize tracing and metrics with agent label keys
-    await initializeTracing(labelKeys);
     initializeMetrics(labelKeys);
 
     logger.info(
