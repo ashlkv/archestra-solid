@@ -16,6 +16,7 @@ import {
   createPaginatedResult,
   type PaginatedResult,
 } from "@/database/utils/pagination";
+import { initializeMetrics } from "@/llm-metrics";
 import type {
   Agent,
   InsertAgent,
@@ -23,8 +24,6 @@ import type {
   SortingQuery,
   UpdateAgent,
 } from "@/types";
-import { initializeMetrics } from "@/llm-metrics";
-import type { Agent, InsertAgent, UpdateAgent } from "@/types";
 import AgentLabelModel from "./agent-label";
 import AgentTeamModel from "./agent-team";
 

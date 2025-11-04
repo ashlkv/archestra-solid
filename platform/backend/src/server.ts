@@ -18,11 +18,7 @@ import { seedRequiredStartingData } from "@/database/seed";
 import { initializeMetrics } from "@/llm-metrics";
 import logger from "@/logging";
 import { McpServerRuntimeManager } from "@/mcp-server-runtime";
-import db, { schema } from "@/database";
-import { seedRequiredStartingData } from "@/database/seed";
 import { authMiddleware } from "@/middleware/auth";
-import { AgentLabelModel } from "@/models";
-import * as routes from "@/routes";
 import { initializeTracing } from "@/tracing";
 import {
   Anthropic,
@@ -31,11 +27,8 @@ import {
   SupportedProvidersDiscriminatorSchema,
   SupportedProvidersSchema,
 } from "@/types";
-import { initializeMetrics } from "./llm-metrics";
-import logger from "@/logging";
 import AgentLabelModel from "./models/agent-label";
 import * as routes from "./routes";
-import { initializeTracing } from "./tracing";
 
 const {
   api: {

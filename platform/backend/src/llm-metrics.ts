@@ -58,7 +58,7 @@ export function initializeMetrics(labelKeys: string[]): void {
     if (llmTokensCounter) {
       client.register.removeSingleMetric("llm_tokens_total");
     }
-  } catch (error) {
+  } catch (_error) {
     // Ignore errors if metrics don't exist
   }
 
