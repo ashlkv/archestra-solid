@@ -67,7 +67,9 @@ docker compose -f dev/docker-compose.observability.yml up -d  # Alternative: Sta
 ## Environment Variables
 
 ```bash
-# Required (ARCHESTRA_DATABASE_URL takes precedence over DATABASE_URL)
+# Database Configuration
+# ARCHESTRA_DATABASE_URL takes precedence over DATABASE_URL
+# When using external database, internal postgres container will not start
 ARCHESTRA_DATABASE_URL="postgresql://archestra:archestra_dev_password@localhost:5432/archestra_dev?schema=public"
 
 # Provider API Keys
@@ -158,7 +160,7 @@ ARCHESTRA_LOGGING_LEVEL=info  # Options: trace, debug, info, warn, error, fatal
 - Keys and values stored separately for consistency and reuse
 - One value per key per agent (updating same key replaces value)
 - Labels returned in alphabetical order by key for consistency
-- API endpoints: GET `/api/agents/labels/keys`, `/api/agents/labels/values`
+- API endpoints: GET `/api/agents/labels/keys`, GET `/api/agents/labels/values?key=<key>` (key param filters values by key)
 
 **MCP Server Installation Requests**:
 
