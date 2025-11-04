@@ -16,7 +16,6 @@ import {
   createPaginatedResult,
   type PaginatedResult,
 } from "@/database/utils/pagination";
-import { initializeMetrics } from "@/llm-metrics";
 import type {
   Agent,
   InsertAgent,
@@ -52,10 +51,6 @@ class AgentModel {
     // Assign labels to the agent if provided
     if (labels && labels.length > 0) {
       await AgentLabelModel.syncAgentLabels(createdAgent.id, labels);
-      const allKeys = await AgentLabelModel.getAllKeys();
-      // We need to re-init metrics with the new label keys in case label keys changed.
-      // Otherwise the newly added labels will not make it to metrics. The labels with new keys, that is.
-      initializeMetrics(allKeys);
     }
 
     return {
@@ -475,10 +470,6 @@ class AgentModel {
     // Sync label assignments if labels is provided
     if (labels !== undefined) {
       await AgentLabelModel.syncAgentLabels(id, labels);
-      const allKeys = await AgentLabelModel.getAllKeys();
-      // We need to re-init metrics with the new label keys in case label keys changed.
-      // Otherwise the newly added labels will not make it to metrics. The labels with new keys, that is.
-      initializeMetrics(allKeys);
     }
 
     // Fetch the tools for the updated agent
