@@ -127,48 +127,50 @@ class AgentLabelModel {
     deletedKeys: number;
     deletedValues: number;
   }> {
-    // Find orphaned keys (not referenced in agent_labels)
-    const orphanedKeys = await db
-      .select({ id: schema.labelKeyTable.id })
-      .from(schema.labelKeyTable)
-      .leftJoin(
-        schema.agentLabelTable,
-        eq(schema.labelKeyTable.id, schema.agentLabelTable.keyId),
-      )
-      .where(isNull(schema.agentLabelTable.keyId));
+    return await db.transaction(async (tx) => {
+      // Find orphaned keys (not referenced in agent_labels)
+      const orphanedKeys = await tx
+        .select({ id: schema.labelKeyTable.id })
+        .from(schema.labelKeyTable)
+        .leftJoin(
+          schema.agentLabelTable,
+          eq(schema.labelKeyTable.id, schema.agentLabelTable.keyId),
+        )
+        .where(isNull(schema.agentLabelTable.keyId));
 
-    // Find orphaned values (not referenced in agent_labels)
-    const orphanedValues = await db
-      .select({ id: schema.labelValueTable.id })
-      .from(schema.labelValueTable)
-      .leftJoin(
-        schema.agentLabelTable,
-        eq(schema.labelValueTable.id, schema.agentLabelTable.valueId),
-      )
-      .where(isNull(schema.agentLabelTable.valueId));
+      // Find orphaned values (not referenced in agent_labels)
+      const orphanedValues = await tx
+        .select({ id: schema.labelValueTable.id })
+        .from(schema.labelValueTable)
+        .leftJoin(
+          schema.agentLabelTable,
+          eq(schema.labelValueTable.id, schema.agentLabelTable.valueId),
+        )
+        .where(isNull(schema.agentLabelTable.valueId));
 
-    let deletedKeys = 0;
-    let deletedValues = 0;
+      let deletedKeys = 0;
+      let deletedValues = 0;
 
-    // Delete orphaned keys
-    if (orphanedKeys.length > 0) {
-      const keyIds = orphanedKeys.map((k) => k.id);
-      const result = await db
-        .delete(schema.labelKeyTable)
-        .where(inArray(schema.labelKeyTable.id, keyIds));
-      deletedKeys = result.rowCount || 0;
-    }
+      // Delete orphaned keys
+      if (orphanedKeys.length > 0) {
+        const keyIds = orphanedKeys.map((k) => k.id);
+        const result = await tx
+          .delete(schema.labelKeyTable)
+          .where(inArray(schema.labelKeyTable.id, keyIds));
+        deletedKeys = result.rowCount || 0;
+      }
 
-    // Delete orphaned values
-    if (orphanedValues.length > 0) {
-      const valueIds = orphanedValues.map((v) => v.id);
-      const result = await db
-        .delete(schema.labelValueTable)
-        .where(inArray(schema.labelValueTable.id, valueIds));
-      deletedValues = result.rowCount || 0;
-    }
+      // Delete orphaned values
+      if (orphanedValues.length > 0) {
+        const valueIds = orphanedValues.map((v) => v.id);
+        const result = await tx
+          .delete(schema.labelValueTable)
+          .where(inArray(schema.labelValueTable.id, valueIds));
+        deletedValues = result.rowCount || 0;
+      }
 
-    return { deletedKeys, deletedValues };
+      return { deletedKeys, deletedValues };
+    });
   }
 
   /**
