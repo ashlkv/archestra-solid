@@ -25,15 +25,21 @@ let llmTokensCounter: client.Counter<string>;
 // Store current label keys for comparison
 let currentLabelKeys: string[] = [];
 
+// Regexp pattern to sanitize label keys
+const sanitizeRegexp = /[^a-zA-Z0-9_]/g;
+
 /**
  * Initialize LLM metrics with dynamic agent label keys
  * @param labelKeys Array of agent label keys to include as metric labels
  */
 export function initializeMetrics(labelKeys: string[]): void {
+  // Prometheus labels have naming restrictions. Dashes are not allowed, for example.
+  const nextLabelKeys = labelKeys
+    .map((key) => key.replace(sanitizeRegexp, "_"))
+    .sort();
   // Check if label keys have changed
   const labelKeysChanged =
-    JSON.stringify(labelKeys.sort()) !==
-    JSON.stringify(currentLabelKeys.sort());
+    JSON.stringify(nextLabelKeys) !== JSON.stringify(currentLabelKeys);
 
   if (!labelKeysChanged && llmRequestDuration && llmTokensCounter) {
     logger.info(
@@ -42,7 +48,7 @@ export function initializeMetrics(labelKeys: string[]): void {
     return;
   }
 
-  currentLabelKeys = [...labelKeys];
+  currentLabelKeys = nextLabelKeys;
 
   // Unregister old metrics if they exist
   try {
@@ -58,8 +64,12 @@ export function initializeMetrics(labelKeys: string[]): void {
 
   // Create new metrics with updated label names
   const baseLabelNames = ["provider", "agent_id", "agent_name"];
-  const durationLabelNames = [...baseLabelNames, "status_code", ...labelKeys];
-  const tokensLabelNames = [...baseLabelNames, "type", ...labelKeys]; // type: input|output
+  const durationLabelNames = [
+    ...baseLabelNames,
+    "status_code",
+    ...nextLabelKeys,
+  ];
+  const tokensLabelNames = [...baseLabelNames, "type", ...nextLabelKeys]; // type: input|output
 
   llmRequestDuration = new client.Histogram({
     name: "llm_request_duration_seconds",
@@ -76,7 +86,7 @@ export function initializeMetrics(labelKeys: string[]): void {
   });
 
   logger.info(
-    `Metrics initialized with ${labelKeys.length} agent label keys: ${labelKeys.join(", ")}`,
+    `Metrics initialized with ${nextLabelKeys.length} agent label keys: ${nextLabelKeys.join(", ")}`,
   );
 }
 
@@ -96,7 +106,9 @@ function buildMetricLabels(
   // Add agent label values for all registered label keys
   for (const labelKey of currentLabelKeys) {
     // Find the label value for this key from the agent's labels
-    const agentLabel = agent.labels?.find((l) => l.key === labelKey);
+    const agentLabel = agent.labels?.find(
+      (l) => l.key.replace(sanitizeRegexp, "_") === labelKey,
+    );
     labels[labelKey] = agentLabel?.value ?? "";
   }
 

@@ -40,12 +40,6 @@ export async function initializeTracing(labelKeys: string[]): Promise<void> {
     [ATTR_SERVICE_VERSION]: version,
   };
 
-  // Add agent label keys as resource attributes
-  // We set them to empty strings initially - they will be populated per-span via context
-  // for (const labelKey of labelKeys) {
-  //   resourceAttributes[labelKey] = "";
-  // }
-
   // Create a resource with service information and agent label keys
   const resource = defaultResource().merge(
     resourceFromAttributes(resourceAttributes),
