@@ -199,10 +199,10 @@ const agentRoutes: FastifyPluginAsyncZod = async (fastify) => {
           });
         }
         const agent = await AgentModel.create(request.body);
-        const allKeys = await AgentLabelModel.getAllKeys();
+        const labelKeys = await AgentLabelModel.getAllKeys();
         // We need to re-init metrics with the new label keys in case label keys changed.
         // Otherwise the newly added labels will not make it to metrics. The labels with new keys, that is.
-        initializeMetrics(allKeys);
+        initializeMetrics(labelKeys);
 
         return reply.send(agent);
       } catch (error) {
@@ -313,10 +313,10 @@ const agentRoutes: FastifyPluginAsyncZod = async (fastify) => {
           });
         }
 
-        const allKeys = await AgentLabelModel.getAllKeys();
+        const labelKeys = await AgentLabelModel.getAllKeys();
         // We need to re-init metrics with the new label keys in case label keys changed.
         // Otherwise the newly added labels will not make it to metrics. The labels with new keys, that is.
-        initializeMetrics(allKeys);
+        initializeMetrics(labelKeys);
 
         return reply.send(agent);
       } catch (error) {
