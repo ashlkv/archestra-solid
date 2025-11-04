@@ -1,4 +1,4 @@
-import { and, asc, eq, inArray, isNull } from "drizzle-orm";
+import { asc, eq, inArray, isNull } from "drizzle-orm";
 import db, { schema } from "@/database";
 import type { AgentLabelWithDetails } from "@/types/label";
 
