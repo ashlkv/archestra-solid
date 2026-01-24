@@ -1,6 +1,6 @@
 import { createSignal } from "solid-js";
-import { navigate } from "astro:transitions/client";
 import { useUpdateInternalMcpCatalogItem } from "@/lib/internal-mcp-catalog.query";
+import styles from "./CatalogCardModal.module.css";
 
 interface Props {
     item: {
@@ -10,7 +10,7 @@ interface Props {
     onClose: () => void;
 }
 
-export function EditCatalogModal(props: Props) {
+export function CatalogCardModal(props: Props) {
     const [name, setName] = createSignal(props.item.name);
     const [error, setError] = createSignal("");
 
@@ -27,39 +27,29 @@ export function EditCatalogModal(props: Props) {
             });
 
             props.onClose();
-            // Revalidate page data
-            navigate(window.location.href);
         } catch (err) {
             setError("Failed to update catalog item");
         }
     };
 
     return (
-        <div class="modal-backdrop" onClick={() => props.onClose()}>
-            <div class="modal" onClick={(e) => e.stopPropagation()}>
+        <div class={styles.backdrop} onClick={() => props.onClose()}>
+            <div class={styles.modal} onClick={(e) => e.stopPropagation()}>
                 <h2>Edit Catalog Item</h2>
 
                 <form onSubmit={handleSubmit}>
                     <label>
                         Name
-                        <input
-                            type="text"
-                            value={name()}
-                            onInput={(e) => setName(e.currentTarget.value)}
-                            required
-                        />
+                        <input type="text" value={name()} onInput={(e) => setName(e.currentTarget.value)} required />
                     </label>
 
-                    {error() && <p class="error">{error()}</p>}
+                    {error() && <p class={styles.error}>{error()}</p>}
 
-                    <div class="actions">
-                        <button type="button" onClick={() => props.onClose()}>
+                    <div class={styles.actions}>
+                        <button type="button" class={styles.cancelBtn} onClick={() => props.onClose()}>
                             Cancel
                         </button>
-                        <button
-                            type="submit"
-                            disabled={updateMutation.isPending}
-                        >
+                        <button type="submit" class={styles.submitBtn} disabled={updateMutation.isPending}>
                             {updateMutation.isPending ? "Saving..." : "Save"}
                         </button>
                     </div>

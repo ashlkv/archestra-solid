@@ -1,24 +1,22 @@
 {
     "name": "solidfrontend",
     "type": "module",
-    "version": "0.0.1",
     "scripts": {
-        "dev": "astro dev",
-        "build": "astro build",
-        "preview": "astro preview",
-        "astro": "astro"
+        "dev": "PORT=3001 vinxi dev",
+        "build": "vinxi build",
+        "start": "vinxi start",
+        "version": "vinxi version"
     },
     "dependencies": {
-        "@astrojs/solid-js": "^5.1.3",
         "@shared": "workspace:*",
-        "@tanstack/solid-query": "^5.66.0",
-        "astro": "^5.16.15",
-        "solid-js": "^1.9.11"
+        "@solidjs/meta": "^0.29.4",
+        "@solidjs/router": "^0.15.0",
+        "@solidjs/start": "^1.1.0",
+        "@tanstack/solid-query": "^5.62.16",
+        "solid-js": "^1.9.5",
+        "vinxi": "^0.5.7"
     },
-    "devDependencies": {
-        "@astrojs/check": "^0.9.6",
-        "prettier": "^3.8.1",
-        "prettier-plugin-astro": "^0.14.1",
-        "typescript": "^5.9.3"
+    "engines": {
+        "node": ">=22"
     }
 }
