@@ -1,0 +1,3 @@
+# Override parent .editorconfig for solidfrontend
+[*]
+indent_size = 4
