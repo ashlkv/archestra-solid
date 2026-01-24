@@ -1,0 +1,70 @@
+.backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    min-width: 300px;
+    max-width: 90%;
+}
+
+.modal h2 {
+    margin: 0 0 1rem;
+}
+
+.modal label {
+    display: block;
+    margin-bottom: 1rem;
+}
+
+.modal input {
+    display: block;
+    width: 100%;
+    padding: 0.5rem;
+    margin-top: 0.25rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.modal button {
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.submitBtn {
+    background: #0066cc;
+    color: white;
+    border: none;
+}
+
+.submitBtn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.cancelBtn {
+    background: white;
+    border: 1px solid #ccc;
+}
+
+.error {
+    color: red;
+    margin: 0.5rem 0;
+}

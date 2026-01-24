@@ -1,28 +1,32 @@
 {
     "$schema": "https://biomejs.dev/schemas/2.0.0/schema.json",
     "files": {
-        "includes": ["**/*.astro", "**/*.ts", "**/*.tsx", "**/*.js", "**/*.json"]
+        "includes": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.json", "**/*.css"]
     },
     "formatter": {
         "indentStyle": "space",
-        "indentWidth": 4
+        "indentWidth": 4,
+        "lineWidth": 120
     },
     "javascript": {
         "formatter": {
             "indentStyle": "space",
-            "indentWidth": 4
+            "indentWidth": 4,
+            "lineWidth": 120
         }
     },
     "json": {
         "formatter": {
             "indentStyle": "space",
-            "indentWidth": 4
+            "indentWidth": 4,
+            "lineWidth": 120
         }
     },
     "css": {
         "formatter": {
             "indentStyle": "space",
-            "indentWidth": 4
+            "indentWidth": 4,
+            "lineWidth": 120
         }
     }
 }

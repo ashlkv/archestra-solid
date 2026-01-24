@@ -1,0 +1,25 @@
+.main {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.title {
+    margin: 0;
+}
+
+.list {
+    list-style: none;
+    padding: 0;
+}
+
+.error {
+    color: red;
+}
