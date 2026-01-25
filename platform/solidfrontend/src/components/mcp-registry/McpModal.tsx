@@ -1,9 +1,9 @@
 import { createSignal, Show } from "solid-js";
-import styles from "./CatalogCardModal.module.css";
+import styles from "./McpModal.module.css";
 import { useUpdateMcp } from '@/lib/mcp-registry.query';
 import { MCP } from '~/types';
 
-export function CatalogCardModal(props: { item: Pick<MCP, 'id' | 'name'>; onClose: () => void; }) {
+export function McpModal(props: { item: Pick<MCP, 'id' | 'name'>; onClose: () => void; }) {
     const [name, setName] = createSignal(props.item.name);
 
     const { update, query } = useUpdateMcp()
