@@ -1,35 +1,20 @@
-import { createSignal } from "solid-js";
-import { useUpdateInternalMcpCatalogItem } from "@/lib/internal-mcp-catalog.query";
+import { createSignal, Show } from "solid-js";
 import styles from "./CatalogCardModal.module.css";
+import { useUpdateMcp } from '@/lib/mcp-registry.query';
+import { MCP } from '~/types';
 
-interface Props {
-    item: {
-        id: string;
-        name: string;
-    };
-    onClose: () => void;
-}
-
-export function CatalogCardModal(props: Props) {
+export function CatalogCardModal(props: { item: Pick<MCP, 'id' | 'name'>; onClose: () => void; }) {
     const [name, setName] = createSignal(props.item.name);
-    const [error, setError] = createSignal("");
 
-    const updateMutation = useUpdateInternalMcpCatalogItem();
+    const { update, query } = useUpdateMcp()
 
-    const handleSubmit = async (e: Event) => {
-        e.preventDefault();
-        setError("");
-
-        try {
-            await updateMutation.mutateAsync({
-                id: props.item.id,
-                data: { name: name() },
-            });
-
-            props.onClose();
-        } catch (err) {
-            setError("Failed to update catalog item");
-        }
+    const onSubmit = async (event: Event) => {
+        event.preventDefault();
+        await update({
+            id: props.item.id,
+            name: name(),
+        });
+        props.onClose();
     };
 
     return (
@@ -37,20 +22,19 @@ export function CatalogCardModal(props: Props) {
             <div class={styles.modal} onClick={(e) => e.stopPropagation()}>
                 <h2>Edit Catalog Item</h2>
 
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={onSubmit}>
                     <label>
                         Name
                         <input type="text" value={name()} onInput={(e) => setName(e.currentTarget.value)} required />
                     </label>
-
-                    {error() && <p class={styles.error}>{error()}</p>}
+                    <Show when={Boolean(query.error)}><p>{query.error.message}</p></Show>
 
                     <div class={styles.actions}>
                         <button type="button" class={styles.cancelBtn} onClick={() => props.onClose()}>
                             Cancel
                         </button>
-                        <button type="submit" class={styles.submitBtn} disabled={updateMutation.isPending}>
-                            {updateMutation.isPending ? "Saving..." : "Save"}
+                        <button type="submit" class={styles.submitBtn} disabled={query.pending}>
+                            {query.pending ? "Saving..." : "Save"}
                         </button>
                     </div>
                 </form>
