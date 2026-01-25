@@ -1,0 +1,33 @@
+.container {
+    box-sizing: border-box;
+    display: flex;
+    gap: 1px;
+    padding: 2px;
+    height: var(--input-height);
+    background: var(--secondary);
+    border-radius: var(--radius);
+}
+
+.button {
+    height: calc(var(--input-height) - 4px);
+    width: calc(var(--input-height) - 4px);
+    background: var(--secondary);
+    color: color-mix(in oklch, var(--foreground) 40%, transparent);
+}
+
+.button:hover {
+    background: var(--secondary);
+    color: var(--foreground);
+}
+
+.button[data-selected] {
+    background: var(--background);
+    color: var(--foreground);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-xs);
+}
+
+.button[data-selected]:hover {
+    background: var(--background);
+    opacity: 1;
+}

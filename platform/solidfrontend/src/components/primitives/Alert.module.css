@@ -7,8 +7,8 @@
     border-radius: var(--radius);
     background: var(--card);
     color: var(--card-foreground);
-    font-size: var(--text-small);
-    line-height: var(--line-height-small);
+    font-size: var(--font-size);
+    line-height: var(--line-height);
 }
 
 .destructive {
