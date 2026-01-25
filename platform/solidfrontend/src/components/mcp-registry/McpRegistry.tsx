@@ -1,10 +1,8 @@
 import { For, Show } from "solid-js";
 import { McpCard } from "./McpCard";
 import { Alert } from "../primitives/Alert";
-import { MainLayout } from "../primitives/MainLayout";
-import { PageHeader } from "../primitives/PageHeader";
+import { Grid } from "../primitives/Grid";
 import { MCP } from "@/types";
-import { Grid } from '../primitives/Grid';
 
 export function McpRegistry(props: {
     catalog: MCP[] | undefined;
@@ -12,9 +10,7 @@ export function McpRegistry(props: {
     pending?: boolean;
 }) {
     return (
-        <MainLayout>
-            <PageHeader title="MCP Catalog" />
-
+        <>
             <Show when={props.pending}>
                 <p>Loading</p>
             </Show>
@@ -32,6 +28,6 @@ export function McpRegistry(props: {
                     {(item) => <McpCard item={item} />}
                 </For>
             </Grid>
-        </MainLayout>
+        </>
     );
 }
