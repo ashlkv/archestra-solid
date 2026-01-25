@@ -1,5 +1,6 @@
 import { defineConfig } from "@solidjs/start/config";
 import { resolve } from "path";
+import devtools from "solid-devtools/vite";
 
 export default defineConfig({
     server: {
@@ -13,6 +14,10 @@ export default defineConfig({
         },
     },
     vite: {
+        plugins: [
+            // Enables Solid DevTools browser extension with proper signal/memo names
+            devtools({ autoname: true }),
+        ],
         resolve: {
             alias: {
                 "@": resolve("./src"),

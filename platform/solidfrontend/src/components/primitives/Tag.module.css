@@ -1,0 +1,54 @@
+.tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    border-radius: var(--radius);
+    background: var(--primary);
+    color: var(--primary-foreground);
+    white-space: nowrap;
+}
+
+.small {
+    padding: 0.125rem 0.5rem;
+    font-size: var(--font-size-xsmall);
+    line-height: var(--line-height-xsmall);
+}
+
+.regular {
+    padding: 0.25rem 0.5rem;
+    font-size: var(--font-size);
+    line-height: var(--line-height);
+}
+
+.muted {
+    background: var(--muted);
+    color: var(--muted-foreground);
+}
+
+.delete {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    background: transparent;
+    border: none;
+    border-radius: 50%;
+    color: inherit;
+    opacity: 0.5;
+    cursor: pointer;
+}
+
+.small .delete {
+    width: 1rem;
+    height: 1rem;
+}
+
+.regular .delete {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+.delete:hover {
+    opacity: 1;
+    background: color-mix(in oklch, var(--foreground) 10%, transparent);
+}

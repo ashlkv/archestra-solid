@@ -3,10 +3,11 @@
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
+    height: var(--input-height);
     padding: 0.5rem 1rem;
-    font-size: var(--text-small);
+    font-size: var(--font-size);
     font-weight: 500;
-    line-height: var(--line-height-small);
+    line-height: var(--line-height);
     background: var(--primary);
     color: var(--primary-foreground);
     border: 1px solid transparent;
@@ -27,4 +28,26 @@
 .button:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+}
+
+.ghost {
+    background: transparent;
+    color: var(--foreground);
+}
+
+.ghost:hover {
+    background: var(--muted);
+    opacity: 1;
+}
+
+.small {
+    height: auto;
+    padding: 0.25rem 0.5rem;
+    font-size: var(--font-size-xsmall);
+    line-height: var(--line-height-xsmall);
+}
+
+.icon {
+    width: var(--input-height);
+    padding: 0;
 }

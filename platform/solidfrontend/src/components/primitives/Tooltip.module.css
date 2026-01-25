@@ -1,0 +1,35 @@
+.content {
+    padding: 0.25rem 0.5rem;
+    font-size: var(--font-size-xsmall);
+    line-height: var(--line-height-xsmall);
+    color: white;
+    background: var(--foreground);
+    border-radius: var(--radius);
+    z-index: 50;
+}
+
+.content[data-expanded] {
+    animation: fadeIn 0.3s ease;
+}
+
+.content[data-closed] {
+    animation: fadeOut 0.1s ease forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}

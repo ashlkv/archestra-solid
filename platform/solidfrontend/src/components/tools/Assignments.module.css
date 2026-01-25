@@ -1,0 +1,39 @@
+.trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    font-size: var(--font-size-xsmall);
+}
+
+.disconnected {
+    color: var(--muted-foreground);
+    white-space: nowrap;
+}
+
+.count {
+    color: var(--muted-foreground);
+}
+
+.edit,
+.connect {
+    opacity: 0;
+    transition: opacity 0.1ms;
+}
+
+.trigger:hover .edit,
+.trigger:hover .connect {
+    opacity: 1;
+}
+
+
+.popoverContent {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    min-width: 16rem;
+}
+
+.popoverActions {
+    display: flex;
+    justify-content: flex-end;
+}

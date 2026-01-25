@@ -1,0 +1,95 @@
+.region {
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    z-index: 100;
+    max-width: 24rem;
+}
+
+.toast {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.75rem 1rem;
+    min-width: 16rem;
+    font-size: var(--font-size);
+    line-height: var(--line-height);
+    background: var(--foreground);
+    color: var(--background);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-lg);
+    animation: slideIn 0.2s ease;
+}
+
+.toast[data-swipe="move"] {
+    transform: translateX(var(--kb-toast-swipe-move-x));
+}
+
+.toast[data-swipe="cancel"] {
+    transform: translateX(0);
+    transition: transform 0.2s ease;
+}
+
+.toast[data-swipe="end"] {
+    animation: swipeOut 0.2s ease forwards;
+}
+
+.toast[data-closed] {
+    animation: fadeOut 0.15s ease forwards;
+}
+
+.destructive {
+    background: var(--destructive);
+    color: var(--destructive-foreground);
+}
+
+.closeButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.25rem;
+    background: transparent;
+    border: none;
+    color: inherit;
+    opacity: 0.7;
+    cursor: pointer;
+}
+
+.closeButton:hover {
+    opacity: 1;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+@keyframes swipeOut {
+    from {
+        opacity: 1;
+        transform: translateX(var(--kb-toast-swipe-end-x));
+    }
+    to {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+}
