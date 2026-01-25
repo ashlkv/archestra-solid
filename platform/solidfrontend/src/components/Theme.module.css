@@ -3,29 +3,47 @@ body {
     color: var(--foreground);
     font-family: var(--font-sans);
     letter-spacing: var(--letter-spacing);
+    font-size: var(--text-small);
+    line-height: var(--line-height-small);
+    margin: 0;
 }
 
 :root {
-    /* Colors */
-    --background: oklch(1.00 0 0);
-    --foreground: oklch(0.32 0 0);
-    --card: oklch(1.00 0 0);
-    --card-foreground: oklch(0.32 0 0);
-    --popover: oklch(1.00 0 0);
-    --popover-foreground: oklch(0.32 0 0);
-    --primary: oklch(0.62 0.19 259.81);
-    --primary-foreground: oklch(1.00 0 0);
-    --secondary: oklch(0.97 0.00 264.54);
-    --secondary-foreground: oklch(0.45 0.03 256.80);
-    --muted: oklch(0.98 0.00 247.84);
-    --muted-foreground: oklch(0.55 0.02 264.36);
-    --accent: oklch(0.95 0.03 236.82);
-    --accent-foreground: oklch(0.38 0.14 265.52);
-    --destructive: oklch(0.64 0.21 25.33);
-    --destructive-foreground: oklch(1.00 0 0);
-    --border: oklch(0.93 0.01 264.53);
-    --input: oklch(0.93 0.01 264.53);
-    --ring: oklch(0.62 0.19 259.81);
+    --background: oklch(1 0 0);
+    --foreground: oklch(.145 0 0);
+    --card: oklch(1 0 0);
+    --card-foreground: oklch(.145 0 0);
+    --popover: oklch(1 0 0);
+    --popover-foreground: oklch(.145 0 0);
+    --primary: oklch(.205 0 0);
+    --primary-foreground: oklch(.985 0 0);
+    --secondary: oklch(.97 0 0);
+    --secondary-foreground: oklch(.205 0 0);
+    --muted: oklch(.97 0 0);
+    --muted-foreground: oklch(.556 0 0);
+    --accent: oklch(.97 0 0);
+    --accent-foreground: oklch(.205 0 0);
+    --destructive: oklch(.577 .245 27.325);
+    --destructive-foreground: oklch(.577 .245 27.325);
+    --info: oklch(.95 .024 236.81);
+    --info-foreground: oklch(.68 .148143 238.104);
+    --success: oklch(.95 .0506 162.83);
+    --success-foreground: oklch(.69 .1481 162.37);
+    --warning: oklch(.96 .0569 95.61);
+    --warning-foreground: oklch(.71 .186 48.13);
+    --error: oklch(.93 .0314 17.73);
+    --error-foreground: oklch(.64 .2082 25.38);
+    --border: oklch(.922 0 0);
+    --input: oklch(.922 0 0);
+    --ring: oklch(.708 0 0);
+    --sidebar: oklch(.985 0 0);
+    --sidebar-foreground: oklch(.145 0 0);
+    --sidebar-primary: oklch(.205 0 0);
+    --sidebar-primary-foreground: oklch(.985 0 0);
+    --sidebar-accent: oklch(.97 0 0);
+    --sidebar-accent-foreground: oklch(.205 0 0);
+    --sidebar-border: oklch(.922 0 0);
+    --sidebar-ring: oklch(.708 0 0);
 
     /* Charts */
     --chart-1: oklch(0.623 0.214 259.1);
@@ -34,15 +52,21 @@ body {
     --chart-4: oklch(0.705 0.213 47.604);
     --chart-5: oklch(0.627 0.265 303.9);
 
-    /* Sidebar */
-    --sidebar: oklch(0.98 0.00 247.84);
-    --sidebar-foreground: oklch(0.32 0 0);
-    --sidebar-primary: oklch(0.62 0.19 259.81);
-    --sidebar-primary-foreground: oklch(1.00 0 0);
-    --sidebar-accent: oklch(0.95 0.03 236.82);
-    --sidebar-accent-foreground: oklch(0.38 0.14 265.52);
-    --sidebar-border: oklch(0.93 0.01 264.53);
-    --sidebar-ring: oklch(0.62 0.19 259.81);
+    /* Tailwind v4 typographt variables */
+    --text-xs: 0.75rem;
+    --text-xs--line-height: 1rem;
+    --text-sm: 0.875rem;
+    --text-sm--line-height: 1.25rem;
+    --text-base: 1rem;
+    --text-base--line-height: 1.5rem;
+    --text-lg: 1.125rem;
+    --text-lg--line-height: 1.75rem;
+    --text-xl: 1.25rem;
+    --text-xl--line-height: 1.75rem;
+    --text-2xl: 1.5rem;
+    --text-2xl--line-height: 2rem;
+    --text-3xl: 1.875rem;
+    --text-3xl--line-height: 2.25rem;
 
     /* Typography */
     --font-sans: Inter, sans-serif;
@@ -50,6 +74,33 @@ body {
     --font-mono: JetBrains Mono, monospace;
     --letter-spacing: 0em;
     --tracking-normal: 0em;
+
+    /* Font sizes */
+    --text-xsmall: var(--text-xs);
+    --text-small: var(--text-sm);
+    --text-medium: var(--text-base);
+    --text-large: var(--text-lg);
+    --text-xlarge: var(--text-xl);
+    --text-xxlarge: var(--text-2xl);
+    --text-xxxlarge: var(--text-3xl);
+
+    /* Line heights */
+    --line-height-xsmall: var(--text-xs--line-height);
+    --line-height-small: var(--text-sm--line-height);
+    --line-height-medium: var(--text-base--line-height);
+    --line-height-large: var(--text-lg--line-height);
+    --line-height-xlarge: var(--text-xl--line-height);
+    --line-height-xxlarge: var(--text-2xl--line-height);
+    --line-height-xxxlarge: var(--text-3xl--line-height);
+
+    /* Line height ratios (line-height / font-size) */
+    --line-height-ratio-xsmall: calc(var(--line-height-xsmall) / var(--text-xsmall));
+    --line-height-ratio-small: calc(var(--line-height-small) / var(--text-small));
+    --line-height-ratio-medium: calc(var(--line-height-medium) / var(--text-medium));
+    --line-height-ratio-large: calc(var(--line-height-large) / var(--text-large));
+    --line-height-ratio-xlarge: calc(var(--line-height-xlarge) / var(--text-xlarge));
+    --line-height-ratio-xxlarge: calc(var(--line-height-xxlarge) / var(--text-xxlarge));
+    --line-height-ratio-xxxlarge: calc(var(--line-height-xxxlarge) / var(--text-xxxlarge));
 
     /* Spacing & Radius */
     --spacing: 0.25rem;

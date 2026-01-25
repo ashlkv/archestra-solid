@@ -1,11 +1,10 @@
-import { Catalog } from "~/components/Catalog";
+import { McpRegistry } from "@/components/mcp-registry/McpRegistry";
 import { useMcpRegistry } from '@/lib/mcp-registry.query';
 
-
-export default function CatalogPage() {
+export default function RegistryPage() {
     const { data: catalog, query } = useMcpRegistry();
 
     return (
-        <Catalog catalog={catalog()} error={Boolean(query.error)} pending={query.pending} />
+        <McpRegistry catalog={catalog()} error={Boolean(query.error)} pending={query.pending} />
     );
 }
