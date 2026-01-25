@@ -1,13 +1,11 @@
-import { archestraApiSdk } from "@shared";
-import { serversideFetch } from "@/lib/api";
-import { useInternalMcpCatalog } from "@/lib/internal-mcp-catalog.query";
 import { Catalog } from "~/components/Catalog";
+import { useMcpRegistry } from '@/lib/mcp-registry.query';
+
 
 export default function CatalogPage() {
-    const catalog = serversideFetch((headers) => archestraApiSdk.getInternalMcpCatalog({ headers }));
-    const catalogQuery = useInternalMcpCatalog({ initialData: catalog() });
+    const { data: catalog, query } = useMcpRegistry();
 
     return (
-        <Catalog catalog={catalogQuery.data ?? []} />
+        <Catalog catalog={catalog()} error={Boolean(query.error)} pending={query.pending} />
     );
 }

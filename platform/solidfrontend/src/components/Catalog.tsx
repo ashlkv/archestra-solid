@@ -1,23 +1,24 @@
 import { For, Show } from "solid-js";
 import { CatalogCard } from "./CatalogCard.tsx";
 import styles from "./Catalog.module.css";
-
-interface CatalogItem {
-  id: string;
-  name: string;
-  serverType: string;
-}
+import { MCP } from '@/types';
 
 export function Catalog(props: {
-                               catalog: CatalogItem[] | null;
+                               catalog: MCP[] | undefined;
                                error?: boolean;
+    pending?: boolean;
                              }
 ) {
+
   return (
     <main class={styles.main}>
       <header class={styles.header}>
         <h1 class={styles.title}>MCP Catalog</h1>
       </header>
+
+      <Show when={props.pending}>
+        <p>Loading</p>
+      </Show>
 
       <Show when={props.error}>
         <p class={styles.error}>Failed to load catalog</p>
@@ -28,7 +29,7 @@ export function Catalog(props: {
       </Show>
 
       <ul class={styles.list}>
-        <For each={props.catalog}>
+        <For each={props.catalog} by={(item) => item.id}>
           {(item) => (
             <CatalogCard
               item={{

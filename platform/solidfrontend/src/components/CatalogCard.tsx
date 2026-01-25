@@ -1,17 +1,14 @@
 import { createSignal, Show } from "solid-js";
 import { CatalogCardModal } from "./CatalogCardModal";
 import styles from "./CatalogCard.module.css";
+import { type MCP } from '@/types';
 
 interface Props {
-    item: {
-        id: string;
-        name: string;
-        serverType: string;
-    };
+    item: MCP;
 }
 
 export function CatalogCard(props: Props) {
-    const [showModal, setShowModal] = createSignal(false);
+    const [isModalShown, setIsModalShown] = createSignal(false);
 
     return (
         <>
@@ -20,13 +17,13 @@ export function CatalogCard(props: Props) {
                     <strong>{props.item.name}</strong>
                     <span class={styles.type}>({props.item.serverType})</span>
                 </span>
-                <button type="button" class={styles.editBtn} onClick={() => setShowModal(true)}>
+                <button type="button" class={styles.editBtn} onClick={() => setIsModalShown(true)}>
                     Edit
                 </button>
             </li>
 
-            <Show when={showModal()}>
-                <CatalogCardModal item={props.item} onClose={() => setShowModal(false)} />
+            <Show when={isModalShown()}>
+                <CatalogCardModal item={props.item} onClose={() => setIsModalShown(false)} />
             </Show>
         </>
     );
