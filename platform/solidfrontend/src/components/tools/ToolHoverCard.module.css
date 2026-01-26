@@ -1,0 +1,69 @@
+.card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    font-size: var(--font-size-xsmall);
+}
+
+.signature {
+    font-family: var(--font-mono);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.125rem;
+}
+
+.name {
+    color: var(--primary);
+    font-weight: bold;
+}
+
+.parens {
+    color: var(--muted-foreground);
+}
+
+.param {
+    color: var(--foreground);
+}
+
+.param-required {
+    color: var(--foreground);
+    font-weight: bold;
+}
+
+.colon {
+    color: var(--muted-foreground);
+}
+
+.type {
+    color: var(--muted-foreground);
+    font-style: italic;
+}
+
+.comma {
+    color: var(--muted-foreground);
+    margin-right: 0.25rem;
+}
+
+.description {
+    margin: 0;
+    color: var(--muted-foreground);
+}
+
+.params {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.25rem 0.5rem;
+    padding-top: 0.25rem;
+    border-top: 1px solid var(--border);
+}
+
+.param-name {
+    font-family: var(--font-mono);
+    color: var(--foreground);
+    text-align: right;
+}
+
+.param-desc {
+    color: var(--muted-foreground);
+    text-align: left;
+}

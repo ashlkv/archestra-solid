@@ -1,6 +1,6 @@
 .container {
     box-sizing: border-box;
-    display: flex;
+    display: inline-flex;
     gap: 1px;
     padding: 2px;
     height: var(--input-height);

@@ -1,0 +1,49 @@
+.card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    width: 26.5rem;
+    padding: 1rem 1.25rem;
+    border-radius: var(--radius-medium);
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    background: linear-gradient(to right, lab(43.0295 75.21 -86.5669) 0%, lab(44.0605 29.0279 -86.0352) 100%);
+    color: var(--primary-foreground);
+    transition: opacity 0.15s ease;
+}
+
+.card:hover {
+    opacity: 0.9;
+}
+
+.icon {
+    flex-shrink: 0;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    background: color-mix(in oklch, var(--primary-foreground) 25%, transparent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-foreground);
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    min-width: 0;
+}
+
+.title {
+    font-weight: bold;
+    font-size: var(--font-size-medium);
+    margin: 0;
+}
+
+.subtitle {
+    font-size: var(--font-size-small);
+    margin: 0;
+    opacity: 0.8;
+}

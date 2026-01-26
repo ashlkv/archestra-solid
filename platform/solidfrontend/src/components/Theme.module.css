@@ -23,16 +23,16 @@ body {
     --muted-foreground: oklch(.556 0 0);
     --accent: oklch(.97 0 0);
     --accent-foreground: oklch(.205 0 0);
-    --destructive: oklch(.577 .245 27.325);
+    --destructive: oklch(0.64 0.24 18);
     --destructive-foreground: oklch(1 0 0);
-    --info: oklch(.95 .024 236.81);
-    --info-foreground: oklch(.68 .148143 238.104);
-    --success: oklch(.95 .0506 162.83);
-    --success-foreground: oklch(.69 .1481 162.37);
-    --warning: oklch(.96 .0569 95.61);
-    --warning-foreground: oklch(.71 .186 48.13);
-    --error: oklch(.93 .0314 17.73);
-    --error-foreground: oklch(.64 .2082 25.38);
+    --info: oklch(0.95 0.024 200);
+    --info-foreground: oklch(0.68 0.10 200);
+    --success: oklch(0.95 0.05 145);
+    --success-foreground: oklch(0.72 0.20 145);
+    --warning: oklch(0.90 0.18 95);
+    --warning-foreground: oklch(0.78 0.17 65);
+    --error: oklch(0.95 0.03 18);
+    --error-foreground: oklch(0.64 0.24 18);
     --border: oklch(.922 0 0);
     --input: oklch(.922 0 0);
     --ring: oklch(.708 0 0);
@@ -45,6 +45,11 @@ body {
     --sidebar-border: oklch(.922 0 0);
     --sidebar-ring: oklch(.708 0 0);
 
+    --color1: var(--info-foreground);
+    --color2: var(--success-foreground);
+    --color3: var(--warning-foreground);
+    --color4: var(--destructive);
+
     /* Charts */
     --chart-1: oklch(0.623 0.214 259.1);
     --chart-2: oklch(0.696 0.17 162.48);
@@ -53,6 +58,8 @@ body {
     --chart-5: oklch(0.627 0.265 303.9);
 
     /* Tailwind v4 typographt variables */
+    --text-xxs: 0.667rem;
+    --text-xxs--line-height: 1rem;
     --text-xs: 0.75rem;
     --text-xs--line-height: 1rem;
     --text-sm: 0.875rem;
@@ -76,6 +83,7 @@ body {
     --tracking-normal: 0em;
 
     /* Font sizes */
+    --font-size-xxsmall: var(--text-xxs);
     --font-size-xsmall: var(--text-xs);
     --font-size-small: var(--text-sm);
     --font-size-medium: var(--text-base);
@@ -88,6 +96,7 @@ body {
 
     /* Line heights */
     --line-height-xsmall: var(--text-xs--line-height);
+    --line-height-xxsmall: var(--text-xxs--line-height);
     --line-height-small: var(--text-sm--line-height);
     --line-height-medium: var(--text-base--line-height);
     --line-height-large: var(--text-lg--line-height);
@@ -110,12 +119,17 @@ body {
     --spacing: 0.25rem;
     --radius: 0.375rem;
     --input-height: 2rem;
+    --input-height-xsmall: 1.5rem;
+    --input-height-xxsmall: 1.25rem;
+
+    --radius-medium: 0.6rem;
+    --radius-large: 1rem;
 
     /* Shadows */
     --shadow-2xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
     --shadow-xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
     --shadow-sm: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 1px 2px -1px hsl(0 0% 0% / 0.10);
-    --shadow: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 1px 2px -1px hsl(0 0% 0% / 0.10);
+    --shadow: 0 4px 10px color-mix(in srgb, var(--foreground) 12%, transparent), 0 1px 2px -1px color-mix(in srgb, var(--foreground) 12%, transparent);
     --shadow-md: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 2px 4px -1px hsl(0 0% 0% / 0.10);
     --shadow-lg: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 4px 6px -1px hsl(0 0% 0% / 0.10);
     --shadow-xl: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 8px 10px -1px hsl(0 0% 0% / 0.10);

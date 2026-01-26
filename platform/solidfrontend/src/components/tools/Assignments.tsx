@@ -24,15 +24,17 @@ export function Assignments(props: { toolId: string; assignments: Assignment[]; 
                         when={hasAssignments()}
                         fallback={
                             <>
-                                <span class={styles.disconnected}>Not connected</span>
+                                <span class={`${styles.content} ${styles.disconnected}`}>Not connected</span>
                                 <Button size="small" class={styles.connect}>Connect</Button>
                             </>
                         }
                     >
-                        <Badge variant="muted">{first()!.name}</Badge>
-                        <Show when={remaining() > 0}>
-                            <span class={styles.count}>+{remaining()}</span>
-                        </Show>
+                        <span class={styles.content}>
+                            <Badge variant="muted">{first()!.name}</Badge>
+                            <Show when={remaining() > 0}>
+                                <span class={styles.count}>+{remaining()}</span>
+                            </Show>
+                        </span>
                         <Button size="small" class={styles.edit}>Edit</Button>
                     </Show>
                 </div>

@@ -8,6 +8,11 @@ export const useMcpRegistry = createQuery({
     callback: () => archestraApiSdk.getInternalMcpCatalog({ headers: getAuthHeaders() }),
 });
 
+export const useMcpServers = createQuery({
+    queryKey: "fetch-mcp-servers",
+    callback: () => archestraApiSdk.getMcpServers({ headers: getAuthHeaders() }),
+});
+
 const updateMcp = createSubmission({
     callback: async (mcp: MCP) => {
         const { id, ...body } = mcp;

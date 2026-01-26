@@ -13,6 +13,25 @@
 
 **Control Flow**:
 - If a function has exactly two outcomes, use if-else, not if-return
+- Avoid using `fallback` prop on `<Show>` - use two separate `<Show>` tags instead for clarity:
+  ```tsx
+  // Good
+  <Show when={condition()}>
+      <ComponentA />
+  </Show>
+  <Show when={!condition()}>
+      <ComponentB />
+  </Show>
+
+  // Avoid
+  <Show when={condition()} fallback={<ComponentB />}>
+      <ComponentA />
+  </Show>
+  ```
+
+**Reactivity**:
+- Do not use `createMemo` unless you have really expensive calculations (e.g. aggregating thousands of items)
+- For derived values from props, use a simple function wrapper: `const columns = () => props.columns ?? [3, 7]`
 
 **Comments**:
 - Avoid "what" comments that describe what code does
