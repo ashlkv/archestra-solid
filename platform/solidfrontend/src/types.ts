@@ -2,6 +2,8 @@ import { type archestraApiTypes } from "@shared";
 
 export type MCP = NonNullable<archestraApiTypes.GetInternalMcpCatalogResponses["200"]>[number];
 
+export type McpServer = NonNullable<archestraApiTypes.GetMcpServersResponses["200"]>[number];
+
 export type Tool =
     NonNullable<archestraApiTypes.GetToolsWithAssignmentsResponses["200"]["data"]>[number];
 

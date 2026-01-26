@@ -19,6 +19,18 @@ export const useTools = createQuery({
             },
         });
         // Extract nested data array for convenience
+        const tools = response.data?.data ?? [];
+        tools.forEach((tool) => {
+            // Local MCP servers have a unique ID suffix (teamId or userId) appended for K8s uniqueness.
+            // Remote servers don't have this suffix. Strip only if the name ends with a 32-char ID.
+            if (tool.mcpServerName) {
+                const idSuffixPattern = /^(.+)-[A-Za-z0-9]{32}$/;
+                const match = tool.mcpServerName.match(idSuffixPattern);
+                if (match) {
+                    tool.mcpServerName = match[1];
+                }
+            }
+        })
         return { data: response.data?.data, error: response.error };
     },
 });

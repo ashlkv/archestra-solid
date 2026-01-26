@@ -1,0 +1,11 @@
+.tool-name {
+    display: block;
+    max-width: 12rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.blocked {
+    opacity: 0.5;
+}
