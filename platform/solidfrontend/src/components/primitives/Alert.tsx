@@ -13,7 +13,7 @@ export function Alert(props: Props): JSX.Element {
         props.variant === "destructive" ? styles.destructive : "";
 
     return (
-        <KobalteAlert.Root
+        <KobalteAlert
             class={`${styles.alert} ${variantClass()} ${props.class ?? ""}`}
         >
             <div>
@@ -24,6 +24,6 @@ export function Alert(props: Props): JSX.Element {
                     <p class={styles.description}>{props.children}</p>
                 </Show>
             </div>
-        </KobalteAlert.Root>
+        </KobalteAlert>
     );
 }

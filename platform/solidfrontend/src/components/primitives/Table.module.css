@@ -15,6 +15,7 @@
 .headerCell {
     padding: 0.75rem 1rem;
     border-bottom: 1px solid var(--border);
+    text-align: start;
 }
 
 .cell {

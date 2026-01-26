@@ -7,8 +7,8 @@ export default function RegistryPage() {
     const { data: catalog, query } = useMcpRegistry();
 
     return (
-        <MainLayout>
-            <PageHeader title="MCP Catalog" />
+        <MainLayout variant="muted">
+            {/*<PageHeader title="MCP Catalog" />*/}
             <McpRegistry catalog={catalog()} error={Boolean(query.error)} pending={query.pending} />
         </MainLayout>
     );
