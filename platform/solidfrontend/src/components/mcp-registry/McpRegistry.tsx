@@ -3,6 +3,9 @@ import { createSignal, For, Show } from "solid-js";
 import { AddMcpCard } from "./AddMcpCard";
 import { McpCard } from "./McpCard";
 import { McpInstallationsDialog } from "./McpInstallationsDialog";
+import { LocalServerInstallDialog } from "./LocalServerInstallDialog";
+import { RemoteServerInstallDialog } from "./RemoteServerInstallDialog";
+import { NoAuthInstallDialog } from "./NoAuthInstallDialog";
 import { ToolTable } from "../tools/ToolTable";
 import { Alert } from "../primitives/Alert";
 import { Button } from "../primitives/Button";
@@ -11,7 +14,8 @@ import { useTools } from "@/lib/tool.query";
 import { useAgents } from "@/lib/agent.query";
 import { useToolCallPolicies, useResultPolicies } from "@/lib/policy.query";
 import { useMcpServers } from "@/lib/mcp-registry.query";
-import type { MCP } from "@/types";
+import { useInstallMcpServer } from "@/lib/mcp-server.query";
+import type { MCP, LocalServerInstallResult, RemoteServerInstallResult, NoAuthInstallResult } from "@/types";
 import styles from "./McpRegistry.module.css";
 
 export function McpRegistry(props: {
@@ -19,14 +23,21 @@ export function McpRegistry(props: {
     error?: boolean;
     pending?: boolean;
     onAddClick?: () => void;
-    onInstall?: (mcp: MCP) => void;
 }) {
     const { data: mcpServers } = useMcpServers();
+    const { submit: installServer, submission: installSubmission } = useInstallMcpServer();
+
     const getInstances = (catalogId: string) => {
         return (mcpServers() ?? []).filter((server) => server.catalogId === catalogId);
     };
+
     const [selectedId, setSelectedId] = createSignal<string | undefined>(undefined);
     const [installationsDialogMcpId, setInstallationsDialogMcpId] = createSignal<string | undefined>(undefined);
+
+    // Install dialog state
+    const [localInstallItem, setLocalInstallItem] = createSignal<MCP | null>(null);
+    const [remoteInstallItem, setRemoteInstallItem] = createSignal<MCP | null>(null);
+    const [noAuthInstallItem, setNoAuthInstallItem] = createSignal<MCP | null>(null);
 
     const selectedMcp = () => props.catalog?.find((item) => item.id === selectedId());
     const installationsDialogMcp = () => props.catalog?.find((item) => item.id === installationsDialogMcpId());
@@ -40,6 +51,59 @@ export function McpRegistry(props: {
         const selected = selectedId();
         if (!selected) return [];
         return (allTools() ?? []).filter((tool) => tool.catalogId === selected);
+    };
+
+    const onInstall = (item: MCP) => {
+        if (item.serverType === "local") {
+            setLocalInstallItem(item);
+        } else if (item.serverType === "remote") {
+            const hasUserConfig = item.userConfig && Object.keys(item.userConfig).length > 0;
+            const hasAuth = item.authMethod !== "none" || item.oauthConfig || hasUserConfig;
+            if (hasAuth || hasUserConfig) {
+                setRemoteInstallItem(item);
+            } else {
+                setNoAuthInstallItem(item);
+            }
+        }
+    };
+
+    const onLocalInstall = async (result: LocalServerInstallResult) => {
+        const item = localInstallItem();
+        if (!item) return;
+        await installServer({
+            name: item.name,
+            catalogId: item.id,
+            environmentValues: result.environmentValues,
+            teamId: result.teamId ?? undefined,
+            serviceAccount: result.serviceAccount,
+        });
+        setLocalInstallItem(null);
+    };
+
+    const onRemoteInstall = async (catalogItem: MCP, result: RemoteServerInstallResult) => {
+        const accessToken =
+            result.metadata?.access_token && typeof result.metadata.access_token === "string"
+                ? result.metadata.access_token
+                : undefined;
+
+        await installServer({
+            name: catalogItem.name,
+            catalogId: catalogItem.id,
+            ...(accessToken && { accessToken }),
+            teamId: result.teamId ?? undefined,
+        });
+        setRemoteInstallItem(null);
+    };
+
+    const onNoAuthInstall = async (result: NoAuthInstallResult) => {
+        const item = noAuthInstallItem();
+        if (!item) return;
+        await installServer({
+            name: item.name,
+            catalogId: item.id,
+            teamId: result.teamId ?? undefined,
+        });
+        setNoAuthInstallItem(null);
     };
 
     return (
@@ -68,7 +132,7 @@ export function McpRegistry(props: {
                                     <McpCard
                                         item={item}
                                         instances={getInstances(item.id)}
-                                        onInstall={() => props.onInstall?.(item)}
+                                        onInstall={() => onInstall(item)}
                                         onManageInstallations={() => setInstallationsDialogMcpId(item.id)}
                                     />
                                 </Tabs.Trigger>
@@ -88,7 +152,7 @@ export function McpRegistry(props: {
                                         <EmptyDescription>
                                             This server is not installed yet. Install it to discover available tools.
                                         </EmptyDescription>
-                                        <Button variant="success" onClick={() => props.onInstall?.(item)}>
+                                        <Button variant="success" onClick={() => onInstall(item)}>
                                             Install server
                                         </Button>
                                     </Empty>
@@ -117,8 +181,32 @@ export function McpRegistry(props: {
                 instances={getInstances(installationsDialogMcpId() ?? "")}
                 onInstall={() => {
                     const mcp = installationsDialogMcp();
-                    if (mcp) props.onInstall?.(mcp);
+                    if (mcp) onInstall(mcp);
                 }}
+            />
+
+            <LocalServerInstallDialog
+                open={Boolean(localInstallItem())}
+                onOpenChange={(open) => { if (!open) setLocalInstallItem(null); }}
+                catalogItem={localInstallItem()}
+                installing={installSubmission.pending}
+                onInstall={onLocalInstall}
+            />
+
+            <RemoteServerInstallDialog
+                open={Boolean(remoteInstallItem())}
+                onOpenChange={(open) => { if (!open) setRemoteInstallItem(null); }}
+                catalogItem={remoteInstallItem()}
+                installing={installSubmission.pending}
+                onInstall={onRemoteInstall}
+            />
+
+            <NoAuthInstallDialog
+                open={Boolean(noAuthInstallItem())}
+                onOpenChange={(open) => { if (!open) setNoAuthInstallItem(null); }}
+                catalogItem={noAuthInstallItem()}
+                installing={installSubmission.pending}
+                onInstall={onNoAuthInstall}
             />
         </div>
     );

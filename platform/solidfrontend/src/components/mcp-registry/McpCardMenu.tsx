@@ -1,4 +1,4 @@
-import { Ellipsis, FileText, Info, Layers, Pencil, RefreshCcw, Trash2 } from "lucide-solid";
+import { Ellipsis, FileText, Info, Layers, Pencil, RefreshCcw, Trash2 } from "@/components/icons";
 import {
     DropdownMenu,
     DropdownMenuContent,

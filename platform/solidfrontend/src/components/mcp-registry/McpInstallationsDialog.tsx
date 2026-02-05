@@ -1,5 +1,5 @@
 import { For, Match, Show, Switch } from "solid-js";
-import { Key, Plus } from "lucide-solid";
+import { Key, Plus } from "@/components/icons";
 import type { McpServer } from "@/types";
 import { Button } from "../primitives/Button";
 import { Dialog, DialogContent } from "../primitives/Dialog";

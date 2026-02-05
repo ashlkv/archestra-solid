@@ -1,4 +1,4 @@
-import { X } from "lucide-solid";
+import { X } from "@/components/icons";
 import type { ComponentProps, JSX, ParentProps } from "solid-js";
 import { splitProps } from "solid-js";
 import styles from "./Tag.module.css";

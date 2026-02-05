@@ -2,6 +2,10 @@ import { defineConfig } from "@solidjs/start/config";
 import { resolve } from "path";
 import devtools from "solid-devtools/vite";
 
+// Vite dev mode does not tree-shake, so barrel imports (e.g. `from "lucide-solid"`)
+// load every module in the package. For lucide-solid this means ~1900 icons.
+// Use the local barrel file `@/components/icons` which deep-imports only used icons.
+// Never import directly from "lucide-solid" — add new icons to `src/components/icons.ts`.
 export default defineConfig({
     server: {
         // Proxy API requests to backend.
