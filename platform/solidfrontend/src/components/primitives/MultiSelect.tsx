@@ -1,5 +1,5 @@
 import { Combobox } from "@kobalte/core/combobox";
-import { Check, ChevronDown } from "lucide-solid";
+import { Check, ChevronDown } from "@/components/icons";
 import { createSignal, For, Show, type JSX } from "solid-js";
 import { Tag } from "./Tag";
 import styles from "./MultiSelect.module.css";

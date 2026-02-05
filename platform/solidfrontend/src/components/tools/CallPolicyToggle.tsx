@@ -1,4 +1,4 @@
-import { Ban, Check, Handshake } from "lucide-solid";
+import { Ban, Check, Handshake } from "@/components/icons";
 import { createEffect, createSignal, For, type JSX } from "solid-js";
 import type { CallPolicy } from "@/types";
 import { useSaveCallPolicy } from "@/lib/policy.query";

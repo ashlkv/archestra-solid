@@ -1,4 +1,4 @@
-import { Loader2 } from "lucide-solid";
+import { Loader2 } from "@/components/icons";
 import type { JSX } from "solid-js";
 import styles from "./Spinner.module.css";
 

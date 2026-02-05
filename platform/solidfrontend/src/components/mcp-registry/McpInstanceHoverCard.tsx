@@ -1,5 +1,5 @@
 import { For, Match, Switch } from "solid-js";
-import { Key } from "lucide-solid";
+import { Key } from "@/components/icons";
 import type { McpServer } from "@/types";
 import { Button } from "../primitives/Button";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "../primitives/HoverCard";
