@@ -1,5 +1,5 @@
 import type { Component } from "solid-js";
-import { Bug, Hammer, Server } from "lucide-solid";
+import { Bug, Hammer, Server } from "@/components/icons";
 import { IconArchestra } from "./IconArchestra";
 import { IconContext7 } from "./IconContext7";
 import { IconGitHub } from "./IconGitHub";

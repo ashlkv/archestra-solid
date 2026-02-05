@@ -1,5 +1,5 @@
 import { Select as KobalteSelect } from "@kobalte/core/select";
-import { Check, ChevronDown } from "lucide-solid";
+import { Check, ChevronDown } from "@/components/icons";
 import { Show, type JSX } from "solid-js";
 import { Spinner } from "./Spinner";
 import styles from "./Select.module.css";

@@ -37,6 +37,11 @@
 - Avoid "what" comments that describe what code does
 - Only add "why" comments when the reasoning isn't obvious from the code
 
+**Icons**:
+- Never import from `"lucide-solid"` directly — Vite dev mode does not tree-shake, so it loads all ~1900 icons
+- Import from `@/components/icons` instead: `import { Check, X } from "@/components/icons"`
+- When adding a new icon, add a deep-import line to `src/components/icons.ts`
+
 **Styling**:
 - Use lowercase or kebab-case for CSS class names: `.popover-content` not `.popoverContent`
 - Use CSS variables from `theme.module.css` for theming
