@@ -1,7 +1,7 @@
 /**
  * API utilities for SolidStart.
  */
-import { query, action, createAsync, revalidate, useAction, useSubmission, json } from "@solidjs/router";
+import { action, createAsync, json, query, revalidate, useAction, useSubmission } from "@solidjs/router";
 import { getRequestEvent } from "solid-js/web";
 
 export type QueryResult<DataType> =
@@ -36,18 +36,22 @@ type SdkResponse<T> = { data?: T; error?: { error?: { message?: string }; messag
 /**
  * Factory for creating query hooks with TanStack Query-like API.
  */
-export function createQuery<Data, Filter = void>({ queryKey, callback }: {
+export function createQuery<Data, Filter = void>({
+    queryKey,
+    callback,
+}: {
     queryKey: string;
     callback: (params: Filter) => Promise<SdkResponse<Data>>;
-}): (params: Filter) => QueryResult<Data> {
+}): (params: Filter | (() => Filter)) => QueryResult<Data> {
     const serverQuery = query(async (params: Filter) => {
         const response = await callback(params);
         const error = response.error?.error?.message || response.error?.message;
         return { data: response.data, error };
     }, queryKey);
 
-    return function(params: Filter): QueryResult<Data> {
-        const result = createAsync(() => serverQuery(params));
+    return (params: Filter | (() => Filter)): QueryResult<Data> => {
+        const resolveParams = typeof params === "function" ? (params as () => Filter) : () => params;
+        const result = createAsync(() => serverQuery(resolveParams()));
         return {
             /** To preserve reactivity, data is a signal (a function) */
             data: () => result()?.data,
@@ -77,7 +81,11 @@ export function createQuery<Data, Filter = void>({ queryKey, callback }: {
 /**
  * Factory for creating mutation hooks with TanStack Query-like API.
  */
-export function createSubmission<Payload, Result = unknown>({ callback, onSuccess, onError }: {
+export function createSubmission<Payload, Result = unknown>({
+    callback,
+    onSuccess,
+    onError,
+}: {
     callback: (update: Payload) => Promise<SdkResponse<Result>>;
     onSuccess?: () => void;
     onError?: (error: Error) => void;
@@ -89,7 +97,7 @@ export function createSubmission<Payload, Result = unknown>({ callback, onSucces
         return json(response.data, { revalidate: [] });
     });
 
-    return function(filter?: (args: [Payload]) => boolean): MutationResult<Payload> {
+    return (filter?: (args: [Payload]) => boolean): MutationResult<Payload> => {
         const trigger = useAction(serverAction);
         const submission = filter ? useSubmission(serverAction, filter) : useSubmission(serverAction);
 

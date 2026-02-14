@@ -3,7 +3,7 @@
     font-size: var(--font-size-xsmall);
     line-height: var(--line-height-xsmall);
     color: white;
-    background: var(--foreground);
+    background: color-mix(in oklch, var(--foreground) 60%, var(--background));
     border-radius: var(--radius);
     z-index: 50;
 }

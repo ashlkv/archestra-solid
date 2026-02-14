@@ -3,7 +3,7 @@
 }
 
 .check {
-    color: var(--success);
+    color: var(--success-foreground);
 }
 
 .label {

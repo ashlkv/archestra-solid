@@ -163,20 +163,22 @@ export function McpCard(props: Props) {
                         </div>
                     </Show>
                     <Show when={isInstalled() && !isBuiltin()}>
-                        <McpInstanceHoverCard instances={props.instances ?? []} onUninstall={props.onUninstall}>
-                            <div class={styles["installed-info"]} data-label="Installed info">
-                                <Show when={hasMultipleInstances()}>
-                                    <p class={styles["installed-label"]}>Installed × {instanceCount()}</p>
+                        <div class={styles["installed-info"]} data-label="Installed info">
+                            <Show when={hasMultipleInstances()}>
+                                <p class={styles["installed-label"]}>Installed × {instanceCount()}</p>
+                                <McpInstanceHoverCard instances={props.instances ?? []} onUninstall={props.onUninstall}>
                                     <p class={styles["installed-credential"]}>various credentials</p>
-                                </Show>
-                                <Show when={!hasMultipleInstances()}>
-                                    <p class={styles["installed-label"]}>Installed with</p>
+                                </McpInstanceHoverCard>
+                            </Show>
+                            <Show when={!hasMultipleInstances()}>
+                                <p class={styles["installed-label"]}>Installed with</p>
+                                <McpInstanceHoverCard instances={props.instances ?? []} onUninstall={props.onUninstall}>
                                     <p class={styles["installed-credential"]}>
                                         {getCredentialLabel(props.instances![0])}
                                     </p>
-                                </Show>
-                            </div>
-                        </McpInstanceHoverCard>
+                                </McpInstanceHoverCard>
+                            </Show>
+                        </div>
                         <Button variant="default" size="small" onClick={onInstall} data-label="New instance">
                             New instance
                         </Button>
