@@ -33,6 +33,12 @@ const navigationItems: MenuItem[] = [
         icon: () => <Bot />,
     },
     {
+        title: "Tools",
+        url: "/mcp-catalog/registry",
+        icon: () => <Wrench />,
+        matchPrefix: "/mcp-catalog",
+    },
+    {
         title: "MCP Gateways",
         url: "/mcp-gateways",
         icon: () => <Shield />,
@@ -47,18 +53,6 @@ const navigationItems: MenuItem[] = [
         url: "/logs/llm-proxy",
         icon: () => <MessagesSquare />,
         matchPrefix: "/logs",
-    },
-    {
-        title: "Tools",
-        url: "/tools",
-        icon: () => <Wrench />,
-        matchPrefix: "/tools",
-    },
-    {
-        title: "MCP Registry",
-        url: "/mcp-catalog/registry",
-        icon: () => <Router />,
-        matchPrefix: "/mcp-catalog",
     },
     {
         title: "Cost & Limits",
@@ -78,7 +72,7 @@ const navigationItems: MenuItem[] = [
     },
 ];
 
-const enabledRoutes = ["/mcp-catalog", "/tools"];
+const enabledRoutes = ["/mcp-catalog", "/tools", "/logs"];
 
 function isEnabled(item: MenuItem): boolean {
     const prefix = item.matchPrefix ?? item.url;

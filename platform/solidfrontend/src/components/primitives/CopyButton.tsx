@@ -1,4 +1,4 @@
-import { createSignal, Show, type JSX } from "solid-js";
+import { createSignal, type JSX, Show } from "solid-js";
 import { Check, Copy } from "@/components/icons";
 import { Button } from "./Button";
 import styles from "./CopyButton.module.css";
@@ -39,7 +39,7 @@ export function CopyButton(props: Props): JSX.Element {
     return (
         <Button
             variant="ghost"
-            size="small"
+            size={props.label ? "small" : "icon"}
             class={`${styles.button} ${props.class ?? ""}`}
             onClick={handleCopy}
             disabled={props.disabled}

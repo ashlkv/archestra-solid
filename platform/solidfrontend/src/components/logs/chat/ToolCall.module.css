@@ -1,0 +1,145 @@
+.root {
+    margin: 0.5rem 0;
+}
+
+.trigger {
+    gap: 0.75rem;
+}
+
+.trigger-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.trigger-left {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.tool-name {
+    font-weight: 600;
+    font-size: var(--font-size-small);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.status-badge {
+    gap: 0.375rem;
+    border-radius: 999px;
+    font-size: var(--font-size-xsmall);
+}
+
+.chevron {
+    flex-shrink: 0;
+    color: var(--muted-foreground);
+    transition: transform 200ms ease;
+}
+
+/* Kobalte adds data-expanded to the trigger when open */
+.trigger[data-expanded] .chevron {
+    transform: rotate(180deg);
+}
+
+.error-text {
+    color: var(--destructive);
+    font-size: var(--font-size-xsmall);
+    margin-top: 0.5rem;
+    text-align: left;
+    user-select: text;
+}
+
+.section {
+    padding: 0.75rem 1rem;
+    border-top: 1px solid var(--border);
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+}
+
+.section-label {
+    font-weight: 600;
+    font-size: var(--font-size-xsmall);
+    color: var(--muted-foreground);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0;
+}
+
+.code-block {
+    font-family: var(--font-mono);
+    font-size: var(--font-size-xsmall);
+    background: var(--muted);
+    padding: 0.75rem;
+    border-radius: var(--radius);
+    overflow: auto;
+    max-height: 400px;
+    white-space: pre-wrap;
+    word-break: break-all;
+    margin: 0;
+}
+
+.code-block.error {
+    background: color-mix(in srgb, var(--destructive) 10%, transparent);
+    color: var(--destructive);
+}
+
+.output-wrapper {
+    position: relative;
+}
+
+.expand-overlay {
+    display: flex;
+    justify-content: center;
+    padding: 0.5rem 0;
+}
+
+.expand-overlay-collapsed {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 3rem 0 0.75rem;
+    background: linear-gradient(to top, var(--background) 30%, transparent);
+}
+
+.conversations-container {
+    display: grid;
+    gap: 0.75rem;
+    background: var(--muted);
+    border-radius: var(--radius);
+    padding: 0.75rem;
+}
+
+.conversation-row {
+    display: flex;
+    gap: 0.5rem;
+    align-items: flex-start;
+}
+
+.conversation-assistant {
+    justify-content: flex-end;
+}
+
+.conversation-bubble {
+    max-width: 85%;
+    border-radius: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    font-size: var(--font-size-xsmall);
+    white-space: pre-wrap;
+}
+
+.bubble-user {
+    background: var(--secondary);
+    color: var(--foreground);
+}
+
+.bubble-assistant {
+    background: var(--primary);
+    color: var(--primary-foreground);
+}

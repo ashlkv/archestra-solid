@@ -6,6 +6,7 @@
     gap: 0.5rem;
     height: var(--input-height);
     padding: 0.5rem 1rem;
+    font-family: inherit;
     font-size: var(--font-size);
     font-weight: 500;
     line-height: var(--line-height);

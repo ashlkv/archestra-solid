@@ -1,0 +1,44 @@
+.root {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+}
+
+.trigger {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    border: none;
+    background: transparent;
+    color: var(--foreground);
+    font-size: var(--font-size-small);
+    cursor: pointer;
+    text-align: left;
+}
+
+.trigger:hover {
+    background: var(--accent);
+}
+
+.content {
+    overflow: hidden;
+    animation: collapsible-slide-down 200ms ease-out;
+}
+
+.content[data-closed] {
+    display: none;
+}
+
+@keyframes collapsible-slide-down {
+    from {
+        height: 0;
+        opacity: 0;
+    }
+    to {
+        height: var(--kb-collapsible-content-height);
+        opacity: 1;
+    }
+}

@@ -1,5 +1,6 @@
-import { For, Show, type JSX } from "solid-js";
-import { HoverCard, HoverCardTrigger, HoverCardContent } from "../primitives/HoverCard";
+import { For, type JSX, Show } from "solid-js";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "../primitives/HoverCard";
+import { Markdown } from "../primitives/Markdown";
 import styles from "./ToolHoverCard.module.css";
 
 type JsonSchema = {
@@ -51,7 +52,7 @@ export function ToolHoverCard(props: {
                         <span class={styles.parens}>)</span>
                     </div>
                     <Show when={props.description}>
-                        <p class={styles.description}>{props.description}</p>
+                        <Markdown class={styles.description}>{props.description ?? undefined}</Markdown>
                     </Show>
                     <Show when={params().length > 0}>
                         <div class={styles.params}>
@@ -59,7 +60,7 @@ export function ToolHoverCard(props: {
                                 {(param) => (
                                     <Show when={param.description}>
                                         <span class={styles["param-name"]}>{param.name}</span>
-                                        <span class={styles["param-desc"]}>{param.description}</span>
+                                        <Markdown class={styles["param-desc"]}>{param.description}</Markdown>
                                     </Show>
                                 )}
                             </For>
