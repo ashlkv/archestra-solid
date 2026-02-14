@@ -39,10 +39,7 @@ export function Tab(props: {
 }): JSX.Element {
     return (
         <KobalteTabs.Trigger as={props.as} class={`${styles.trigger} ${props.class ?? ""}`} value={props.value} disabled={props.disabled} data-label="Tab">
-            {(state) => typeof props.children === "function"
-                ? props.children({ selected: state?.selected?.() ?? false })
-                : props.children
-            }
+            {props.children}
         </KobalteTabs.Trigger>
     );
 }
