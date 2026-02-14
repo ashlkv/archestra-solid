@@ -11,7 +11,6 @@ import { Button } from "@/components/primitives/Button";
 import { Empty, EmptyDescription, EmptyTitle } from "@/components/primitives/Empty";
 import { PageHeader } from "@/components/primitives/PageHeader";
 import { Spinner } from "@/components/primitives/Spinner";
-import { StaticLayout } from "@/components/primitives/StaticLayout";
 import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "@/components/primitives/Table";
 import { Tab, TabList, Tabs } from "@/components/primitives/Tabs";
 import { useAgents } from "@/lib/agent.query";
@@ -99,7 +98,7 @@ export default function McpGatewayLogsPage(): JSX.Element {
     };
 
     return (
-        <StaticLayout>
+        <>
             <PageHeader
                 title="Logs"
                 description="View all logs including LLM proxy interactions and MCP gateway tool calls."
@@ -288,6 +287,6 @@ export default function McpGatewayLogsPage(): JSX.Element {
                     onPageChange={(newPage) => setSearchParams({ page: String(newPage) })}
                 />
             </Show>
-        </StaticLayout>
+        </>
     );
 }
