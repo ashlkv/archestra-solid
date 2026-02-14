@@ -1,0 +1,187 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 65vh;
+    min-height: 400px;
+    overflow-y: auto;
+}
+
+.section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.section-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: bold;
+}
+
+.section-title-icon {
+    color: var(--muted-foreground);
+}
+
+.section-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.field {
+    display: flex;
+    gap: 0.25rem;
+}
+
+.field-label {
+    color: var(--muted-foreground);
+    font-weight: bold;
+}
+
+.field-value {
+    color: var(--foreground);
+}
+
+.link {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    color: var(--primary);
+}
+
+.link:hover {
+    text-decoration: underline;
+}
+
+.link-icon {
+    flex-shrink: 0;
+}
+
+.tool-card {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 0.75rem;
+}
+
+.tool-name {
+    font-weight: bold;
+    font-family: var(--font-mono);
+}
+
+.tool-description {
+    color: var(--muted-foreground);
+    margin-top: 0.25rem;
+}
+
+.config-card {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 0.75rem;
+}
+
+.config-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+.config-name {
+    font-weight: bold;
+    font-family: var(--font-mono);
+}
+
+.config-badges {
+    display: flex;
+    gap: 0.25rem;
+}
+
+.config-description {
+    color: var(--muted-foreground);
+    margin-top: 0.25rem;
+}
+
+.config-default {
+    color: var(--muted-foreground);
+    margin-top: 0.25rem;
+    font-size: var(--font-size-xsmall);
+}
+
+.env-vars {
+    background: var(--muted);
+    border-radius: var(--radius);
+    padding: 0.5rem;
+}
+
+.env-var {
+    font-family: var(--font-mono);
+    font-size: var(--font-size-xsmall);
+}
+
+.env-var-key {
+    color: var(--foreground);
+}
+
+.code {
+    background: var(--muted);
+    color: var(--destructive);
+    padding: 0.125rem 0.375rem;
+    border-radius: var(--radius);
+    font-family: var(--font-mono);
+    font-size: var(--font-size-xsmall);
+}
+
+.github-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+.github-stat {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.github-stat-icon {
+    flex-shrink: 0;
+}
+
+.github-stat-label {
+    color: var(--muted-foreground);
+}
+
+.github-stat-value {
+    font-weight: bold;
+}
+
+.readme-container {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem;
+}
+
+.separator {
+    height: 1px;
+    min-height: 1px;
+    background: var(--border);
+    margin: 0.5rem 0;
+}
+
+.loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 200px;
+    color: var(--muted-foreground);
+}
+
+.description {
+    color: var(--muted-foreground);
+}
