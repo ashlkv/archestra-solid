@@ -30,9 +30,10 @@ function getCredentialLabel(instance: McpServer): string {
     return instance.ownerEmail ?? "Unknown";
 }
 
-const badgeColors: Record<MCP["serverType"], string>  = {
+const badgeColors: Record<MCP["serverType"], "info" | "muted" | "success">  = {
     remote: 'info',
     local: 'success',
+    builtin: 'success',
 }
 
 export function McpCard(props: Props) {
@@ -44,7 +45,7 @@ export function McpCard(props: Props) {
     const hasMultipleInstances = () => instanceCount() > 1;
 
     const badges = () => {
-        const result: Array<{ label: string; variant: "info" | "muted" }> = [];
+        const result: Array<{ label: string; variant: "info" | "muted" | "success" }> = [];
         if (props.item.serverType) {
             result.push({
                 label: isBuiltin() ? "local" : props.item.serverType,
@@ -71,6 +72,9 @@ export function McpCard(props: Props) {
 
     const cardClass = () => {
         const classes = [styles.card];
+        if (isBuiltin()) {
+            classes.push(styles.builtin);
+        }
         if (isWellKnown()) {
             classes.push(styles["well-known"]);
         }
@@ -78,15 +82,15 @@ export function McpCard(props: Props) {
     }
 
     return (
-        <div class={cardClass()}>
-            <div class={styles.main}>
+        <div class={cardClass()} data-label="Card">
+            <div class={styles.main} data-label="Card main">
                 <div class={styles["top-row"]}>
-                    <div class={styles.icon}>
+                    <div class={styles.icon} data-label="Icon">
                         <Dynamic component={getIcon(props.item.name)} size={24} />
                     </div>
                     <div class={styles.header}>
-                        <p class={styles.name}>{props.item.name}</p>
-                        <div class={styles.badges}>
+                        <p class={styles.name} data-label="Name">{props.item.name}</p>
+                        <div class={styles.badges} data-label="Badges">
                             <For each={badges()}>
                                 {(badge) => (
                                     <Badge variant={badge.variant} pill caps>
@@ -98,12 +102,12 @@ export function McpCard(props: Props) {
                     </div>
                 </div>
                 <Show when={props.item.description}>
-                    <p class={styles.description}>{props.item.description}</p>
+                    <p class={styles.description} data-label="Description">{props.item.description}</p>
                 </Show>
             </div>
-            <div class={styles.actions}>
+            <div class={styles.actions} data-label="Actions">
                 <Show when={isBuiltin()}>
-                    <div class={styles["system-info"]}>
+                    <div class={styles["system-info"]} data-label="Built-in info">
                         <p>Built-in server, always available. Cannot be installed or deleted.</p>
                     </div>
                 </Show>
@@ -122,7 +126,7 @@ export function McpCard(props: Props) {
                 </Show>
                 <Show when={isInstalled() && !isBuiltin()}>
                     <McpInstanceHoverCard instances={props.instances ?? []} onUninstall={props.onUninstall}>
-                        <div class={styles["installed-info"]}>
+                        <div class={styles["installed-info"]} data-label="Installed info">
                             <Show when={hasMultipleInstances()}>
                                 <p class={styles["installed-label"]}>Installed × {instanceCount()}</p>
                                 <p class={styles["installed-credential"]}>various credentials</p>
@@ -135,12 +139,12 @@ export function McpCard(props: Props) {
                             </Show>
                         </div>
                     </McpInstanceHoverCard>
-                    <Button variant="default" size="small" onClick={onInstall}>
+                    <Button variant="default" size="small" onClick={onInstall} data-label="New instance">
                         New instance
                     </Button>
                 </Show>
                 <Show when={!isInstalled() && !isBuiltin()}>
-                    <Button variant="success" onClick={onInstall} class={styles["install-button"]}>
+                    <Button onClick={onInstall} class={styles["install-button"]} data-label="Install">
                         Install
                     </Button>
                 </Show>

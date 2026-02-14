@@ -5,6 +5,7 @@ import { IconContext7 } from "./IconContext7";
 import { IconGitHub } from "./IconGitHub";
 import { IconJira } from "./IconJira";
 import { IconKubernetes } from "./IconKubernetes";
+import { IconPlaywright } from "./IconPlaywright";
 
 type IconComponent = Component<{ size?: number; class?: string }>;
 
@@ -15,6 +16,7 @@ const wellKnown: Record<string, IconComponent> = {
     jira: IconJira,
     kubernetes: IconKubernetes,
     k8s: IconKubernetes,
+    playwright: IconPlaywright,
 };
 
 const builtIn: Record<string, IconComponent> = {

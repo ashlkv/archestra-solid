@@ -10,10 +10,10 @@ type PolicyAction = CallPolicy["action"]
 
 const MIN_LOADER_DURATION = 400;
 
-const ICONS: Record<PolicyAction, JSX.Element> = {
-    allow_when_context_is_untrusted: <Check size={14} />,
-    block_when_context_is_untrusted: <Handshake size={14} />,
-    block_always: <Ban size={14} />,
+const ICONS: Record<PolicyAction, () => JSX.Element> = {
+    allow_when_context_is_untrusted: () => <Check size={14} />,
+    block_when_context_is_untrusted: () => <Handshake size={14} />,
+    block_always: () => <Ban size={14} />,
 };
 
 export function CallPolicyToggle(props: {
@@ -63,7 +63,7 @@ export function CallPolicyToggle(props: {
                         disabled={isDisabled()}
                         onClick={onClick(option.value)}
                     >
-                        {ICONS[option.value]}
+                        {ICONS[option.value]()}
                     </ToggleItem>
                 )}
             </For>

@@ -7,8 +7,8 @@ import type { MCP, McpServer, Team } from "@/types";
 import styles from "./SelectCredentialTypeAndTeams.module.css";
 
 type Props = {
-    selectedTeamId: string | null;
-    onTeamChange: (teamId: string | null) => void;
+    selectedTeamId: string | undefined;
+    onTeamChange: (teamId: string | undefined) => void;
     catalogId?: string;
     onCredentialTypeChange?: (type: "personal" | "team") => void;
 };
@@ -81,7 +81,7 @@ export function SelectCredentialTypeAndTeams(props: Props) {
         setCredentialType(type);
         props.onCredentialTypeChange?.(type);
         if (type === "personal") {
-            props.onTeamChange(null);
+            props.onTeamChange(undefined);
         }
     };
 
@@ -103,7 +103,7 @@ export function SelectCredentialTypeAndTeams(props: Props) {
                     </span>
                     <Select
                         value={props.selectedTeamId ?? ""}
-                        onChange={(value) => props.onTeamChange(value || null)}
+                        onChange={(value) => props.onTeamChange(value || undefined)}
                         options={teamOptions()}
                         placeholder={teamsQuery.pending ? "Loading teams..." : "Select a team"}
                         disabled={teamsQuery.pending}
