@@ -1,6 +1,6 @@
 import { revalidate } from "@solidjs/router";
 import { createQuery, createSubmission, getAuthHeaders } from "@/lib/api";
-import { archestraApiSdk } from "@shared";
+import { archestraApiSdk, archestraCatalogSdk } from "@shared";
 import { showToast, showError } from "@/components/primitives/Toast";
 import type { MCP } from "@/types";
 
@@ -50,3 +50,8 @@ const deleteMcp = createSubmission({
 export function useDeleteMcp() {
     return deleteMcp();
 }
+
+export const useMcpServerDetails = createQuery({
+    queryKey: "fetch-mcp-server-details",
+    callback: (name: string) => archestraCatalogSdk.getMcpServer({ path: { name } }),
+});

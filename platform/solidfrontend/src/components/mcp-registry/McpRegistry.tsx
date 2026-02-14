@@ -4,6 +4,7 @@ import { McpCard } from "./McpCard";
 import { McpInstallDialog } from "./McpInstallDialog";
 import { McpDeleteDialog } from "./McpDeleteDialog";
 import { McpLogsDialog } from "./McpLogsDialog";
+import { McpAboutDialog } from "./McpAboutDialog";
 import { ToolTable } from "../tools/ToolTable";
 import { Alert } from "../primitives/Alert";
 import { Button } from "../primitives/Button";
@@ -34,6 +35,7 @@ export function McpRegistry(props: {
     const [installItem, setInstallItem] = createSignal<MCP | undefined>(undefined);
     const [deleteItem, setDeleteItem] = createSignal<MCP | undefined>(undefined);
     const [logsItem, setLogsItem] = createSignal<MCP | undefined>(undefined);
+    const [aboutServerName, setAboutServerName] = createSignal<string | undefined>(undefined);
 
     const selectedMcp = () => props.catalog?.find((item) => item.id === selectedId());
 
@@ -114,6 +116,7 @@ export function McpRegistry(props: {
                                         onInstall={() => setInstallItem(item)}
                                         onDelete={() => setDeleteItem(item)}
                                         onLogs={() => setLogsItem(item)}
+                                        onAbout={() => setAboutServerName(item.name)}
                                     />
                                 </div>
                             )}
@@ -179,6 +182,13 @@ export function McpRegistry(props: {
                         name: server.ownerEmail ?? server.teamDetails?.name ?? "Unknown",
                     }))}
                     onClose={() => setLogsItem(undefined)}
+                />
+            </Show>
+
+            <Show when={aboutServerName()}>
+                <McpAboutDialog
+                    serverName={aboutServerName()!}
+                    onClose={() => setAboutServerName(undefined)}
                 />
             </Show>
         </div>

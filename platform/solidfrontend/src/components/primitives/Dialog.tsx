@@ -15,15 +15,15 @@ export function DialogTrigger(props: ParentProps): JSX.Element {
     return <KobalteDialog.Trigger as="div" class={styles.trigger}>{props.children}</KobalteDialog.Trigger>;
 }
 
-export function DialogContent(props: ParentProps<{ title?: string; size?: "default" | "small" | "medium" | "large" }>): JSX.Element {
+export function DialogContent(props: ParentProps<{ title?: string; size?: "small" | "medium" | "large" }>): JSX.Element {
     const contentClass = () => {
         const classes = [styles.content];
         if (props.size === "small") {
             classes.push(styles.small);
-        } else if (props.size === "medium") {
-            classes.push(styles.medium);
         } else if (props.size === "large") {
             classes.push(styles.large);
+        } else {
+            classes.push(styles.medium);
         }
         return classes.join(" ");
     };
