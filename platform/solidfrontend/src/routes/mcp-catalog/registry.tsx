@@ -1,14 +1,14 @@
-import { McpRegistry } from "@/components/mcp-registry/McpRegistry";
+import { clientOnly } from "@solidjs/start";
 import { MainLayout } from "~/components/primitives/MainLayout";
-import { PageHeader } from "~/components/primitives/PageHeader";
 import { useMcpRegistry } from "@/lib/mcp-registry.query";
+
+const McpRegistry = clientOnly(() => import("@/components/mcp-registry/McpRegistry").then(m => ({ default: m.McpRegistry })));
 
 export default function RegistryPage() {
     const { data: catalog, query } = useMcpRegistry();
 
     return (
-        <MainLayout variant="muted">
-            {/*<PageHeader title="MCP Catalog" />*/}
+        <MainLayout>
             <McpRegistry catalog={catalog()} error={Boolean(query.error)} pending={query.pending} />
         </MainLayout>
     );

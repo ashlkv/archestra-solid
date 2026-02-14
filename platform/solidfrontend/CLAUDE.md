@@ -1,11 +1,19 @@
 # Solidfrontend Conventions
 
+This is a SolidJS rewrite of a NextJS frontend located in `../frontend` folder.
+Whenever you are asked to port UI, port it from `../frontend`. It also has Tanstack / React queries. 
+
+`../shared` folder has api / sdk methods and types share with the backend, which is located in `../backend` folder.
+
 **Component Library**: Using Kobalte unstyled components as the base for UI primitives.
+
+**Type Checking**: Skip `pnpm type-check` during the port - focus on functionality first, fix types later.
 
 **Naming**:
 - Use full variable names: `response` not `res`, `request` not `req`, `callback` not `cb`/`fn`, `event` not `e`, `error` not `err`
 - Use full words for prop values: `size="small"` not `size="sm"`, `size="medium"` not `size="md"`
 - Use meaningful names: `policy` not `input`, `agent` not `data`, `toolId` not `params`
+- Avoid ambiguous names: `state`, `payload`, `data`, `info`, `value`, `item` - use specific names like `loadingState`, `toolPayload`, `catalogData`
 - Catch exceptions, not errors: `catch (exception)` not `catch (error)`
 - Name event handlers `onClick`, `onSubmit`, `onChange`, etc. not `handleClick`, `handleSubmit`, `handleChange`
 - Use `save` not `upsert`
@@ -32,6 +40,7 @@
 **Reactivity**:
 - Do not use `createMemo` unless you have really expensive calculations (e.g. aggregating thousands of items)
 - For derived values from props, use a simple function wrapper: `const columns = () => props.columns ?? [3, 7]`
+- Never create JSX at module level - wrap in functions: `const ICONS = { foo: () => <Icon /> }` not `{ foo: <Icon /> }`
 
 **Comments**:
 - Avoid "what" comments that describe what code does
@@ -41,6 +50,12 @@
 - Never import from `"lucide-solid"` directly — Vite dev mode does not tree-shake, so it loads all ~1900 icons
 - Import from `@/components/icons` instead: `import { Check, X } from "@/components/icons"`
 - When adding a new icon, add a deep-import line to `src/components/icons.ts`
+
+**Data Labels**:
+- Add `data-label` attributes to important elements for debugging and testing
+- Use human-readable values: `data-label="Card"`, `data-label="Install"`, `data-label="Tools content"`
+- Label key structural elements: containers, lists, cards, buttons, form fields
+- For dynamic items, include identifier: `data-label={`MCP: ${item.name}`}`
 
 **Styling**:
 - Use lowercase or kebab-case for CSS class names: `.popover-content` not `.popoverContent`
@@ -53,6 +68,11 @@
   - Bad: `<div><Show /><Table /></div>`
   - Good: `<><Show /><Table /></>`
 
+**Null vs Undefined**:
+- Prefer `undefined` over `null` for unset/uninitialized state
+- Use `null` only when a value is intentionally cleared (rare)
+- Signal initial values should be `undefined`: `createSignal<T | undefined>(undefined)`
+
 **Types**:
 - Reuse types from `@shared` package via `archestraApiTypes` (see `src/types.ts`)
 - Do not declare ad-hoc types in components
@@ -63,6 +83,11 @@
   ```tsx
   export function MyComponent(props: { value: string; onChange: (v: string) => void }) {
   ```
+
+**SSR**:
+- Keep it simple - don't add SSR tricks like `onMount` guards, `clientOnly`, or `isServer` checks for basic pages
+- If there's a hydration issue, fix the root cause instead of adding workarounds
+- Route components should just render their content directly
 
 **Queries**:
 - Do not import `action`, `createAsync`, `query`, `revalidate`, `useAction`, `useSubmission` from `@solidjs/router` in components - use query hooks from `lib/*.query.ts` instead

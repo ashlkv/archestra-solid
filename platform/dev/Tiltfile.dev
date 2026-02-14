@@ -99,6 +99,16 @@ else:
     serve_env=frontend_env_vars
   )
 
+  # SolidJS frontend dev server - waits for backend to be ready
+  local_resource(
+    dev_resource_name + '-solidfrontend',
+    serve_cmd='trap "pkill -TERM -P $$" EXIT INT TERM; pnpm dev --filter solidfrontend & wait $!',
+    serve_cmd_bat='pnpm dev --filter solidfrontend',
+    labels=['dev'],
+    resource_deps=[dev_resource_name + '-backend'],
+    deps=['../.env'],
+  )
+
 local_resource(
   'lint:fix',
   cmd='pnpm type-check && pnpm lint:fix',

@@ -30,28 +30,28 @@ export function McpCardMenu(props: Props) {
                     <Ellipsis size={16} />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
-                    <DropdownMenuItem onClick={props.onLogs} disabled={!props.isLocal}>
-                        <FileText size={16} />
-                        Logs
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={props.onRestart} disabled={!props.isLocal}>
-                        <RefreshCcw size={16} />
-                        Restart
-                    </DropdownMenuItem>
                     <Show when={props.isInstalled}>
+                        <DropdownMenuItem onClick={props.onLogs} disabled={!props.isLocal}>
+                            <FileText size={16} />
+                            Logs
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={props.onRestart} disabled={!props.isLocal}>
+                            <RefreshCcw size={16} />
+                            Restart
+                        </DropdownMenuItem>
                         <DropdownMenuItem onClick={props.onManageInstallations}>
                             <Layers size={16} />
                             Manage instances
                         </DropdownMenuItem>
+                        <DropdownMenuItem onClick={props.onEdit}>
+                            <Pencil size={16} />
+                            Edit
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
                     </Show>
-                    <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={props.onAbout}>
                         <Info size={16} />
                         About
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={props.onEdit}>
-                        <Pencil size={16} />
-                        Edit
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={props.onDelete} variant="destructive">
