@@ -13,6 +13,7 @@ import {
     Wrench,
 } from "~/components/icons";
 import styles from "./Sidebar.module.css";
+import { SidebarHeader } from "./SidebarHeader";
 
 interface MenuItem {
     title: string;
@@ -89,10 +90,7 @@ export function Sidebar(props: { class?: string }): JSX.Element {
 
     return (
         <aside class={`${styles.sidebar}${props.class ? ` ${props.class}` : ""}`} data-label="Sidebar">
-            <div class={styles.header}>
-                <img src="/logo.png" alt="Logo" class={styles.logo} />
-                <span class={styles.title}>Archestra.AI</span>
-            </div>
+            <SidebarHeader />
 
             <div class={styles.content}>
                 <ul class={styles.menu}>
