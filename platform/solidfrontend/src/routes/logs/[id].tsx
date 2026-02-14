@@ -17,8 +17,8 @@ import type { Agent } from "@/types";
 export default function InteractionDetailPage(): JSX.Element {
     const params = useParams<{ id: string }>();
 
-    const { data: interaction, query: interactionQuery } = useInteraction({ interactionId: params.id });
-    const { data: dualLlmResults } = useDualLlmResultsByInteraction({ interactionId: params.id });
+    const { data: interaction, query: interactionQuery } = useInteraction(() => ({ interactionId: params.id }));
+    const { data: dualLlmResults } = useDualLlmResultsByInteraction(() => ({ interactionId: params.id }));
     const { data: agents } = useAgents();
 
     const dynamicInteraction = () => {

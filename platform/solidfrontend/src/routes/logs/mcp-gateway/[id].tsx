@@ -15,7 +15,7 @@ type ToolResult = { isError?: boolean };
 
 export default function McpToolCallDetailPage(): JSX.Element {
     const params = useParams<{ id: string }>();
-    const { data: toolCall, query: toolCallQuery } = useMcpToolCall({ mcpToolCallId: params.id });
+    const { data: toolCall, query: toolCallQuery } = useMcpToolCall(() => ({ mcpToolCallId: params.id }));
     const { data: agents } = useAgents();
 
     const getProfileName = (agentId: string): string => {

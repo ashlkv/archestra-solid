@@ -124,6 +124,7 @@ body {
     --input-height: 2rem;
     --input-height-xsmall: 1.5rem;
     --input-height-xxsmall: 1.25rem;
+    --cell-height: 2.5rem;
 
     --radius-medium: 0.6rem;
     --radius-large: 1rem;

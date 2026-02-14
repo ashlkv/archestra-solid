@@ -1,5 +1,10 @@
+.tableWrapper {
+    overflow-x: auto;
+}
+
 .table {
     width: 100%;
+    min-width: max-content;
     border-collapse: collapse;
 }
 
@@ -12,13 +17,12 @@
 .row {
 }
 
-.headerCell {
-    padding: 0.75rem 1rem;
+.headerCell,
+.cell {
+    padding: 0.5rem 0.75rem;
+    box-sizing: border-box;
+    height: var(--cell-height);
     border-bottom: 1px solid var(--border);
     text-align: start;
-}
-
-.cell {
-    padding: 0.75rem 1rem;
-    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
 }
