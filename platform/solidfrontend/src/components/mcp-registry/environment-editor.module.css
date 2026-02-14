@@ -1,0 +1,83 @@
+.root {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+
+.section-title {
+    font-weight: bold;
+}
+
+.empty {
+    color: var(--muted-foreground);
+    font-size: var(--font-size-xsmall);
+    margin: 0;
+}
+
+/* Env vars: 7-column grid */
+.header-row {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 0.6fr 0.6fr 1.5fr 1.5fr auto;
+    gap: 0.5rem;
+    align-items: center;
+    font-size: var(--font-size-xsmall);
+    font-weight: bold;
+    color: var(--muted-foreground);
+}
+
+.row {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 0.6fr 0.6fr 1.5fr 1.5fr auto;
+    gap: 0.5rem;
+    align-items: start;
+}
+
+/* Secret files: 6-column grid (no Type column) */
+.secret-header-row {
+    display: grid;
+    grid-template-columns: 1.5fr 0.6fr 0.6fr 2fr 1.5fr auto;
+    gap: 0.5rem;
+    align-items: center;
+    font-size: var(--font-size-xsmall);
+    font-weight: bold;
+    color: var(--muted-foreground);
+}
+
+.secret-row {
+    display: grid;
+    grid-template-columns: 1.5fr 0.6fr 0.6fr 2fr 1.5fr auto;
+    gap: 0.5rem;
+    align-items: start;
+}
+
+.checkbox-cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: var(--input-height);
+}
+
+.value-cell {
+    min-height: var(--input-height);
+    display: flex;
+    align-items: center;
+}
+
+.prompted-text {
+    color: var(--muted-foreground);
+    font-size: var(--font-size-xsmall);
+    font-style: italic;
+}

@@ -1,21 +1,27 @@
+import { useSearchParams } from "@solidjs/router";
 import { createSignal, For, Show } from "solid-js";
-import { AddMcpCard } from "./AddMcpCard";
-import { McpCard } from "./McpCard";
-import { McpInstallDialog } from "./McpInstallDialog";
-import { McpDeleteDialog } from "./McpDeleteDialog";
-import { McpLogsDialog } from "./McpLogsDialog";
-import { McpAboutDialog } from "./McpAboutDialog";
-import { ToolTable } from "../tools/ToolTable";
+import { useAgents } from "@/lib/agent.query";
+import { useDeleteMcp, useMcpServers } from "@/lib/mcp-registry.query";
+import { useDeleteMcpServer, useInstallMcpServer } from "@/lib/mcp-server.query";
+import { useResultPolicies, useToolCallPolicies } from "@/lib/policy.query";
+import { useTools } from "@/lib/tool.query";
+import type { MCP } from "@/types";
 import { Alert } from "../primitives/Alert";
 import { Button } from "../primitives/Button";
 import { Empty, EmptyDescription } from "../primitives/Empty";
-import { useTools } from "@/lib/tool.query";
-import { useAgents } from "@/lib/agent.query";
-import { useToolCallPolicies, useResultPolicies } from "@/lib/policy.query";
-import { useMcpServers, useDeleteMcp } from "@/lib/mcp-registry.query";
-import { useInstallMcpServer } from "@/lib/mcp-server.query";
-import type { MCP } from "@/types";
+import { ToolTable } from "../tools/ToolTable";
+import { AddMcpCard } from "./AddMcpCard";
+import { ClaudeCodeCard } from "./ClaudeCodeCard";
+import { McpAboutDialog } from "./McpAboutDialog";
+import { McpCard } from "./McpCard";
+import { McpDeleteDialog } from "./McpDeleteDialog";
+import { McpEditDialog } from "./McpEditDialog";
+import { McpInstallDialog } from "./McpInstallDialog";
+import { McpLogsDialog } from "./McpLogsDialog";
+import { McpManageInstancesDialog } from "./McpManageInstancesDialog";
 import styles from "./McpRegistry.module.css";
+
+const CLAUDE_CODE_VIRTUAL_ID = "virtual:claude-code";
 
 export function McpRegistry(props: {
     catalog: MCP[] | undefined;
@@ -26,16 +32,34 @@ export function McpRegistry(props: {
     const { data: mcpServers } = useMcpServers();
     const { submit: installServer, submission: installSubmission } = useInstallMcpServer();
     const { submit: deleteMcp, submission: deleteSubmission } = useDeleteMcp();
+    const { submit: uninstallServer } = useDeleteMcpServer();
 
     const getInstances = (catalogId: string) => {
         return (mcpServers() ?? []).filter((server) => server.catalogId === catalogId);
     };
 
-    const [selectedId, setSelectedId] = createSignal<string | undefined>(undefined);
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    const selectedId = () => {
+        const id = searchParams.selected;
+        if (!id || !props.catalog) return undefined;
+        if (id === CLAUDE_CODE_VIRTUAL_ID) return id;
+        const exists = props.catalog.some((item) => item.id === id);
+        return exists ? id : undefined;
+    };
+
+    const isVirtualSelected = () => selectedId() === CLAUDE_CODE_VIRTUAL_ID;
+
+    const setSelectedId = (id: string | undefined) => {
+        setSearchParams({ selected: id });
+    };
+
     const [installItem, setInstallItem] = createSignal<MCP | undefined>(undefined);
     const [deleteItem, setDeleteItem] = createSignal<MCP | undefined>(undefined);
     const [logsItem, setLogsItem] = createSignal<MCP | undefined>(undefined);
     const [aboutServerName, setAboutServerName] = createSignal<string | undefined>(undefined);
+    const [manageInstancesItem, setManageInstancesItem] = createSignal<MCP | undefined>(undefined);
+    const [editItem, setEditItem] = createSignal<MCP | undefined>(undefined);
 
     const selectedMcp = () => props.catalog?.find((item) => item.id === selectedId());
 
@@ -44,18 +68,32 @@ export function McpRegistry(props: {
     const { data: callPolicies } = useToolCallPolicies();
     const { data: resultPolicies } = useResultPolicies();
 
+    const regularCatalog = () => (props.catalog ?? []).filter((item) => item.serverType !== "builtin");
+    const builtinCatalog = () => (props.catalog ?? []).filter((item) => item.serverType === "builtin");
+
+    const autoDiscoveredTools = () =>
+        (allTools() ?? []).filter(
+            (tool) => !tool.catalogId && !tool.mcpServerName && !tool.name.startsWith("archestra__"),
+        );
+
+    const hasAutoDiscoveredTools = () => autoDiscoveredTools().length > 0;
+
     const tools = () => {
         const selected = selectedId();
         if (!selected) return [];
+        if (selected === CLAUDE_CODE_VIRTUAL_ID) return autoDiscoveredTools();
         return (allTools() ?? []).filter((tool) => tool.catalogId === selected);
     };
 
-    const onInstallSubmit = async (catalogItem: MCP, result: {
-        teamId: string | undefined;
-        environmentValues?: Record<string, string>;
-        serviceAccount?: string;
-        metadata?: Record<string, unknown>;
-    }) => {
+    const onInstallSubmit = async (
+        catalogItem: MCP,
+        result: {
+            teamId: string | undefined;
+            environmentValues?: Record<string, string>;
+            serviceAccount?: string;
+            metadata?: Record<string, unknown>;
+        },
+    ) => {
         const accessToken =
             result.metadata?.access_token && typeof result.metadata.access_token === "string"
                 ? result.metadata.access_token
@@ -70,6 +108,12 @@ export function McpRegistry(props: {
             ...(accessToken && { accessToken }),
         });
         setInstallItem(undefined);
+    };
+
+    const onUninstallInstance = async (serverId: string) => {
+        const servers = mcpServers() ?? [];
+        const server = servers.find((s) => s.id === serverId);
+        await uninstallServer({ id: serverId, name: server?.name ?? "" });
     };
 
     const onDeleteConfirm = async () => {
@@ -89,7 +133,9 @@ export function McpRegistry(props: {
             </Show>
 
             <Show when={!props.pending && props.error}>
-                <Alert variant="destructive" data-label="Error">Failed to load catalog</Alert>
+                <Alert variant="destructive" data-label="Error">
+                    Failed to load catalog
+                </Alert>
             </Show>
 
             <Show when={!props.pending && !props.error && (!props.catalog || props.catalog.length === 0)}>
@@ -102,7 +148,7 @@ export function McpRegistry(props: {
                         <div class={styles.tab} data-label="Add MCP card">
                             <AddMcpCard onClick={props.onAddClick} />
                         </div>
-                        <For each={props.catalog}>
+                        <For each={regularCatalog()}>
                             {(item) => (
                                 <div
                                     class={styles.tab}
@@ -114,32 +160,80 @@ export function McpRegistry(props: {
                                         item={item}
                                         instances={getInstances(item.id)}
                                         onInstall={() => setInstallItem(item)}
+                                        onUninstall={onUninstallInstance}
                                         onDelete={() => setDeleteItem(item)}
                                         onLogs={() => setLogsItem(item)}
                                         onAbout={() => setAboutServerName(item.name)}
+                                        onEdit={() => setEditItem(item)}
+                                        onManageInstallations={() => setManageInstancesItem(item)}
                                     />
                                 </div>
                             )}
                         </For>
+                        <Show when={hasAutoDiscoveredTools()}>
+                            <div
+                                class={styles.tab}
+                                classList={{ [styles.selected]: isVirtualSelected() }}
+                                onClick={() => setSelectedId(CLAUDE_CODE_VIRTUAL_ID)}
+                                data-label="MCP: Claude Code"
+                            >
+                                <ClaudeCodeCard />
+                            </div>
+                        </Show>
+                        <For each={builtinCatalog()}>
+                            {(item) => (
+                                <div
+                                    class={styles.tab}
+                                    classList={{ [styles.selected]: selectedId() === item.id }}
+                                    onClick={() => setSelectedId(item.id)}
+                                    data-label={`MCP: ${item.name}`}
+                                >
+                                    <McpCard item={item} instances={getInstances(item.id)} />
+                                </div>
+                            )}
+                        </For>
                     </div>
-                    <Show when={!selectedMcp()}>
+                    <Show when={!selectedMcp() && !isVirtualSelected()}>
                         <Empty class={styles["empty-tools"]} data-label="Empty tools">
                             <EmptyDescription>Select server to see tools</EmptyDescription>
                         </Empty>
                     </Show>
-                    <Show when={selectedMcp()}>
+                    <Show when={isVirtualSelected()}>
                         <div class={styles["tab-content"]} data-label="Tools content">
-                            <Show when={getInstances(selectedId()!).length === 0}>
-                                <Empty data-label="Not installed">
+                            <ToolTable
+                                tools={autoDiscoveredTools}
+                                agents={() => agents() ?? []}
+                                callPolicies={() => callPolicies() ?? []}
+                                resultPolicies={() => resultPolicies() ?? []}
+                                error={toolsQuery.error}
+                                pending={toolsQuery.pending}
+                                columns={["name", "assignments", "call-policy", "result-policy"]}
+                            />
+                        </div>
+                    </Show>
+                    <Show when={selectedMcp() && !isVirtualSelected()}>
+                        <div class={styles["tab-content"]} data-label="Tools content">
+                            <Show
+                                when={
+                                    selectedMcp()?.serverType !== "builtin" && getInstances(selectedId()!).length === 0
+                                }
+                            >
+                                <Empty data-label="Not installed" class={styles["empty-content"]}>
                                     <EmptyDescription>
                                         This server is not installed yet. Install it to discover available tools.
                                     </EmptyDescription>
-                                    <Button variant="success" onClick={() => setInstallItem(selectedMcp()!)}>
+                                    <Button
+                                        variant="success"
+                                        size="large"
+                                        onClick={() => setInstallItem(selectedMcp()!)}
+                                    >
                                         Install server
                                     </Button>
                                 </Empty>
                             </Show>
-                            <Show when={getInstances(selectedId()!).length > 0}>
+                            <Show
+                                when={selectedMcp()?.serverType === "builtin" || getInstances(selectedId()!).length > 0}
+                            >
                                 <ToolTable
                                     tools={tools}
                                     agents={() => agents() ?? []}
@@ -186,9 +280,24 @@ export function McpRegistry(props: {
             </Show>
 
             <Show when={aboutServerName()}>
-                <McpAboutDialog
-                    serverName={aboutServerName()!}
-                    onClose={() => setAboutServerName(undefined)}
+                <McpAboutDialog serverName={aboutServerName()!} onClose={() => setAboutServerName(undefined)} />
+            </Show>
+
+            <Show when={editItem()}>
+                <McpEditDialog item={editItem()!} onClose={() => setEditItem(undefined)} />
+            </Show>
+
+            <Show when={manageInstancesItem()}>
+                <McpManageInstancesDialog
+                    serverName={manageInstancesItem()!.name}
+                    instances={getInstances(manageInstancesItem()!.id)}
+                    onClose={() => setManageInstancesItem(undefined)}
+                    onUninstall={onUninstallInstance}
+                    onInstall={() => {
+                        const item = manageInstancesItem();
+                        setManageInstancesItem(undefined);
+                        if (item) setInstallItem(item);
+                    }}
                 />
             </Show>
         </div>

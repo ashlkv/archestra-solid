@@ -8,13 +8,14 @@ type Variant = "default" | "ghost" | "outline" | "info" | "success" | "warning" 
 type Props = ParentProps<{
     type?: "button" | "submit" | "reset";
     variant?: Variant;
-    size?: "default" | "small" | "xsmall" | "icon";
+    size?: "default" | "large" | "small" | "xsmall" | "icon";
     disabled?: boolean;
     onClick?: (e: MouseEvent) => void;
     class?: string;
 }> & Omit<ComponentProps<"button">, "type" | "disabled" | "onClick" | "class">;
 
 const sizeClasses: Record<string, string> = {
+    large: styles.large,
     small: styles.small,
     xsmall: styles.xsmall,
     icon: styles.icon,
