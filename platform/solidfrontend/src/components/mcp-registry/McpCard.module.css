@@ -1,4 +1,42 @@
+.card-wrapper {
+    position: relative;
+}
+
+.card-wrapper.stacked-1 {
+    margin-bottom: 0.25rem;
+}
+
+.card-wrapper.stacked-2 {
+    margin-bottom: 0.75rem;
+}
+
+.card-wrapper.stacked-1::before,
+.card-wrapper.stacked-2::before,
+.card-wrapper.stacked-2::after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: var(--radius-large);
+    border: 1px solid color-mix(in srgb, var(--foreground) 12%, transparent);
+    pointer-events: none;
+}
+
+.card-wrapper.stacked-1::before,
+.card-wrapper.stacked-2::before {
+    top: 0.25rem;
+    left: 0.25rem;
+    z-index: -1;
+}
+
+.card-wrapper.stacked-2::after {
+    top: 0.75rem;
+    left: 0.75rem;
+    z-index: -2;
+}
+
 .card {
+    position: relative;
     display: flex;
     box-sizing: border-box;
     width: 26.5rem;
@@ -109,17 +147,30 @@
     background: color-mix(in oklch, var(--foreground) 4%, transparent);
 }
 
-.context-menu {
+.card-actions {
     position: absolute;
     top: 0.5rem;
     right: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.125rem;
     opacity: 0;
     transition: opacity 0.15s;
 }
 
-.card:hover .context-menu,
-.context-menu:has([data-expanded]) {
+.card:hover .card-actions,
+.card-actions:has([data-expanded]) {
     opacity: 1;
+}
+
+.quick-action {
+    width: 1.5rem;
+    height: 1.5rem;
+    color: var(--muted-foreground);
+}
+
+.quick-action:hover {
+    color: var(--foreground);
 }
 
 .install-button {
@@ -191,4 +242,32 @@
     gap: 0.375rem;
     color: color-mix(in oklch, var(--background) 50%, transparent);
     font-size: var(--font-size-xsmall);
+}
+
+/* Auto-discovered variant (e.g. Claude Code) */
+.auto-discovered {
+    background: color-mix(in oklch, var(--foreground) 75%, var(--background));
+    border-color: color-mix(in oklch, var(--foreground) 75%, var(--background));
+}
+
+.auto-discovered .main {
+    color: var(--background);
+}
+
+.auto-discovered .name {
+    color: var(--background);
+}
+
+.auto-discovered .description {
+    color: color-mix(in oklch, var(--background) 70%, transparent);
+}
+
+.auto-discovered .icon {
+    background: transparent;
+    border: 1px solid color-mix(in oklch, var(--background) 25%, transparent);
+    color: var(--background);
+}
+
+.auto-discovered .actions {
+    background: color-mix(in oklch, var(--background) 8%, transparent);
 }

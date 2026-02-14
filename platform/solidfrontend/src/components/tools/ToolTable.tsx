@@ -1,16 +1,9 @@
-import { For, Show, type Accessor } from "solid-js";
+import { type Accessor, For, Show } from "solid-js";
 import type { CallPolicy, ResultPolicy, ToolWithAssignments } from "@/types";
 import { Alert } from "../primitives/Alert";
 import { Badge } from "../primitives/Badge";
 import { Empty, EmptyDescription } from "../primitives/Empty";
-import {
-    Table,
-    TableHead,
-    TableBody,
-    TableRow,
-    TableHeaderCell,
-    TableCell,
-} from "../primitives/Table";
+import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "../primitives/Table";
 import { Assignments } from "./Assignments";
 import { CallPolicyToggle } from "./CallPolicyToggle";
 import { ResultPolicySelect } from "./ResultPolicySelect";
@@ -18,14 +11,14 @@ import { ToolHoverCard } from "./ToolHoverCard";
 import styles from "./ToolTable.module.css";
 
 type Agent = { id: string; name: string };
-type CallPolicyAction = CallPolicy["action"]
-type ResultPolicyAction = ResultPolicy["action"]
+type CallPolicyAction = CallPolicy["action"];
+type ResultPolicyAction = ResultPolicy["action"];
 
 type Column = "name" | "origin" | "assignments" | "call-policy" | "result-policy";
 
 export function ToolTable(props: {
     tools: Accessor<ToolWithAssignments[]>;
-    agents: Accessor<Agent[]>
+    agents: Accessor<Agent[]>;
     callPolicies: Accessor<CallPolicy[]>;
     resultPolicies: Accessor<ResultPolicy[]>;
     error: Error | undefined;
@@ -36,7 +29,7 @@ export function ToolTable(props: {
 
     const callPolicyDictionary = () => {
         const dictionary: Record<string, { id: string; action: CallPolicyAction }> = {};
-        for (const policy of props.callPolicies()) {
+        for (const policy of props.callPolicies() ?? []) {
             if (policy.conditions.length === 0) {
                 dictionary[policy.toolId] = { id: policy.id, action: policy.action };
             }
@@ -46,7 +39,7 @@ export function ToolTable(props: {
 
     const resultPolicyDictionary = () => {
         const dictionary: Record<string, { id: string; action: ResultPolicyAction }> = {};
-        for (const policy of props.resultPolicies()) {
+        for (const policy of props.resultPolicies() ?? []) {
             if (policy.conditions.length === 0) {
                 dictionary[policy.toolId] = { id: policy.id, action: policy.action };
             }
@@ -68,11 +61,21 @@ export function ToolTable(props: {
                 <Table>
                     <TableHead>
                         <TableRow>
-                            <Show when={showColumn("name")}><TableHeaderCell>Tool name</TableHeaderCell></Show>
-                            <Show when={showColumn("origin")}><TableHeaderCell>Origin</TableHeaderCell></Show>
-                            <Show when={showColumn("assignments")}><TableHeaderCell>Assignments</TableHeaderCell></Show>
-                            <Show when={showColumn("call-policy")}><TableHeaderCell>Call policy</TableHeaderCell></Show>
-                            <Show when={showColumn("result-policy")}><TableHeaderCell>Results are</TableHeaderCell></Show>
+                            <Show when={showColumn("name")}>
+                                <TableHeaderCell>Tool name</TableHeaderCell>
+                            </Show>
+                            <Show when={showColumn("origin")}>
+                                <TableHeaderCell>Origin</TableHeaderCell>
+                            </Show>
+                            <Show when={showColumn("assignments")}>
+                                <TableHeaderCell>Assignments</TableHeaderCell>
+                            </Show>
+                            <Show when={showColumn("call-policy")}>
+                                <TableHeaderCell>Call policy</TableHeaderCell>
+                            </Show>
+                            <Show when={showColumn("result-policy")}>
+                                <TableHeaderCell>Results are</TableHeaderCell>
+                            </Show>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -107,7 +110,10 @@ function ToolRow(props: {
     resultPolicy: { id: string; action: ResultPolicyAction } | undefined;
     columns?: Column[];
 }) {
-    const origin = () => props.tool.name.startsWith("archestra__") ? "archestra" : props.tool.mcpServerName ?? "LLM Proxy";
+    const isAutoDiscovered = () =>
+        !props.tool.catalogId && !props.tool.mcpServerName && !props.tool.name.startsWith("archestra__");
+    const origin = () =>
+        props.tool.name.startsWith("archestra__") ? "archestra" : (props.tool.mcpServerName ?? "LLM Proxy");
     const methodName = () => props.tool.name.replace(origin() + "__", "");
     const showColumn = (column: Column) => !props.columns?.length || props.columns.includes(column);
     const isBlocked = () => props.callPolicy?.action === "block_always";
@@ -127,14 +133,17 @@ function ToolRow(props: {
             </Show>
             <Show when={showColumn("origin")}>
                 <TableCell>
-                    <Badge variant={origin() === "archestra" ? "primary" : "muted"}>
-                        {origin()}
-                    </Badge>
+                    <Badge variant={origin() === "archestra" ? "primary" : "muted"}>{origin()}</Badge>
                 </TableCell>
             </Show>
             <Show when={showColumn("assignments")}>
                 <TableCell>
-                    <Assignments toolId={props.tool.id} assignments={props.tool.assignments} agents={props.agents} />
+                    <Assignments
+                        toolId={props.tool.id}
+                        assignments={props.tool.assignments}
+                        agents={props.agents}
+                        readOnly={isAutoDiscovered()}
+                    />
                 </TableCell>
             </Show>
             <Show when={showColumn("call-policy")}>

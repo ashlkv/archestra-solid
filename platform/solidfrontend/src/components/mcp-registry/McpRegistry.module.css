@@ -17,12 +17,16 @@
     flex-direction: column;
     gap: 0;
     height: 100%;
+    padding: 0 1rem;
     overflow-y: auto;
 }
 
 .tab {
     cursor: pointer;
     padding: 1rem;
+    margin: 0 -1rem;
+    justify-content: center;
+    display: flex;
 }
 
 .tab.selected {
@@ -43,9 +47,10 @@
 }
 
 .empty-tools {
+    box-sizing: border-box;
+    height: 100%;
     position: relative;
-    justify-content: flex-start;
-    padding-top: 4rem;
+    justify-content: center;
     width: calc(100% - var(--tab-width));
     background: var(--background);
 }
@@ -59,4 +64,9 @@
     background-position: center;
     opacity: 0.1;
     pointer-events: none;
+}
+
+.empty-content {
+    box-sizing: border-box;
+    height: 100%;
 }

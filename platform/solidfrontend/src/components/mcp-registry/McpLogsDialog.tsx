@@ -1,10 +1,11 @@
 import { createSignal, createEffect, onCleanup, Show, type JSX } from "solid-js";
 import { MCP_DEFAULT_LOG_LINES, type McpLogsMessage, type McpLogsErrorMessage } from "@shared";
-import { ArrowDown, Copy, Terminal } from "@/components/icons";
+import { ArrowDown, Terminal } from "@/components/icons";
 import { Dialog, DialogContent } from "../primitives/Dialog";
 import { Button } from "../primitives/Button";
+import { CopyButton } from "../primitives/CopyButton";
 import { Select } from "../primitives/Select";
-import { showToast, showError } from "../primitives/Toast";
+import { showError } from "../primitives/Toast";
 import websocketService from "@/lib/websocket";
 import styles from "./McpLogsDialog.module.css";
 
@@ -44,16 +45,19 @@ function useStreamingAnimation(isActive: () => boolean): () => string {
 }
 
 export function McpLogsDialog(props: Props): JSX.Element {
-    const [copied, setCopied] = createSignal(false);
-    const [commandCopied, setCommandCopied] = createSignal(false);
     const [streamedLogs, setStreamedLogs] = createSignal("");
     const [streamError, setStreamError] = createSignal<string | undefined>(undefined);
     const [command, setCommand] = createSignal("");
     const [autoScroll, setAutoScroll] = createSignal(true);
     const [isStreaming, setIsStreaming] = createSignal(false);
-    const [serverId, setServerId] = createSignal<string | undefined>(
-        props.installs.length > 0 ? props.installs[0].id : undefined
-    );
+    const [serverId, setServerId] = createSignal<string | undefined>(undefined);
+
+    // Set initial serverId when installs become available
+    createEffect(() => {
+        if (!serverId() && props.installs.length > 0) {
+            setServerId(props.installs[0].id);
+        }
+    });
 
     let unsubscribeLogs: (() => void) | undefined;
     let unsubscribeError: (() => void) | undefined;
@@ -178,28 +182,6 @@ export function McpLogsDialog(props: Props): JSX.Element {
         stopStreaming();
     });
 
-    const handleCopyLogs = async () => {
-        try {
-            await navigator.clipboard.writeText(streamedLogs());
-            setCopied(true);
-            showToast({ title: "Logs copied to clipboard" });
-            setTimeout(() => setCopied(false), 2000);
-        } catch {
-            showError("Failed to copy logs");
-        }
-    };
-
-    const handleCopyCommand = async () => {
-        try {
-            await navigator.clipboard.writeText(command());
-            setCommandCopied(true);
-            showToast({ title: "Command copied to clipboard" });
-            setTimeout(() => setCommandCopied(false), 2000);
-        } catch {
-            showError("Failed to copy command");
-        }
-    };
-
     const handleScroll = () => {
         if (scrollAreaRef) {
             const { scrollTop, scrollHeight, clientHeight } = scrollAreaRef;
@@ -284,16 +266,12 @@ export function McpLogsDialog(props: Props): JSX.Element {
                                 <Show when={!isStreaming() || streamError()}>
                                     <div />
                                 </Show>
-                                <Button
-                                    variant="ghost"
-                                    size="small"
-                                    onClick={handleCopyLogs}
-                                    disabled={!!streamError() || !streamedLogs()}
+                                <CopyButton
+                                    text={streamedLogs()}
+                                    label="Copy"
                                     class={styles["copy-button"]}
-                                >
-                                    <Copy size={12} />
-                                    {copied() ? "Copied!" : "Copy"}
-                                </Button>
+                                    disabled={!!streamError() || !streamedLogs()}
+                                />
                             </div>
                         </div>
                     </div>
@@ -303,15 +281,10 @@ export function McpLogsDialog(props: Props): JSX.Element {
                             <h3 class={styles["command-title"]}>Manual command</h3>
                             <div class={styles["command-container"]}>
                                 <code class={styles["command-text"]}>{command()}</code>
-                                <Button
-                                    variant="ghost"
-                                    size="small"
-                                    onClick={handleCopyCommand}
+                                <CopyButton
+                                    text={command()}
                                     class={styles["command-copy"]}
-                                >
-                                    <Copy size={12} />
-                                    {commandCopied() ? "Copied!" : ""}
-                                </Button>
+                                />
                             </div>
                         </div>
                     </Show>

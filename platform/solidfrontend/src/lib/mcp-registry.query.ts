@@ -1,8 +1,13 @@
+import { archestraApiSdk, type archestraApiTypes, archestraCatalogSdk } from "@shared";
 import { revalidate } from "@solidjs/router";
+import { showError, showToast } from "@/components/primitives/Toast";
 import { createQuery, createSubmission, getAuthHeaders } from "@/lib/api";
-import { archestraApiSdk, archestraCatalogSdk } from "@shared";
-import { showToast, showError } from "@/components/primitives/Toast";
 import type { MCP } from "@/types";
+
+type UpdateMcpPayload = {
+    id: string;
+    body: NonNullable<archestraApiTypes.UpdateInternalMcpCatalogItemData["body"]>;
+};
 
 export const useMcpRegistry = createQuery({
     queryKey: "fetch-mcp-registry",
@@ -15,15 +20,19 @@ export const useMcpServers = createQuery({
 });
 
 const updateMcp = createSubmission({
-    callback: async (mcp: MCP) => {
-        const { id, ...body } = mcp;
+    callback: async (payload: UpdateMcpPayload) => {
         return archestraApiSdk.updateInternalMcpCatalogItem({
             headers: getAuthHeaders(),
-            path: { id },
-            body,
+            path: { id: payload.id },
+            body: payload.body,
         });
     },
-    onSuccess: () => revalidate("fetch-mcp-registry"),
+    onSuccess: () => {
+        revalidate("fetch-mcp-registry");
+        revalidate("fetch-mcp-servers");
+        showToast({ title: "Server updated" });
+    },
+    onError: (exception) => showError(exception.message),
 });
 
 export function useUpdateMcp() {

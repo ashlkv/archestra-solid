@@ -1,14 +1,13 @@
-import type { JSX, ParentProps } from "solid-js";
+import { splitProps, type JSX, type ParentProps } from "solid-js";
 import styles from "./Empty.module.css";
 
-interface Props extends ParentProps {
-    class?: string;
-}
+type Props = ParentProps<JSX.HTMLAttributes<HTMLDivElement>>;
 
 export function Empty(props: Props): JSX.Element {
+    const [local, rest] = splitProps(props, ["class", "children"]);
     return (
-        <div class={`${styles.empty} ${props.class ?? ""}`}>
-            {props.children}
+        <div class={`${styles.empty} ${local.class ?? ""}`} {...rest}>
+            {local.children}
         </div>
     );
 }

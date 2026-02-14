@@ -5,6 +5,10 @@ type MessageHandler = (message: WebSocketMessage) => void;
 
 function getWebSocketUrl(): string {
     if (typeof window === "undefined") return "";
+    // Connect directly to backend - cookies are sent automatically for same-domain websockets
+    if (import.meta.env.DEV) {
+        return "ws://localhost:9000/ws";
+    }
     const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
     const host = window.location.host;
     return `${protocol}//${host}/ws`;
