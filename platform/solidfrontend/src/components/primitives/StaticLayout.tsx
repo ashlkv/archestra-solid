@@ -10,9 +10,7 @@ export function StaticLayout(props: Props): JSX.Element {
     return (
         <div class={styles["layout"]}>
             <Sidebar class={styles["sidebar"]} />
-            <main class={`${styles.main} ${props.class ?? ""}`}>
-                {props.children}
-            </main>
+            <div class={styles["content"]}>{props.children}</div>
         </div>
     );
 }

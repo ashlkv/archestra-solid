@@ -2,8 +2,8 @@ import { MetaProvider, Title } from "@solidjs/meta";
 import { Router } from "@solidjs/router";
 import { FileRoutes } from "@solidjs/start/router";
 import { Suspense } from "solid-js";
-import Theme from '~/components/Theme';
 import { ToastRegion } from "~/components/primitives/Toast";
+import Theme from "~/components/Theme";
 
 export default function App() {
     return (
@@ -17,7 +17,7 @@ export default function App() {
                     </MetaProvider>
                 )}
             >
-                <FileRoutes/>
+                <FileRoutes />
             </Router>
         </Theme>
     );

@@ -7,7 +7,9 @@ import { Pagination } from "@/components/logs/Pagination";
 import { Savings } from "@/components/logs/Savings";
 import { SearchableSelect } from "@/components/logs/SearchableSelect";
 import { TruncatedText } from "@/components/logs/TruncatedText";
+import { AgentBadge } from "@/components/primitives/AgentBadge";
 import { Badge } from "@/components/primitives/Badge";
+import { ModelBadge } from "@/components/primitives/ModelBadge";
 import { Button } from "@/components/primitives/Button";
 import { Empty, EmptyDescription, EmptyTitle } from "@/components/primitives/Empty";
 import { PageHeader } from "@/components/primitives/PageHeader";
@@ -20,6 +22,7 @@ import { useAgents } from "@/lib/agent.query";
 import { useInteractionSessions, useUniqueUserIds } from "@/lib/interaction.query";
 import { DEFAULT_TABLE_LIMIT, DynamicInteraction, formatDate, formatDuration } from "@/lib/interaction.utils";
 import type { Agent, SessionData } from "@/types";
+import { Main } from "~/components/primitives/Main";
 
 function asString(value: string | string[] | undefined): string {
     if (Array.isArray(value)) return value[0] ?? "";
@@ -141,192 +144,180 @@ export default function LlmProxyLogsPage(): JSX.Element {
                 title="Logs"
                 description="View all logs including LLM proxy interactions and MCP gateway tool calls."
             />
+            <Main>
+                {/*<Tabs defaultValue="llm-proxy">
+                    <TabList>
+                        <Tab value="llm-proxy">
+                            <A href="/logs/llm-proxy" style={{ "text-decoration": "none", color: "inherit" }}>
+                                LLM Proxy
+                            </A>
+                        </Tab>
+                        <Tab value="mcp-gateway">
+                            <A href="/logs/mcp-gateway" style={{ "text-decoration": "none", color: "inherit" }}>
+                                MCP Gateway
+                            </A>
+                        </Tab>
+                    </TabList>
+                </Tabs>*/}
 
-            <Tabs defaultValue="llm-proxy">
-                <TabList>
-                    <Tab value="llm-proxy">
-                        <A href="/logs/llm-proxy" style={{ "text-decoration": "none", color: "inherit" }}>
-                            LLM Proxy
-                        </A>
-                    </Tab>
-                    <Tab value="mcp-gateway">
-                        <A href="/logs/mcp-gateway" style={{ "text-decoration": "none", color: "inherit" }}>
-                            MCP Gateway
-                        </A>
-                    </Tab>
-                </TabList>
-            </Tabs>
+                {/*<div
+                    data-label="Filters"
+                    style={{
+                        display: "flex",
+                        "flex-wrap": "wrap",
+                        gap: "0.5rem",
+                        "align-items": "center",
+                        "margin-top": "1rem",
+                    }}
+                >
+                    <DebouncedInput
+                        value={search()}
+                        onChange={(value) => setSearchParams({ search: value || undefined, page: "0" })}
+                        placeholder="Search sessions..."
+                    />
+                    <SearchableSelect
+                        value={profileId()}
+                        onValueChange={(value) => setSearchParams({ profileId: value || undefined, page: "0" })}
+                        items={profileItems()}
+                        placeholder="All profiles"
+                    />
+                    <SearchableSelect
+                        value={userId()}
+                        onValueChange={(value) => setSearchParams({ userId: value || undefined, page: "0" })}
+                        items={userIdItems()}
+                        placeholder="All users"
+                    />
+                    <DateTimeRangePicker
+                        startDate={startDate()}
+                        endDate={endDate()}
+                        onApply={(start, end) => setSearchParams({ startDate: start, endDate: end, page: "0" })}
+                        onClear={() => setSearchParams({ startDate: undefined, endDate: undefined, page: "0" })}
+                    />
+                    <Show when={hasFilters()}>
+                        <Button variant="ghost" size="small" onClick={clearFilters}>
+                            <X style={{ width: "14px", height: "14px" }} /> Clear filters
+                        </Button>
+                    </Show>
+                </div>*/}
 
-            <div
-                data-label="Filters"
-                style={{
-                    display: "flex",
-                    "flex-wrap": "wrap",
-                    gap: "0.5rem",
-                    "align-items": "center",
-                    "margin-top": "1rem",
-                }}
-            >
-                <DebouncedInput
-                    value={search()}
-                    onChange={(value) => setSearchParams({ search: value || undefined, page: "0" })}
-                    placeholder="Search sessions..."
-                />
-                <SearchableSelect
-                    value={profileId()}
-                    onValueChange={(value) => setSearchParams({ profileId: value || undefined, page: "0" })}
-                    items={profileItems()}
-                    placeholder="All profiles"
-                />
-                <SearchableSelect
-                    value={userId()}
-                    onValueChange={(value) => setSearchParams({ userId: value || undefined, page: "0" })}
-                    items={userIdItems()}
-                    placeholder="All users"
-                />
-                <DateTimeRangePicker
-                    startDate={startDate()}
-                    endDate={endDate()}
-                    onApply={(start, end) => setSearchParams({ startDate: start, endDate: end, page: "0" })}
-                    onClear={() => setSearchParams({ startDate: undefined, endDate: undefined, page: "0" })}
-                />
-                <Show when={hasFilters()}>
-                    <Button variant="ghost" size="small" onClick={clearFilters}>
-                        <X style={{ width: "14px", height: "14px" }} /> Clear filters
-                    </Button>
+                <Show when={sessionsQuery.pending}>
+                    <div style={{ display: "flex", "justify-content": "center", padding: "3rem" }}>
+                        <Spinner />
+                    </div>
                 </Show>
-            </div>
 
-            <Show when={sessionsQuery.pending}>
-                <div style={{ display: "flex", "justify-content": "center", padding: "3rem" }}>
-                    <Spinner />
-                </div>
-            </Show>
+                <Show when={!sessionsQuery.pending && sessionsQuery.error}>
+                    <div style={{ color: "var(--destructive)", padding: "1rem" }}>
+                        Failed to load sessions: {sessionsQuery.error?.message}
+                    </div>
+                </Show>
 
-            <Show when={!sessionsQuery.pending && sessionsQuery.error}>
-                <div style={{ color: "var(--destructive)", padding: "1rem" }}>
-                    Failed to load sessions: {sessionsQuery.error?.message}
-                </div>
-            </Show>
+                <Show when={!sessionsQuery.pending && !sessionsQuery.error && sessions().length === 0}>
+                    <Empty>
+                        <EmptyTitle>No sessions found</EmptyTitle>
+                        <EmptyDescription>
+                            {hasFilters() ? "Try adjusting your filters." : "No LLM proxy sessions recorded yet."}
+                        </EmptyDescription>
+                    </Empty>
+                </Show>
 
-            <Show when={!sessionsQuery.pending && !sessionsQuery.error && sessions().length === 0}>
-                <Empty>
-                    <EmptyTitle>No sessions found</EmptyTitle>
-                    <EmptyDescription>
-                        {hasFilters() ? "Try adjusting your filters." : "No LLM proxy sessions recorded yet."}
-                    </EmptyDescription>
-                </Empty>
-            </Show>
-
-            <Show when={!sessionsQuery.pending && !sessionsQuery.error && sessions().length > 0}>
-                <Table>
-                    <TableHead>
-                        <TableRow>
-                            <TableHeaderCell>Session</TableHeaderCell>
-                            <TableHeaderCell>Requests</TableHeaderCell>
-                            <TableHeaderCell>Models</TableHeaderCell>
-                            <TableHeaderCell>Cost</TableHeaderCell>
-                            <TableHeaderCell>Time</TableHeaderCell>
-                            <TableHeaderCell>Details</TableHeaderCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        <For each={sessions()}>
-                            {(session) => (
-                                <tr onClick={() => onRowClick(session)} style={{ cursor: "pointer" }}>
-                                    <TableCell>
-                                        <div
-                                            style={{
-                                                display: "flex",
-                                                "align-items": "center",
-                                                gap: "0.5rem",
-                                                "max-width": "350px",
-                                            }}
-                                        >
-                                            <Show when={session.requestCount > 1}>
-                                                <Layers
-                                                    style={{
-                                                        width: "14px",
-                                                        height: "14px",
-                                                        "flex-shrink": 0,
-                                                        color: "var(--muted-foreground)",
-                                                    }}
-                                                />
-                                            </Show>
-                                            <TruncatedText message={getSessionTitle(session)} maxLength={80} />
-                                            <Show when={session.sessionSource === "archestra_chat"}>
-                                                <Badge variant="info">Chat</Badge>
-                                            </Show>
-                                            <Show when={session.sessionSource === "claude_code"}>
-                                                <Badge variant="muted">Claude Code</Badge>
-                                            </Show>
-                                        </div>
-                                    </TableCell>
-                                    <TableCell>{session.requestCount}</TableCell>
-                                    <TableCell>
-                                        <div style={{ display: "flex", gap: "0.25rem", "flex-wrap": "wrap" }}>
-                                            <For each={session.models?.slice(0, 2) ?? []}>
-                                                {(model) => <Badge variant="muted">{model}</Badge>}
-                                            </For>
-                                            <Show when={(session.models?.length ?? 0) > 2}>
-                                                <Tooltip content={(session.models ?? []).join(", ")}>
-                                                    <Badge variant="muted">+{(session.models?.length ?? 0) - 2}</Badge>
-                                                </Tooltip>
-                                            </Show>
-                                        </div>
-                                    </TableCell>
-                                    <TableCell>
-                                        <Savings
-                                            cost={session.totalCost ?? "0"}
-                                            baselineCost={session.totalBaselineCost ?? "0"}
-                                            toonCostSavings={session.totalToonCostSavings}
-                                            variant="session"
-                                        />
-                                    </TableCell>
-                                    <TableCell>
-                                        <div>
-                                            <div style={{ "font-size": "var(--font-size-small)" }}>
-                                                {formatDate(session.lastRequestTime)}
+                <Show when={!sessionsQuery.pending && !sessionsQuery.error && sessions().length > 0}>
+                    <Table>
+                        <TableHead>
+                            <TableRow>
+                                <TableHeaderCell data-label="Session">Session</TableHeaderCell>
+                                <TableHeaderCell data-label="Requests">Requests</TableHeaderCell>
+                                <TableHeaderCell data-label="Models">Models</TableHeaderCell>
+                                <TableHeaderCell data-label="Cost">Cost</TableHeaderCell>
+                                <TableHeaderCell data-label="Last message at">Last message at</TableHeaderCell>
+                                <TableHeaderCell data-label="Duration">Duration</TableHeaderCell>
+                                <TableHeaderCell data-label="Details">Details</TableHeaderCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            <For each={sessions()}>
+                                {(session) => (
+                                    <tr onClick={() => onRowClick(session)} style={{ cursor: "pointer" }}>
+                                        <TableCell data-label="Session">
+                                            <div
+                                                style={{
+                                                    display: "flex",
+                                                    "align-items": "center",
+                                                    gap: "0.5rem",
+                                                }}
+                                            >
+                                                <Show when={session.requestCount > 1}>
+                                                    <Layers
+                                                        style={{
+                                                            width: "14px",
+                                                            height: "14px",
+                                                            "flex-shrink": 0,
+                                                            color: "var(--muted-foreground)",
+                                                        }}
+                                                    />
+                                                </Show>
+                                                <TruncatedText message={getSessionTitle(session)} maxLength={80} />
+                                                <AgentBadge source={session.sessionSource} />
                                             </div>
+                                        </TableCell>
+                                        <TableCell data-label="Requests">{session.requestCount}</TableCell>
+                                        <TableCell data-label="Models">
+                                            <div style={{ display: "flex", gap: "0.25rem", "flex-wrap": "wrap" }}>
+                                                <For each={session.models?.slice(0, 2) ?? []}>
+                                                    {(model) => <ModelBadge model={model} />}
+                                                </For>
+                                                <Show when={(session.models?.length ?? 0) > 2}>
+                                                    <Tooltip content={(session.models ?? []).join(", ")}>
+                                                        <Badge variant="muted">
+                                                            +{(session.models?.length ?? 0) - 2}
+                                                        </Badge>
+                                                    </Tooltip>
+                                                </Show>
+                                            </div>
+                                        </TableCell>
+                                        <TableCell data-label="Cost">
+                                            <Savings
+                                                cost={session.totalCost ?? "0"}
+                                                baselineCost={session.totalBaselineCost ?? "0"}
+                                                toonCostSavings={session.totalToonCostSavings}
+                                                variant="session"
+                                            />
+                                        </TableCell>
+                                        <TableCell data-label="Date">
+                                            {formatDate(session.lastRequestTime)}
+                                        </TableCell>
+                                        <TableCell data-label="Duration">
                                             <Show
                                                 when={
                                                     session.requestCount > 1 &&
                                                     session.firstRequestTime !== session.lastRequestTime
                                                 }
                                             >
-                                                <div
-                                                    style={{
-                                                        "font-size": "var(--font-size-xsmall)",
-                                                        color: "var(--muted-foreground)",
-                                                    }}
-                                                >
-                                                    Duration:{" "}
-                                                    {formatDuration(session.firstRequestTime, session.lastRequestTime)}
-                                                </div>
+                                                {formatDuration(session.firstRequestTime, session.lastRequestTime)}
                                             </Show>
-                                        </div>
-                                    </TableCell>
-                                    <TableCell>
-                                        <div style={{ display: "flex", gap: "0.25rem", "flex-wrap": "wrap" }}>
-                                            <Badge variant="outline">{getProfileName(session.profileId)}</Badge>
-                                            <For each={session.userNames?.slice(0, 2) ?? []}>
-                                                {(userName) => <Badge variant="ghost">{userName}</Badge>}
-                                            </For>
-                                        </div>
-                                    </TableCell>
-                                </tr>
-                            )}
-                        </For>
-                    </TableBody>
-                </Table>
+                                        </TableCell>
+                                        <TableCell data-label="Details">
+                                            <div style={{ display: "flex", gap: "0.25rem", "flex-wrap": "wrap" }}>
+                                                <Badge variant="outline">{getProfileName(session.profileId)}</Badge>
+                                                <For each={session.userNames?.slice(0, 2) ?? []}>
+                                                    {(userName) => <Badge variant="ghost">{userName}</Badge>}
+                                                </For>
+                                            </div>
+                                        </TableCell>
+                                    </tr>
+                                )}
+                            </For>
+                        </TableBody>
+                    </Table>
 
-                <Pagination
-                    page={page()}
-                    pageSize={pageSize()}
-                    total={total()}
-                    onPageChange={(newPage) => setSearchParams({ page: String(newPage) })}
-                />
-            </Show>
+                    <Pagination
+                        page={page()}
+                        pageSize={pageSize()}
+                        total={total()}
+                        onPageChange={(newPage) => setSearchParams({ page: String(newPage) })}
+                    />
+                </Show>
+            </Main>
         </StaticLayout>
     );
 }
