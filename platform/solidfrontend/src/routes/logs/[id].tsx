@@ -7,7 +7,6 @@ import { Savings } from "@/components/logs/Savings";
 import { Badge } from "@/components/primitives/Badge";
 import { PageHeader } from "@/components/primitives/PageHeader";
 import { Spinner } from "@/components/primitives/Spinner";
-import { StaticLayout } from "@/components/primitives/StaticLayout";
 import { useAgents } from "@/lib/agent.query";
 import { useDualLlmResultsByInteraction } from "@/lib/dual-llm-result.query";
 import { useInteraction } from "@/lib/interaction.query";
@@ -46,7 +45,7 @@ export default function InteractionDetailPage(): JSX.Element {
     };
 
     return (
-        <StaticLayout>
+        <>
             <div style={{ display: "flex", "align-items": "center", gap: "0.5rem", "margin-bottom": "1rem" }}>
                 <A href="/logs/llm-proxy" style={{ color: "var(--muted-foreground)" }}>
                     <ArrowLeft style={{ width: "20px", height: "20px" }} />
@@ -254,6 +253,6 @@ export default function InteractionDetailPage(): JSX.Element {
                     <JsonSection title="Raw response" data={interaction()!.response} />
                 </div>
             </Show>
-        </StaticLayout>
+        </>
     );
 }

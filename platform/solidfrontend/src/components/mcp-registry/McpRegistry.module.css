@@ -19,6 +19,7 @@
     height: 100%;
     padding: 0 1rem;
     overflow-y: auto;
+    background: color-mix(in srgb, var(--foreground) 5%, transparent);
 }
 
 .tab {

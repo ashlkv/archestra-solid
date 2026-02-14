@@ -5,7 +5,6 @@ import { JsonSection } from "@/components/logs/JsonSection";
 import { Badge } from "@/components/primitives/Badge";
 import { PageHeader } from "@/components/primitives/PageHeader";
 import { Spinner } from "@/components/primitives/Spinner";
-import { StaticLayout } from "@/components/primitives/StaticLayout";
 import { useAgents } from "@/lib/agent.query";
 import { formatDate } from "@/lib/interaction.utils";
 import { useMcpToolCall } from "@/lib/mcp-tool-call.query";
@@ -24,7 +23,7 @@ export default function McpToolCallDetailPage(): JSX.Element {
     };
 
     return (
-        <StaticLayout>
+        <>
             <div style={{ display: "flex", "align-items": "center", gap: "0.5rem", "margin-bottom": "1rem" }}>
                 <A href="/logs/mcp-gateway" style={{ color: "var(--muted-foreground)" }}>
                     <ArrowLeft style={{ width: "20px", height: "20px" }} />
@@ -152,6 +151,6 @@ export default function McpToolCallDetailPage(): JSX.Element {
                     <JsonSection title="Result" data={toolCall()!.toolResult} defaultOpen />
                 </div>
             </Show>
-        </StaticLayout>
+        </>
     );
 }

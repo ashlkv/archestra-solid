@@ -9,12 +9,11 @@ import { SearchableSelect } from "@/components/logs/SearchableSelect";
 import { TruncatedText } from "@/components/logs/TruncatedText";
 import { AgentBadge } from "@/components/primitives/AgentBadge";
 import { Badge } from "@/components/primitives/Badge";
-import { ModelBadge } from "@/components/primitives/ModelBadge";
 import { Button } from "@/components/primitives/Button";
 import { Empty, EmptyDescription, EmptyTitle } from "@/components/primitives/Empty";
+import { ModelBadge } from "@/components/primitives/ModelBadge";
 import { PageHeader } from "@/components/primitives/PageHeader";
 import { Spinner } from "@/components/primitives/Spinner";
-import { StaticLayout } from "@/components/primitives/StaticLayout";
 import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "@/components/primitives/Table";
 import { Tab, TabList, Tabs } from "@/components/primitives/Tabs";
 import { Tooltip } from "@/components/primitives/Tooltip";
@@ -139,7 +138,7 @@ export default function LlmProxyLogsPage(): JSX.Element {
     };
 
     return (
-        <StaticLayout>
+        <>
             <PageHeader
                 title="Logs"
                 description="View all logs including LLM proxy interactions and MCP gateway tool calls."
@@ -283,9 +282,7 @@ export default function LlmProxyLogsPage(): JSX.Element {
                                                 variant="session"
                                             />
                                         </TableCell>
-                                        <TableCell data-label="Date">
-                                            {formatDate(session.lastRequestTime)}
-                                        </TableCell>
+                                        <TableCell data-label="Date">{formatDate(session.lastRequestTime)}</TableCell>
                                         <TableCell data-label="Duration">
                                             <Show
                                                 when={
@@ -318,6 +315,6 @@ export default function LlmProxyLogsPage(): JSX.Element {
                     />
                 </Show>
             </Main>
-        </StaticLayout>
+        </>
     );
 }

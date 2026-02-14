@@ -7,7 +7,6 @@ import { TruncatedText } from "@/components/logs/TruncatedText";
 import { Badge } from "@/components/primitives/Badge";
 import { PageHeader } from "@/components/primitives/PageHeader";
 import { Spinner } from "@/components/primitives/Spinner";
-import { StaticLayout } from "@/components/primitives/StaticLayout";
 import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "@/components/primitives/Table";
 import { useAgents } from "@/lib/agent.query";
 import { useInteractionSessions, useInteractions } from "@/lib/interaction.query";
@@ -66,7 +65,7 @@ export default function SessionDetailPage(): JSX.Element {
     };
 
     return (
-        <StaticLayout>
+        <>
             <div style={{ display: "flex", "align-items": "center", gap: "0.5rem", "margin-bottom": "1rem" }}>
                 <A href="/logs/llm-proxy" style={{ color: "var(--muted-foreground)" }}>
                     <ArrowLeft style={{ width: "20px", height: "20px" }} />
@@ -248,6 +247,6 @@ export default function SessionDetailPage(): JSX.Element {
                     onPageChange={(newPage) => setSearchParams({ page: String(newPage) })}
                 />
             </Show>
-        </StaticLayout>
+        </>
     );
 }
