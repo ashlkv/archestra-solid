@@ -5,6 +5,7 @@ body {
     letter-spacing: var(--letter-spacing);
     font-size: var(--font-size-small);
     line-height: var(--line-height);
+    font-weight: var(--font-weight);
     margin: 0;
 }
 
@@ -76,11 +77,13 @@ body {
     --text-3xl--line-height: 2.25rem;
 
     /* Typography */
-    --font-sans: Inter, sans-serif;
-    --font-serif: Source Serif 4, serif;
-    --font-mono: JetBrains Mono, monospace;
+    --font-sans: Manrope, sans-serif;
+    --font-heading: "Nunito", serif;
+    --font-serif: "Source Serif 4", serif;
+    --font-mono: "JetBrains Mono", monospace;
     --letter-spacing: 0em;
     --tracking-normal: 0em;
+    --font-weight: 300;
 
     /* Font sizes */
     --font-size-xxsmall: var(--text-xxs);

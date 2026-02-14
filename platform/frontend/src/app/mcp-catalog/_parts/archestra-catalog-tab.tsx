@@ -297,6 +297,7 @@ export function ArchestraCatalogTab({
 
     const createdItem = await createMutation.mutateAsync({
       name: server.name,
+      description: server.description,
       version: undefined, // No version in archestra catalog
       instructions: server.instructions,
       serverType: server.server.type,

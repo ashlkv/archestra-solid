@@ -20,6 +20,8 @@
 }
 
 .content {
+    display: flex;
+    flex-direction: column;
     background: var(--popover);
     color: var(--popover-foreground);
     border: 1px solid var(--border);
@@ -30,6 +32,18 @@
     max-height: 85vh;
     overflow: hidden;
     animation: slideIn 0.15s ease;
+}
+
+.content.small {
+    width: min(42rem, 85vw);
+}
+
+.content.medium {
+    width: min(56rem, 90vw);
+}
+
+.content.large {
+    width: min(72rem, 95vw);
 }
 
 .header {
@@ -64,9 +78,10 @@
 }
 
 .body {
+    flex: 1;
+    min-height: 0;
     padding: 1rem;
     overflow-y: auto;
-    max-height: calc(85vh - 4rem);
 }
 
 @keyframes fadeIn {

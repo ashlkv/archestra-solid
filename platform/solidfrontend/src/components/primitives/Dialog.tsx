@@ -15,12 +15,24 @@ export function DialogTrigger(props: ParentProps): JSX.Element {
     return <KobalteDialog.Trigger as="div" class={styles.trigger}>{props.children}</KobalteDialog.Trigger>;
 }
 
-export function DialogContent(props: ParentProps<{ title?: string }>): JSX.Element {
+export function DialogContent(props: ParentProps<{ title?: string; size?: "default" | "small" | "medium" | "large" }>): JSX.Element {
+    const contentClass = () => {
+        const classes = [styles.content];
+        if (props.size === "small") {
+            classes.push(styles.small);
+        } else if (props.size === "medium") {
+            classes.push(styles.medium);
+        } else if (props.size === "large") {
+            classes.push(styles.large);
+        }
+        return classes.join(" ");
+    };
+
     return (
         <KobalteDialog.Portal>
             <KobalteDialog.Overlay class={styles.overlay} />
             <div class={styles.positioner}>
-                <KobalteDialog.Content class={styles.content}>
+                <KobalteDialog.Content class={contentClass()}>
                     <div class={styles.header}>
                         <KobalteDialog.Title class={styles.title}>{props.title}</KobalteDialog.Title>
                         <KobalteDialog.CloseButton class={styles.close}>

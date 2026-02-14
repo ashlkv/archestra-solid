@@ -41,15 +41,12 @@
 }
 
 .description {
-    color: var(--muted-foreground);
+    /* Markdown component handles base styles */
     font-size: var(--font-size-xxsmall);
-    line-height: 1.4;
 }
 
 .instructions {
-    color: var(--muted-foreground);
-    font-size: var(--font-size-xsmall);
-    line-height: 1.5;
+    /* Markdown component handles base styles, only overrides needed here */
 }
 
 .details {
