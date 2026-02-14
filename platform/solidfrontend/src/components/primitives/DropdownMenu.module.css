@@ -8,6 +8,8 @@
     cursor: pointer;
     color: var(--muted-foreground);
     border-radius: var(--radius);
+    font-family: inherit;
+    font-weight: inherit;
 }
 
 .trigger:hover {

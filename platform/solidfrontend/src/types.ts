@@ -1,22 +1,18 @@
-import { type archestraApiTypes } from "@shared";
+import type { archestraApiTypes } from "@shared";
 
 export type MCP = NonNullable<archestraApiTypes.GetInternalMcpCatalogResponses["200"]>[number];
 
 export type McpServer = NonNullable<archestraApiTypes.GetMcpServersResponses["200"]>[number];
 
-export type Tool =
-    NonNullable<archestraApiTypes.GetToolsWithAssignmentsResponses["200"]["data"]>[number];
+export type Tool = NonNullable<archestraApiTypes.GetToolsWithAssignmentsResponses["200"]["data"]>[number];
 
 export type ToolWithAssignments = Tool;
 
-export type ToolsQueryParams =
-    archestraApiTypes.GetToolsWithAssignmentsData["query"];
+export type ToolsQueryParams = archestraApiTypes.GetToolsWithAssignmentsData["query"];
 
-export type CallPolicy =
-    archestraApiTypes.GetToolInvocationPoliciesResponses["200"][number];
+export type CallPolicy = archestraApiTypes.GetToolInvocationPoliciesResponses["200"][number];
 
-export type ResultPolicy =
-    archestraApiTypes.GetTrustedDataPoliciesResponses["200"][number];
+export type ResultPolicy = archestraApiTypes.GetTrustedDataPoliciesResponses["200"][number];
 
 export type ResultPolicyAction = ResultPolicy["action"];
 
@@ -53,3 +49,13 @@ export type RemoteServerInstallResult = {
 export type NoAuthInstallResult = {
     teamId?: string | null;
 };
+
+export type Interaction = archestraApiTypes.GetInteractionsResponses["200"]["data"][number];
+
+export type SessionData = archestraApiTypes.GetInteractionSessionsResponses["200"]["data"][number];
+
+export type McpToolCallData = archestraApiTypes.GetMcpToolCallsResponses["200"]["data"][number];
+
+export type DualLlmResult = archestraApiTypes.GetDualLlmResultsByInteractionResponses["200"][number];
+
+export type Agent = { id: string; name: string };
