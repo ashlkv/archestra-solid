@@ -1,0 +1,11 @@
+.button {
+    gap: 0.25rem;
+}
+
+.check {
+    color: var(--success);
+}
+
+.label {
+    font-size: var(--font-size-xsmall);
+}

@@ -9,10 +9,15 @@
 :global(#app) {
     height: 100%;
 }
+
+.layout {
+    display: flex;
+    height: 100%;
+}
+
 .main {
+    flex: 1;
     height: 100%;
     box-sizing: border-box;
-    max-width: 80rem;
-    margin: 0 auto;
-
+    overflow-y: auto;
 }

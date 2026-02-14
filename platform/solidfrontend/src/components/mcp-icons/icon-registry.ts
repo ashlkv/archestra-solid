@@ -1,6 +1,7 @@
 import type { Component } from "solid-js";
 import { Bug, Hammer, Server } from "@/components/icons";
 import { IconArchestra } from "./IconArchestra";
+import { IconClaudeCode } from "./IconClaudeCode";
 import { IconContext7 } from "./IconContext7";
 import { IconGitHub } from "./IconGitHub";
 import { IconJira } from "./IconJira";
@@ -11,6 +12,7 @@ type IconComponent = Component<{ size?: number; class?: string }>;
 
 const wellKnown: Record<string, IconComponent> = {
     archestra: IconArchestra,
+    "claude code": IconClaudeCode,
     context7: IconContext7,
     github: IconGitHub,
     jira: IconJira,
@@ -24,12 +26,11 @@ const builtIn: Record<string, IconComponent> = {
     coding: Bug,
 };
 
-
 export const defaultIcon: IconComponent = Server;
 
 export function getIcon(name: string): IconComponent {
     const key = name.toLowerCase();
-    const dictionary = {...wellKnown, ...builtIn}
+    const dictionary = { ...wellKnown, ...builtIn };
     for (const [pattern, icon] of Object.entries(dictionary)) {
         if (key.includes(pattern)) {
             return icon;
@@ -45,4 +46,3 @@ export function isWellKnownIcon(name: string): boolean {
     });
     return Boolean(entry);
 }
-

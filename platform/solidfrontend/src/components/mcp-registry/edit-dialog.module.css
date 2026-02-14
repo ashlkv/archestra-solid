@@ -1,0 +1,41 @@
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+}
+
+.label {
+    font-weight: bold;
+}
+
+.required {
+    color: var(--destructive);
+}
+
+.hint {
+    color: var(--muted-foreground);
+    font-size: var(--font-size-xxsmall);
+    line-height: 1.4;
+}
+
+.info-box {
+    background: var(--muted);
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius);
+    font-size: var(--font-size-xsmall);
+    color: var(--muted-foreground);
+}
+
+.footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--border);
+}
