@@ -26,10 +26,20 @@ export function InteractionDrawer(props: {
                     <InteractionHeaderBar interactionId={props.interactionId!} />
                 </div>
                 <ToggleGroup size="xsmall">
-                    <ToggleItem selected={view() === "chat"} tooltip="Chat view" onClick={() => setView("chat")}>
+                    <ToggleItem
+                        selected={view() === "chat"}
+                        tooltip="Chat view"
+                        label="Chat"
+                        onClick={() => setView("chat")}
+                    >
                         <MessageCircle style={{ width: "14px", height: "14px" }} />
                     </ToggleItem>
-                    <ToggleItem selected={view() === "raw"} tooltip="Raw data" onClick={() => setView("raw")}>
+                    <ToggleItem
+                        selected={view() === "raw"}
+                        tooltip="Raw data"
+                        label="Raw"
+                        onClick={() => setView("raw")}
+                    >
                         <Code2 style={{ width: "14px", height: "14px" }} />
                     </ToggleItem>
                 </ToggleGroup>
@@ -40,7 +50,7 @@ export function InteractionDrawer(props: {
     return (
         <Drawer open={props.open} onOpenChange={props.onOpenChange}>
             <DrawerContent
-                title="Interaction"
+                title="Log entry"
                 description={props.interactionId ?? undefined}
                 size="full"
                 headerContent={headerContent()}

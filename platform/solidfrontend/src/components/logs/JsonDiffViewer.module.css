@@ -1,0 +1,108 @@
+.labels {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.label {
+    font-size: var(--font-size-xsmall);
+    font-weight: 600;
+    color: var(--muted-foreground);
+    padding: 0.25rem 0;
+}
+
+.noDiff {
+    font-size: var(--font-size-small);
+    color: var(--muted-foreground);
+    padding: 1rem;
+    text-align: center;
+    background: var(--muted-background);
+    border-radius: var(--radius);
+}
+
+/* CodeMirror merge view overrides */
+.mergeView {
+    border-radius: var(--radius);
+    overflow: hidden;
+}
+
+.mergeView :global(.cm-mergeView) {
+    height: auto;
+    max-height: 600px;
+    overflow: auto;
+    font-family: var(--font-mono);
+    font-size: var(--font-size-xsmall);
+}
+
+.mergeView :global(.cm-editor) {
+    background: var(--muted-background);
+}
+
+.mergeView :global(.cm-gutters) {
+    background: var(--muted-background);
+    border-right: 1px solid var(--border);
+    color: var(--muted-foreground);
+    font-size: var(--font-size-xxsmall);
+}
+
+.mergeView :global(.cm-activeLineGutter),
+.mergeView :global(.cm-activeLine) {
+    background: transparent;
+}
+
+/* Diff highlighting - deleted (left side, red) */
+.mergeView :global(.cm-changedLine) {
+    background: color-mix(in srgb, var(--destructive) 8%, transparent);
+}
+
+.mergeView :global(.cm-changedText) {
+    background: color-mix(in srgb, var(--destructive) 20%, transparent);
+}
+
+/* Diff highlighting - inserted (right side, green) */
+.mergeView :global(.cm-insertedLine) {
+    background: color-mix(in srgb, var(--success) 8%, transparent);
+}
+
+.mergeView :global(.cm-insertedText) {
+    background: color-mix(in srgb, var(--success) 20%, transparent);
+}
+
+/* Diff highlighting - deleted line */
+.mergeView :global(.cm-deletedLine) {
+    background: color-mix(in srgb, var(--destructive) 8%, transparent);
+}
+
+.mergeView :global(.cm-deletedText) {
+    background: color-mix(in srgb, var(--destructive) 20%, transparent);
+}
+
+/* Diff gutter markers */
+.mergeView :global(.cm-changedLineGutter) {
+    color: var(--destructive);
+}
+
+.mergeView :global(.cm-mergeViewGap) {
+    background: var(--border);
+}
+
+/* Make content not editable visually */
+.mergeView :global(.cm-content) {
+    cursor: default;
+}
+
+.mergeView :global(.cm-cursor) {
+    display: none;
+}
+
+/* Collapsed unchanged sections */
+.mergeView :global(.cm-collapsedLines) {
+    background: var(--muted-background);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    color: var(--muted-foreground);
+    font-size: var(--font-size-xsmall);
+    padding: 0.25rem 0.5rem;
+    cursor: pointer;
+}
