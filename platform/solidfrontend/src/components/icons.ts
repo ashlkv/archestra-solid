@@ -25,6 +25,8 @@ export { default as DollarSign } from "lucide-solid/icons/dollar-sign";
 export { default as Ellipsis } from "lucide-solid/icons/ellipsis";
 export { default as ExternalLink } from "lucide-solid/icons/external-link";
 export { default as FileText } from "lucide-solid/icons/file-text";
+export { default as FoldVertical } from "lucide-solid/icons/fold-vertical";
+
 export { default as Github } from "lucide-solid/icons/github";
 export { default as Globe } from "lucide-solid/icons/globe";
 export { default as Hammer } from "lucide-solid/icons/hammer";
@@ -58,6 +60,7 @@ export { default as Star } from "lucide-solid/icons/star";
 export { default as Terminal } from "lucide-solid/icons/terminal";
 export { default as Trash2 } from "lucide-solid/icons/trash-2";
 export { default as TriangleAlert } from "lucide-solid/icons/triangle-alert";
+export { default as UnfoldVertical } from "lucide-solid/icons/unfold-vertical";
 export { default as User } from "lucide-solid/icons/user";
 export { default as Users } from "lucide-solid/icons/users";
 export { default as Video } from "lucide-solid/icons/video";

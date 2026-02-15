@@ -1,17 +1,19 @@
 import { A, useNavigate, useSearchParams } from "@solidjs/router";
-import { For, type JSX, Show } from "solid-js";
-import { Layers, X } from "@/components/icons";
+import { createSignal, For, type JSX, Show } from "solid-js";
+import { X } from "@/components/icons";
 import { DateTimeRangePicker } from "@/components/logs/DateTimeRangePicker";
 import { DebouncedInput } from "@/components/logs/DebouncedInput";
 import { InteractionDrawer } from "@/components/logs/InteractionDrawer";
 import { Pagination } from "@/components/logs/Pagination";
 import { Savings } from "@/components/logs/Savings";
 import { SearchableSelect } from "@/components/logs/SearchableSelect";
+import { SessionExpandedRow } from "@/components/logs/SessionExpandedRow";
 import { TruncatedText } from "@/components/logs/TruncatedText";
 import { AgentBadge } from "@/components/primitives/AgentBadge";
 import { Badge } from "@/components/primitives/Badge";
 import { Button } from "@/components/primitives/Button";
 import { Empty, EmptyDescription, EmptyTitle } from "@/components/primitives/Empty";
+import { ExpandCollapseButton } from "@/components/primitives/ExpandCollapseButton";
 import { ModelBadge } from "@/components/primitives/ModelBadge";
 import { PageHeader } from "@/components/primitives/PageHeader";
 import { Spinner } from "@/components/primitives/Spinner";
@@ -29,7 +31,7 @@ function asString(value: string | string[] | undefined): string {
     return value ?? "";
 }
 
-export default function LlmProxyLogsPage(): JSX.Element {
+export function LlmProxyLogsPage(props: { initialExpandedSessionId?: string; initialLogId?: string }): JSX.Element {
     const navigate = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
 
@@ -76,8 +78,39 @@ export default function LlmProxyLogsPage(): JSX.Element {
         ];
     };
 
-    const drawerInteractionId = () => asString(searchParams.logId) || null;
+    const [expandedSessions, setExpandedSessions] = createSignal<Set<string>>(
+        props.initialExpandedSessionId ? new Set([props.initialExpandedSessionId]) : new Set(),
+    );
+
+    const toggleSession = (sessionId: string) => {
+        setExpandedSessions((prev) => {
+            const next = new Set(prev);
+            if (next.has(sessionId)) {
+                next.delete(sessionId);
+                navigate("/logs/llm-proxy", { replace: true });
+            } else {
+                next.add(sessionId);
+                navigate(`/logs/llm-proxy/session/${sessionId}`, { replace: true });
+            }
+            return next;
+        });
+    };
+
+    const drawerInteractionId = () => props.initialLogId ?? null;
     const drawerOpen = () => drawerInteractionId() !== null;
+
+    const currentSessionPath = () => {
+        const expanded = props.initialExpandedSessionId;
+        return expanded ? `/logs/llm-proxy/session/${expanded}` : "/logs/llm-proxy";
+    };
+
+    const openDrawer = (interactionId: string) => {
+        navigate(`${currentSessionPath()}/entry/${interactionId}`, { replace: true });
+    };
+
+    const closeDrawer = () => {
+        navigate(currentSessionPath(), { replace: true });
+    };
 
     const clearFilters = () => {
         setSearchParams({
@@ -134,10 +167,10 @@ export default function LlmProxyLogsPage(): JSX.Element {
     };
 
     const onRowClick = (session: SessionData) => {
-        if (session.sessionId) {
-            navigate(`/logs/llm-proxy/session/${session.sessionId}`);
-        } else {
-            setSearchParams({ logId: session.interactionId });
+        if (session.sessionId && session.requestCount > 1) {
+            toggleSession(session.sessionId);
+        } else if (session.interactionId) {
+            openDrawer(session.interactionId);
         }
     };
 
@@ -239,74 +272,106 @@ export default function LlmProxyLogsPage(): JSX.Element {
                         </TableHead>
                         <TableBody>
                             <For each={sessions()}>
-                                {(session) => (
-                                    <tr onClick={() => onRowClick(session)} style={{ cursor: "pointer" }}>
-                                        <TableCell data-label="Session">
-                                            <div
-                                                style={{
-                                                    display: "flex",
-                                                    "align-items": "center",
-                                                    gap: "0.5rem",
-                                                }}
-                                            >
-                                                <Show when={session.requestCount > 1}>
-                                                    <Layers
+                                {(session) => {
+                                    const isExpanded = () =>
+                                        session.sessionId ? expandedSessions().has(session.sessionId) : false;
+
+                                    return (
+                                        <>
+                                            <tr onClick={() => onRowClick(session)} style={{ cursor: "pointer" }}>
+                                                <TableCell data-label="Session">
+                                                    <div
                                                         style={{
-                                                            width: "14px",
-                                                            height: "14px",
-                                                            "flex-shrink": 0,
-                                                            color: "var(--muted-foreground)",
+                                                            display: "flex",
+                                                            "align-items": "center",
+                                                            gap: "0.5rem",
                                                         }}
+                                                    >
+                                                        <Show when={session.sessionId && session.requestCount > 1}>
+                                                            <ExpandCollapseButton
+                                                                expanded={isExpanded()}
+                                                                onClick={() => toggleSession(session.sessionId!)}
+                                                                size={14}
+                                                            />
+                                                        </Show>
+                                                        <TruncatedText
+                                                            message={getSessionTitle(session)}
+                                                            maxLength={80}
+                                                        />
+                                                        <AgentBadge source={session.sessionSource} />
+                                                    </div>
+                                                </TableCell>
+                                                <TableCell data-label="Requests">{session.requestCount}</TableCell>
+                                                <TableCell data-label="Models">
+                                                    <div
+                                                        style={{
+                                                            display: "flex",
+                                                            gap: "0.25rem",
+                                                            "flex-wrap": "wrap",
+                                                        }}
+                                                    >
+                                                        <For each={session.models?.slice(0, 2) ?? []}>
+                                                            {(model) => <ModelBadge model={model} />}
+                                                        </For>
+                                                        <Show when={(session.models?.length ?? 0) > 2}>
+                                                            <Tooltip content={(session.models ?? []).join(", ")}>
+                                                                <Badge variant="muted">
+                                                                    +{(session.models?.length ?? 0) - 2}
+                                                                </Badge>
+                                                            </Tooltip>
+                                                        </Show>
+                                                    </div>
+                                                </TableCell>
+                                                <TableCell data-label="Cost">
+                                                    <Savings
+                                                        cost={session.totalCost ?? "0"}
+                                                        baselineCost={session.totalBaselineCost ?? "0"}
+                                                        toonCostSavings={session.totalToonCostSavings}
+                                                        variant="session"
                                                     />
-                                                </Show>
-                                                <TruncatedText message={getSessionTitle(session)} maxLength={80} />
-                                                <AgentBadge source={session.sessionSource} />
-                                            </div>
-                                        </TableCell>
-                                        <TableCell data-label="Requests">{session.requestCount}</TableCell>
-                                        <TableCell data-label="Models">
-                                            <div style={{ display: "flex", gap: "0.25rem", "flex-wrap": "wrap" }}>
-                                                <For each={session.models?.slice(0, 2) ?? []}>
-                                                    {(model) => <ModelBadge model={model} />}
-                                                </For>
-                                                <Show when={(session.models?.length ?? 0) > 2}>
-                                                    <Tooltip content={(session.models ?? []).join(", ")}>
-                                                        <Badge variant="muted">
-                                                            +{(session.models?.length ?? 0) - 2}
+                                                </TableCell>
+                                                <TableCell data-label="Date">
+                                                    {formatDate(session.lastRequestTime)}
+                                                </TableCell>
+                                                <TableCell data-label="Duration">
+                                                    <Show
+                                                        when={
+                                                            session.requestCount > 1 &&
+                                                            session.firstRequestTime !== session.lastRequestTime
+                                                        }
+                                                    >
+                                                        {formatDuration(
+                                                            session.firstRequestTime,
+                                                            session.lastRequestTime,
+                                                        )}
+                                                    </Show>
+                                                </TableCell>
+                                                <TableCell data-label="Details">
+                                                    <div
+                                                        style={{
+                                                            display: "flex",
+                                                            gap: "0.25rem",
+                                                            "flex-wrap": "wrap",
+                                                        }}
+                                                    >
+                                                        <Badge variant="outline">
+                                                            {getProfileName(session.profileId)}
                                                         </Badge>
-                                                    </Tooltip>
-                                                </Show>
-                                            </div>
-                                        </TableCell>
-                                        <TableCell data-label="Cost">
-                                            <Savings
-                                                cost={session.totalCost ?? "0"}
-                                                baselineCost={session.totalBaselineCost ?? "0"}
-                                                toonCostSavings={session.totalToonCostSavings}
-                                                variant="session"
-                                            />
-                                        </TableCell>
-                                        <TableCell data-label="Date">{formatDate(session.lastRequestTime)}</TableCell>
-                                        <TableCell data-label="Duration">
-                                            <Show
-                                                when={
-                                                    session.requestCount > 1 &&
-                                                    session.firstRequestTime !== session.lastRequestTime
-                                                }
-                                            >
-                                                {formatDuration(session.firstRequestTime, session.lastRequestTime)}
+                                                        <For each={session.userNames?.slice(0, 2) ?? []}>
+                                                            {(userName) => <Badge variant="ghost">{userName}</Badge>}
+                                                        </For>
+                                                    </div>
+                                                </TableCell>
+                                            </tr>
+                                            <Show when={isExpanded() && session.sessionId}>
+                                                <SessionExpandedRow
+                                                    session={session}
+                                                    onInteractionClick={(id) => openDrawer(id)}
+                                                />
                                             </Show>
-                                        </TableCell>
-                                        <TableCell data-label="Details">
-                                            <div style={{ display: "flex", gap: "0.25rem", "flex-wrap": "wrap" }}>
-                                                <Badge variant="outline">{getProfileName(session.profileId)}</Badge>
-                                                <For each={session.userNames?.slice(0, 2) ?? []}>
-                                                    {(userName) => <Badge variant="ghost">{userName}</Badge>}
-                                                </For>
-                                            </div>
-                                        </TableCell>
-                                    </tr>
-                                )}
+                                        </>
+                                    );
+                                }}
                             </For>
                         </TableBody>
                     </Table>
@@ -324,9 +389,13 @@ export default function LlmProxyLogsPage(): JSX.Element {
                 interactionId={drawerInteractionId()}
                 open={drawerOpen()}
                 onOpenChange={(open) => {
-                    if (!open) setSearchParams({ logId: undefined });
+                    if (!open) closeDrawer();
                 }}
             />
         </>
     );
+}
+
+export default function LlmProxyLogsPageRoute(): JSX.Element {
+    return <LlmProxyLogsPage />;
 }
