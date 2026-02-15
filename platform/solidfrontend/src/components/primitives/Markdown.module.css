@@ -18,7 +18,7 @@
 }
 
 .markdown code {
-    background: var(--muted);
+    background: var(--muted-background);
     padding: 0.125rem 0.375rem;
     border-radius: var(--radius-small, 3px);
     font-family: var(--font-mono, monospace);

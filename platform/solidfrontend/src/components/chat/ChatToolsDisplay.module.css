@@ -21,7 +21,7 @@
 }
 
 .pill:hover {
-    background: var(--accent);
+    background: var(--background);
 }
 
 .pill-name {
@@ -48,7 +48,7 @@
 }
 
 .add-tools-button:hover {
-    background: var(--accent);
+    background: var(--background);
     color: var(--foreground);
     border-color: var(--foreground);
 }
@@ -83,7 +83,7 @@
 }
 
 .section-button:hover {
-    background: var(--accent);
+    background: var(--background);
 }
 
 .tool-list {
@@ -134,7 +134,7 @@
 }
 
 .tool-action:hover {
-    background: var(--accent);
+    background: var(--background);
     color: var(--foreground);
 }
 

@@ -1,14 +1,14 @@
-import { revalidate } from "@solidjs/router";
-import { createQuery, createSubmission, getAuthHeaders } from "@/lib/api";
 import { archestraApiSdk } from "@shared";
+import { revalidate } from "@solidjs/router";
 import { showError } from "@/components/primitives/Toast";
+import { createQuery, createSubmission, getAuthHeaders } from "@/lib/api";
 
 type Agent = { id: string; name: string };
 
 export const useAgents = createQuery({
     queryKey: "fetch-agents",
     callback: async () => {
-        const {error, data: {data: profiles} = {}} = await archestraApiSdk.getAgents({ headers: getAuthHeaders() });
+        const { error, data: { data: profiles } = {} } = await archestraApiSdk.getAgents({ headers: getAuthHeaders() });
         return { data: profiles, error };
     },
 });
@@ -20,13 +20,13 @@ const assignTool = createSubmission({
         return archestraApiSdk.assignToolToAgent({
             headers: getAuthHeaders(),
             path: { agentId, toolId },
-            body: { toolId },
+            body: { useDynamicTeamCredential: true },
         });
     },
     onSuccess: () => revalidate("fetch-tools"),
     onError: (error) => showError(error.message),
 });
 
-export function useAssignTool(toolId: string) {
-    return assignTool(([payload]) => payload.toolId === toolId);
+export function useAssignTool(toolId?: string) {
+    return assignTool(toolId ? ([payload]) => payload.toolId === toolId : undefined);
 }

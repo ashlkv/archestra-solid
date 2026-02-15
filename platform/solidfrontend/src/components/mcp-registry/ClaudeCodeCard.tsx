@@ -16,7 +16,7 @@ export function ClaudeCodeCard() {
                             Claude Code
                         </p>
                         <div class={styles.badges} data-label="Badges">
-                            <Badge variant="success" pill caps>
+                            <Badge variant="muted" pill caps>
                                 local
                             </Badge>
                             <Badge variant="muted" pill caps>

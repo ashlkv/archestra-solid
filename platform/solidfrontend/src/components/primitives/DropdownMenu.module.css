@@ -18,8 +18,8 @@
 
 .content {
     min-width: 10rem;
-    background: var(--popover);
-    color: var(--popover-foreground);
+    background: var(--background);
+    color: var(--foreground);
     border: 1px solid var(--border);
     border-radius: var(--radius);
     box-shadow: var(--shadow-md);
@@ -64,8 +64,8 @@
 
 .item:hover,
 .item:focus {
-    background: var(--accent);
-    color: var(--accent-foreground);
+    background: var(--background);
+    color: var(--foreground);
 }
 
 .item[data-disabled] {

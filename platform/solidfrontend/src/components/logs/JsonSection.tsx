@@ -53,7 +53,7 @@ export function JsonSection(props: { title: string; data: unknown; defaultOpen?:
                         style={{
                             "font-family": "var(--font-mono)",
                             "font-size": "var(--font-size-xsmall)",
-                            background: "var(--muted)",
+                            background: "var(--muted-background)",
                             padding: "1rem",
                             "border-radius": "var(--radius)",
                             overflow: "auto",

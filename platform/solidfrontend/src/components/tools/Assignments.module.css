@@ -26,6 +26,11 @@
     color: var(--muted-foreground);
 }
 
+.muted {
+    color: var(--muted-foreground);
+    white-space: nowrap;
+}
+
 .edit,
 .connect {
     position: absolute;
@@ -38,7 +43,6 @@
 .trigger:hover .connect {
     opacity: 1;
 }
-
 
 .popoverContent {
     display: flex;

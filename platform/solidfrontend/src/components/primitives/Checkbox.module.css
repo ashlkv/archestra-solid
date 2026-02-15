@@ -28,7 +28,7 @@
 .control[data-indeterminate] {
     background: var(--primary);
     border-color: var(--primary);
-    color: var(--primary-foreground);
+    color: oklch(from var(--primary) clamp(0, (0.5 - l) * 100, 1) 0 0);
 }
 
 .control:focus-visible {
