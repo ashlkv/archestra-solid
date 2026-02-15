@@ -9,6 +9,7 @@
         "type-check": "tsc --noEmit"
     },
     "dependencies": {
+        "ai": "^6.0.37",
         "@kobalte/core": "^0.13.11",
         "@shared": "workspace:*",
         "@solidjs/meta": "^0.29.4",
