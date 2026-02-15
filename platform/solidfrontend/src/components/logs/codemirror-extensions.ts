@@ -13,14 +13,14 @@ const jsonHighlightStyle = HighlightStyle.define([
     { tag: tags.punctuation, color: "oklch(0.55 0 0)" }, // neutral for braces/brackets
 ]);
 
-export function readonlyJsonExtensions(): Extension[] {
+export function readonlyJsonExtensions(options?: { lineNumbers?: boolean }): Extension[] {
     return [
         json(),
         syntaxHighlighting(jsonHighlightStyle),
         EditorState.readOnly.of(true),
         EditorView.editable.of(false),
         EditorView.lineWrapping,
-        lineNumbers(),
+        ...(options?.lineNumbers !== false ? [lineNumbers()] : []),
         EditorView.theme({
             "&": { backgroundColor: "var(--muted-background)" },
         }),

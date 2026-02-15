@@ -213,7 +213,7 @@ class AnthropicMessagesInteraction implements InteractionUtils {
 
                                     toolCallParts.push({
                                         type: "dynamic-tool",
-                                        toolName: "tool-result",
+                                        toolName: block.name,
                                         toolCallId: block.id,
                                         state: "output-available",
                                         input: {},

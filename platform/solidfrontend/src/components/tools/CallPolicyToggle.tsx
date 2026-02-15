@@ -1,12 +1,12 @@
-import { Ban, Check, Handshake } from "@/components/icons";
 import { createEffect, createSignal, For, type JSX } from "solid-js";
-import type { CallPolicy } from "@/types";
+import { Ban, Check, Handshake } from "@/components/icons";
 import { useSaveCallPolicy } from "@/lib/policy.query";
+import type { CallPolicy } from "@/types";
 import { showError } from "../primitives/Toast";
 import { ToggleGroup, ToggleItem } from "../primitives/ToggleGroup";
 import { CALL_POLICY_ACTION_OPTIONS } from "./tool.utils";
 
-type PolicyAction = CallPolicy["action"]
+type PolicyAction = CallPolicy["action"];
 
 const MIN_LOADER_DURATION = 400;
 
@@ -21,6 +21,7 @@ export function CallPolicyToggle(props: {
     policyId: string | undefined;
     value: PolicyAction | undefined;
     disabled?: boolean;
+    size?: "small" | "xsmall";
 }): JSX.Element {
     const [selected, setSelected] = createSignal(props.value);
     const [pendingAction, setPendingAction] = createSignal<PolicyAction | null>(null);
@@ -37,7 +38,10 @@ export function CallPolicyToggle(props: {
         setSelected(action);
         const startTime = Date.now();
         try {
-            await submit({ toolId: props.toolId, policy: { id: props.policyId, action, conditions: [], reason: null } });
+            await submit({
+                toolId: props.toolId,
+                policy: { id: props.policyId, action, conditions: [], reason: null },
+            });
         } catch (exception) {
             setSelected(previousValue);
             showError(exception instanceof Error ? exception.message : "Failed to save policy");
@@ -53,7 +57,7 @@ export function CallPolicyToggle(props: {
     const isDisabled = () => props.disabled || submission.pending;
 
     return (
-        <ToggleGroup>
+        <ToggleGroup size={props.size}>
             <For each={CALL_POLICY_ACTION_OPTIONS}>
                 {(option) => (
                     <ToggleItem

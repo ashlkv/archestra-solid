@@ -1,6 +1,6 @@
 import { createEffect, createSignal, type JSX } from "solid-js";
-import type { ResultPolicyAction } from "@/types";
 import { useSaveResultPolicy } from "@/lib/policy.query";
+import type { ResultPolicyAction } from "@/types";
 import { Select } from "../primitives/Select";
 import { showError } from "../primitives/Toast";
 import { RESULT_POLICY_ACTION_OPTIONS } from "./tool.utils";
@@ -12,6 +12,7 @@ export function ResultPolicySelect(props: {
     policyId: string | undefined;
     value: ResultPolicyAction | undefined;
     disabled?: boolean;
+    size?: "inherit" | "small" | "xsmall";
 }): JSX.Element {
     const [selected, setSelected] = createSignal(props.value);
     const [loading, setLoading] = createSignal(false);
@@ -48,6 +49,7 @@ export function ResultPolicySelect(props: {
             options={RESULT_POLICY_ACTION_OPTIONS}
             disabled={props.disabled || submission.pending}
             loading={loading()}
+            size={props.size}
         />
     );
 }

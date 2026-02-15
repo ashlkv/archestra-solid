@@ -1,0 +1,8 @@
+.name {
+    font-family: var(--font-mono);
+    display: block;
+    max-width: 12rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

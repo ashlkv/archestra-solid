@@ -1,15 +1,15 @@
 import { type Accessor, createEffect, createSignal, For, on, Show } from "solid-js";
 import type { CallPolicy, ResultPolicy, ToolWithAssignments } from "@/types";
 import { Alert } from "../primitives/Alert";
-import { Badge } from "../primitives/Badge";
 import { Checkbox } from "../primitives/Checkbox";
 import { Empty, EmptyDescription } from "../primitives/Empty";
 import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "../primitives/Table";
 import { Assignments } from "./Assignments";
 import { CallPolicyToggle } from "./CallPolicyToggle";
 import { GroupPolicyBar } from "./GroupPolicyBar";
+import { OriginBadge } from "./OriginBadge";
 import { ResultPolicySelect } from "./ResultPolicySelect";
-import { ToolHoverCard } from "./ToolHoverCard";
+import { ToolName } from "./ToolName";
 import styles from "./ToolTable.module.css";
 
 type Agent = { id: string; name: string };
@@ -101,7 +101,7 @@ export function ToolTable(props: {
     }
 
     const groupBarDisabled = () => selectedCount() === 0;
-    const showGroupBar = () => !props.selectedAgentId;
+    const showGroupBar = () => !props.selectedAgentId && showColumn("select");
 
     function clearSelection() {
         updateSelection(new Set());
@@ -197,12 +197,6 @@ function ToolRow(props: {
 }) {
     const isAutoDiscovered = () =>
         !props.tool.catalogId && !props.tool.mcpServerName && !props.tool.name.startsWith("archestra__");
-    const origin = () =>
-        props.tool.name.startsWith("archestra__") ? "archestra" : (props.tool.mcpServerName ?? "LLM Proxy");
-    const methodName = () => {
-        const lastSep = props.tool.name.lastIndexOf("__");
-        return lastSep !== -1 ? props.tool.name.slice(lastSep + 2) : props.tool.name;
-    };
     const showColumn = (column: Column) => {
         if (props.columns?.length) return props.columns.includes(column);
         return true;
@@ -225,18 +219,15 @@ function ToolRow(props: {
             </Show>
             <Show when={showColumn("name")}>
                 <TableCell>
-                    <ToolHoverCard
+                    <ToolName
                         name={props.tool.name}
-                        description={props.tool.description}
-                        parameters={props.tool.parameters}
-                    >
-                        <span class={styles["tool-name"]}>{methodName()}</span>
-                    </ToolHoverCard>
+                        tool={{ description: props.tool.description, parameters: props.tool.parameters }}
+                    />
                 </TableCell>
             </Show>
             <Show when={showColumn("origin")}>
                 <TableCell>
-                    <Badge variant={origin() === "archestra" ? "primary" : "muted"}>{origin()}</Badge>
+                    <OriginBadge toolName={props.tool.name} mcpServerName={props.tool.mcpServerName} />
                 </TableCell>
             </Show>
             <Show when={showColumn("assignments")}>

@@ -34,7 +34,9 @@
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    max-width: 32rem;
     width: 100%;
+    align-self: center;
 }
 
 .reasoning {
@@ -51,6 +53,13 @@
     font-weight: bold;
     font-style: normal;
     margin-bottom: 0.25rem;
+}
+
+.timestamp {
+    font-size: var(--font-size-xxsmall);
+    color: var(--muted-foreground);
+    opacity: 0.7;
+    margin-top: 0.125rem;
 }
 
 .previous-collapsed {
@@ -87,11 +96,6 @@
     padding: 0.25rem 0.75rem;
     cursor: pointer;
     align-self: center;
-}
-
-.previous-reveal:hover {
-    color: var(--foreground);
-    background: color-mix(in srgb, var(--foreground) 8%, transparent);
 }
 
 .previous-expanded {

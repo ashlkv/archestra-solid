@@ -4,14 +4,14 @@ import { type JSX, onCleanup } from "solid-js";
 import { readonlyJsonExtensions } from "./codemirror-extensions";
 import styles from "./JsonHighlight.module.css";
 
-export function JsonHighlight(props: { code: string }): JSX.Element {
+export function JsonHighlight(props: { code: string; lineNumbers?: boolean }): JSX.Element {
     let editorView: EditorView | undefined;
 
     const createEditor = (el: HTMLDivElement) => {
         editorView = new EditorView({
             state: EditorState.create({
                 doc: props.code,
-                extensions: readonlyJsonExtensions(),
+                extensions: readonlyJsonExtensions({ lineNumbers: props.lineNumbers }),
             }),
             parent: el,
         });

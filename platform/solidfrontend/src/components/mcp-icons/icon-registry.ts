@@ -8,7 +8,7 @@ import { IconJira } from "./IconJira";
 import { IconKubernetes } from "./IconKubernetes";
 import { IconPlaywright } from "./IconPlaywright";
 
-type IconComponent = Component<{ size?: number; class?: string }>;
+type IconComponent = Component<{ size?: number; class?: string; title?: string }>;
 
 const wellKnown: Record<string, IconComponent> = {
     archestra: IconArchestra,
