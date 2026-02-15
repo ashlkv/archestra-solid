@@ -9,3 +9,11 @@
 .blocked {
     opacity: 0.5;
 }
+
+.selected {
+    background: var(--accent);
+}
+
+.checkbox-cell {
+    width: 1rem;
+}

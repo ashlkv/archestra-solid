@@ -39,6 +39,7 @@ export { default as LogIn } from "lucide-solid/icons/log-in";
 export { default as MessageCircle } from "lucide-solid/icons/message-circle";
 export { default as MessagesSquare } from "lucide-solid/icons/messages-square";
 export { default as Mic } from "lucide-solid/icons/mic";
+export { default as Minus } from "lucide-solid/icons/minus";
 export { default as Network } from "lucide-solid/icons/network";
 export { default as Pencil } from "lucide-solid/icons/pencil";
 export { default as Plus } from "lucide-solid/icons/plus";
