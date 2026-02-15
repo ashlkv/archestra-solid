@@ -3,6 +3,7 @@ import { For, type JSX, Show } from "solid-js";
 import { Layers, X } from "@/components/icons";
 import { DateTimeRangePicker } from "@/components/logs/DateTimeRangePicker";
 import { DebouncedInput } from "@/components/logs/DebouncedInput";
+import { InteractionDrawer } from "@/components/logs/InteractionDrawer";
 import { Pagination } from "@/components/logs/Pagination";
 import { Savings } from "@/components/logs/Savings";
 import { SearchableSelect } from "@/components/logs/SearchableSelect";
@@ -75,6 +76,9 @@ export default function LlmProxyLogsPage(): JSX.Element {
         ];
     };
 
+    const drawerInteractionId = () => asString(searchParams.logId) || null;
+    const drawerOpen = () => drawerInteractionId() !== null;
+
     const clearFilters = () => {
         setSearchParams({
             page: undefined,
@@ -133,7 +137,7 @@ export default function LlmProxyLogsPage(): JSX.Element {
         if (session.sessionId) {
             navigate(`/logs/llm-proxy/session/${session.sessionId}`);
         } else {
-            navigate(`/logs/${session.interactionId}`);
+            setSearchParams({ logId: session.interactionId });
         }
     };
 
@@ -315,6 +319,14 @@ export default function LlmProxyLogsPage(): JSX.Element {
                     />
                 </Show>
             </Main>
+
+            <InteractionDrawer
+                interactionId={drawerInteractionId()}
+                open={drawerOpen()}
+                onOpenChange={(open) => {
+                    if (!open) setSearchParams({ logId: undefined });
+                }}
+            />
         </>
     );
 }

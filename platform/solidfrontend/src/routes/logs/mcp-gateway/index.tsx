@@ -3,6 +3,7 @@ import { For, type JSX, Show } from "solid-js";
 import { ChevronDown, ChevronUp, X } from "@/components/icons";
 import { DateTimeRangePicker } from "@/components/logs/DateTimeRangePicker";
 import { DebouncedInput } from "@/components/logs/DebouncedInput";
+import { McpToolCallDrawer } from "@/components/logs/McpToolCallDrawer";
 import { Pagination } from "@/components/logs/Pagination";
 import { SearchableSelect } from "@/components/logs/SearchableSelect";
 import { TruncatedText } from "@/components/logs/TruncatedText";
@@ -43,6 +44,9 @@ export default function McpGatewayLogsPage(): JSX.Element {
         sortBy: sortBy(),
         sortDirection: sortDirection(),
     });
+
+    const drawerToolCallId = () => String(searchParams.logId ?? "") || null;
+    const drawerOpen = () => drawerToolCallId() !== null;
 
     const { data: toolCallsData, query: toolCallsQuery } = useMcpToolCalls(queryParams);
     const { data: agents } = useAgents();
@@ -241,7 +245,7 @@ export default function McpGatewayLogsPage(): JSX.Element {
                         <For each={toolCalls()}>
                             {(toolCall) => (
                                 <tr
-                                    onClick={() => navigate(`/logs/mcp-gateway/${toolCall.id}`)}
+                                    onClick={() => setSearchParams({ logId: toolCall.id })}
                                     style={{ cursor: "pointer" }}
                                 >
                                     <TableCell>
@@ -287,6 +291,14 @@ export default function McpGatewayLogsPage(): JSX.Element {
                     onPageChange={(newPage) => setSearchParams({ page: String(newPage) })}
                 />
             </Show>
+
+            <McpToolCallDrawer
+                mcpToolCallId={drawerToolCallId()}
+                open={drawerOpen()}
+                onOpenChange={(open) => {
+                    if (!open) setSearchParams({ logId: undefined });
+                }}
+            />
         </>
     );
 }
