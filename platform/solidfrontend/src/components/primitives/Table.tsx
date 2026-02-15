@@ -6,9 +6,7 @@ interface TableProps extends ParentProps {
 }
 
 export function Table(props: TableProps): JSX.Element {
-    return (
-        <table class={`${styles.table} ${props.class ?? ""}`}>{props.children}</table>
-    );
+    return <table class={`${styles.table} ${props.class ?? ""}`}>{props.children}</table>;
 }
 
 export function TableHead(props: ParentProps): JSX.Element {
@@ -25,11 +23,12 @@ export function TableRow(props: ParentProps & { class?: string }): JSX.Element {
 
 interface CellProps extends ParentProps {
     "data-label"?: string;
+    class?: string;
 }
 
 export function TableHeaderCell(props: CellProps): JSX.Element {
     return (
-        <th class={styles.headerCell} data-label={props["data-label"]}>
+        <th class={`${styles.headerCell} ${props.class ?? ""}`} data-label={props["data-label"]}>
             {props.children}
         </th>
     );
@@ -37,7 +36,7 @@ export function TableHeaderCell(props: CellProps): JSX.Element {
 
 export function TableCell(props: CellProps): JSX.Element {
     return (
-        <td class={styles.cell} data-label={props["data-label"]}>
+        <td class={`${styles.cell} ${props.class ?? ""}`} data-label={props["data-label"]}>
             {props.children}
         </td>
     );
