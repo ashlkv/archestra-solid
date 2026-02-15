@@ -11,6 +11,8 @@
     border: 1px solid var(--border);
     border-radius: var(--radius);
     cursor: pointer;
+    font-family: inherit;
+    font-size: inherit;
 }
 
 .trigger:hover {
