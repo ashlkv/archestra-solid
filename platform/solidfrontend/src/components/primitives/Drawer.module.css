@@ -64,8 +64,8 @@
 .header {
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
-    padding: 1rem;
+    gap: 0.5rem;
+    padding-bottom: 0.75rem;
     border-bottom: 1px solid var(--border);
 }
 
@@ -76,14 +76,8 @@
 }
 
 .title {
-    font-weight: 600;
-    font-size: 1rem;
-    margin: 0;
-}
-
-.description {
-    font-size: 0.875rem;
-    color: var(--muted-foreground);
+    font-weight: inherit;
+    font-size: inherit;
     margin: 0;
 }
 

@@ -1,6 +1,7 @@
 import { Dialog as KobalteDialog } from "@kobalte/core/dialog";
-import type { JSX, ParentProps } from "solid-js";
+import { type JSX, type ParentProps, Show } from "solid-js";
 import { X } from "@/components/icons";
+import { PageHeader } from "~/components/primitives/PageHeader";
 import styles from "./Drawer.module.css";
 
 export function Drawer(props: ParentProps<{ open?: boolean; onOpenChange?: (open: boolean) => void }>): JSX.Element {
@@ -24,6 +25,7 @@ export function DrawerContent(
         title?: string;
         description?: string;
         size?: "small" | "medium" | "large" | "xlarge" | "full";
+        headerContent?: JSX.Element;
     }>,
 ): JSX.Element {
     const contentClass = () => {
@@ -43,16 +45,16 @@ export function DrawerContent(
                 <KobalteDialog.Content class={contentClass()}>
                     <div class={styles.header}>
                         <div class={styles.headerRow}>
-                            <KobalteDialog.Title class={styles.title}>{props.title}</KobalteDialog.Title>
+                            <KobalteDialog.Title class={styles.title}>
+                                <Show when={props.title}>
+                                    <PageHeader title={props.title!} description={props.description} />
+                                </Show>
+                            </KobalteDialog.Title>
                             <KobalteDialog.CloseButton class={styles.close}>
                                 <X size={16} />
                             </KobalteDialog.CloseButton>
                         </div>
-                        {props.description && (
-                            <KobalteDialog.Description class={styles.description}>
-                                {props.description}
-                            </KobalteDialog.Description>
-                        )}
+                        <Show when={props.headerContent}>{props.headerContent}</Show>
                     </div>
                     <div class={styles.body}>{props.children}</div>
                 </KobalteDialog.Content>

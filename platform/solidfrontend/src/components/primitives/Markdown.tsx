@@ -1,61 +1,52 @@
+import DOMPurify from "dompurify";
+import { Marked } from "marked";
 import type { JSX } from "solid-js";
 import styles from "./Markdown.module.css";
 
 type Props = {
     children: string | undefined;
+    size?: "inherit" | "small" | "xsmall";
     class?: string;
 };
 
+const marked = new Marked({
+    gfm: true,
+    breaks: true,
+});
+
 /**
- * Simple markdown renderer for instructions and descriptions.
- * Supports: **bold**, `code`, [links](url), line breaks.
+ * Markdown renderer using `marked` (GFM) + DOMPurify sanitization.
+ * Supports headings, lists, tables, code blocks, bold, italic, links, etc.
+ * Strips unknown XML/HTML-like tags (e.g. <antThinking>, <system-reminder>)
+ * before rendering so they never appear to the user.
  */
 export function Markdown(props: Props): JSX.Element {
     const html = () => {
         if (!props.children) return "";
-        return parseMarkdown(props.children);
+        const cleaned = stripXmlTags(props.children);
+        const raw = marked.parse(cleaned) as string;
+        return DOMPurify.sanitize(raw);
     };
 
-    return (
-        <div
-            class={`${styles.markdown} ${props.class ?? ""}`}
-            innerHTML={html()}
-        />
-    );
-}
-
-function parseMarkdown(text: string): string {
-    let result = escapeHtml(text);
-
-    // Convert markdown line breaks (two+ newlines = paragraph break, single newline = <br>)
-    result = result
-        .split(/\n{2,}/)
-        .map((paragraph) => `<p>${paragraph.replace(/\n/g, "<br>")}</p>`)
-        .join("");
-
-    // **bold** or __bold__
-    result = result.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
-    result = result.replace(/__(.+?)__/g, "<strong>$1</strong>");
-
-    // `code`
-    result = result.replace(/`([^`]+)`/g, "<code>$1</code>");
-
-    // [text](url)
-    result = result.replace(
-        /\[([^\]]+)\]\(([^)]+)\)/g,
-        '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>'
-    );
-
-    return result;
-}
-
-function escapeHtml(text: string): string {
-    const map: Record<string, string> = {
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        '"': "&quot;",
-        "'": "&#039;",
+    const sizeClass = () => {
+        if (props.size === "small") return styles.small;
+        if (props.size === "xsmall") return styles.xsmall;
+        return "";
     };
-    return text.replace(/[&<>"']/g, (char) => map[char]);
+
+    return <div class={`${styles.markdown} ${sizeClass()} ${props.class ?? ""}`} innerHTML={html()} />;
+}
+
+/**
+ * Strip XML-like tags that are not standard HTML/markdown.
+ * This removes tags like <antThinking>, </antThinking>, <system-reminder>, etc.
+ * while preserving standard markdown content.
+ */
+function stripXmlTags(text: string): string {
+    // Remove matched pairs first (e.g. <antThinking>...</antThinking>)
+    let result = text.replace(/<(antThinking|ant_thinking)[^>]*>[\s\S]*?<\/\1>/gi, "");
+    // Remove any remaining self-closing or opening/closing non-HTML tags
+    // Preserve standard HTML tags by only stripping known non-standard ones
+    result = result.replace(/<\/?(antThinking|ant_thinking|system-reminder|archestra-[a-z-]+)[^>]*>/gi, "");
+    return result.trim();
 }

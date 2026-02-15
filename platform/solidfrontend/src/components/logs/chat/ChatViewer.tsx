@@ -1,41 +1,70 @@
-import { For, type JSX, Show } from "solid-js";
-import { ShieldCheck, TriangleAlert } from "@/components/icons";
+import { createSignal, For, type JSX, Show } from "solid-js";
+import { ShieldCheck, TriangleAlert, UnfoldVertical } from "@/components/icons";
 import { Markdown } from "@/components/primitives/Markdown";
+import { TextBubble } from "@/components/primitives/TextBubble";
 import type { BlockedToolPart, DualLlmPart, PartialUIMessage } from "@/lib/llm-providers/common";
 import { parsePolicyDenied } from "@/lib/llm-providers/common";
 import styles from "./ChatViewer.module.css";
 import { ToolCall } from "./ToolCall";
 
 export function ChatViewer(props: { messages: PartialUIMessage[] }): JSX.Element {
+    const [expanded, setExpanded] = createSignal(false);
+
+    const splitIndex = () => findLastExchangeStart(props.messages);
+    const previousMessages = () => props.messages.slice(0, splitIndex());
+    const visibleMessages = () => props.messages.slice(splitIndex());
+    const hasPrevious = () => previousMessages().length > 0;
+
     return (
         <div class={styles.container} data-label="ChatViewer">
-            <For each={props.messages}>{(message) => <ChatMessage message={message} />}</For>
+            <Show when={hasPrevious()}>
+                <div class={expanded() ? styles["previous-expanded"] : styles["previous-collapsed"]}>
+                    <For each={previousMessages()}>{(message) => <ChatMessage message={message} />}</For>
+                </div>
+                <Show when={!expanded()}>
+                    <button type="button" class={styles["previous-reveal"]} onClick={() => setExpanded(true)}>
+                        <UnfoldVertical style={{ width: "14px", height: "14px" }} />
+                        Show {previousMessages().length} previous messages
+                    </button>
+                </Show>
+            </Show>
+
+            <For each={visibleMessages()}>{(message) => <ChatMessage message={message} />}</For>
         </div>
     );
 }
 
 function ChatMessage(props: { message: PartialUIMessage }): JSX.Element {
     const roleLabel = () => {
-        if (props.message.role === "user") return "User";
-        if (props.message.role === "assistant") return "Assistant";
+        if (props.message.role === "user") return "Client";
+        if (props.message.role === "assistant") return "Server";
         return "System";
     };
 
     return (
         <div class={`${styles.message} ${styles[props.message.role]}`} data-label={`Message: ${props.message.role}`}>
             <span class={styles["message-role"]}>{roleLabel()}</span>
-            <For each={props.message.parts}>{(part) => <MessagePart part={part} />}</For>
+            <For each={props.message.parts}>{(part) => <MessagePart part={part} role={props.message.role} />}</For>
         </div>
     );
 }
 
-function MessagePart(props: { part: PartialUIMessage["parts"][number] }): JSX.Element {
+function MessagePart(props: { part: PartialUIMessage["parts"][number]; role: string }): JSX.Element {
     const part = () => props.part;
+    const bubbleVariant = (): "user" | "agent" | "system" => {
+        if (props.role === "system") return "system";
+        if (props.role === "user") {
+            const p = part();
+            if (p.type === "text" && "text" in p && isSystemReminderText(p.text)) return "system";
+            return "user";
+        }
+        return "agent";
+    };
 
     return (
         <>
             <Show when={part().type === "text" && "text" in part()}>
-                <TextBubble text={(part() as { type: "text"; text: string }).text} />
+                <TextPart text={(part() as { type: "text"; text: string }).text} variant={bubbleVariant()} />
             </Show>
 
             <Show when={(part().type === "dynamic-tool" || part().type === "tool-invocation") && "toolName" in part()}>
@@ -62,7 +91,7 @@ function MessagePart(props: { part: PartialUIMessage["parts"][number] }): JSX.El
     );
 }
 
-function TextBubble(props: { text: string }): JSX.Element {
+function TextPart(props: { text: string; variant: "user" | "agent" | "system" }): JSX.Element {
     const policyDenied = () => parsePolicyDenied(props.text);
 
     return (
@@ -92,9 +121,7 @@ function TextBubble(props: { text: string }): JSX.Element {
                 </div>
             </Show>
             <Show when={!policyDenied()}>
-                <div class={styles.bubble}>
-                    <Markdown>{props.text}</Markdown>
-                </div>
+                <TextBubble text={props.text} variant={props.variant} size="xsmall" />
             </Show>
         </>
     );
@@ -235,4 +262,40 @@ function BlockedToolPartView(props: { part: BlockedToolPart }): JSX.Element {
             </div>
         </div>
     );
+}
+
+function isSystemReminderText(text: string): boolean {
+    const trimmed = text.trim();
+    return trimmed.startsWith("<system-reminder>") || trimmed.startsWith("<system-reminder ");
+}
+
+/**
+ * Find the start index of the last user→assistant exchange.
+ * Walks backwards to find the last assistant message, then finds the user message before it.
+ * Everything before that user message is "previous context".
+ */
+function findLastExchangeStart(messages: PartialUIMessage[]): number {
+    if (messages.length <= 2) return 0;
+
+    // Find the last assistant message index
+    let lastAssistantIdx = -1;
+    for (let i = messages.length - 1; i >= 0; i--) {
+        if (messages[i].role === "assistant") {
+            lastAssistantIdx = i;
+            break;
+        }
+    }
+    if (lastAssistantIdx === -1) return 0;
+
+    // Find the last user message before that assistant message
+    let lastUserIdx = -1;
+    for (let i = lastAssistantIdx - 1; i >= 0; i--) {
+        if (messages[i].role === "user") {
+            lastUserIdx = i;
+            break;
+        }
+    }
+    if (lastUserIdx === -1) return 0;
+
+    return lastUserIdx;
 }

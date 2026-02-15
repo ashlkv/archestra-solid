@@ -13,10 +13,10 @@ export default function InteractionDetailPage(): JSX.Element {
                 <A href="/logs/llm-proxy" style={{ color: "var(--muted-foreground)" }}>
                     <ArrowLeft style={{ width: "20px", height: "20px" }} />
                 </A>
-                <PageHeader title="Interaction" />
+                <PageHeader title="Log entry" description={params.id} />
             </div>
 
-            <InteractionDetailContent interactionId={params.id} />
+            <InteractionDetailContent interactionId={params.id} view="chat" />
         </>
     );
 }

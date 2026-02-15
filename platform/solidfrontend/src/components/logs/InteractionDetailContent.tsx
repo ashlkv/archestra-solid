@@ -1,23 +1,26 @@
-import { For, type JSX, Show } from "solid-js";
+import { type JSX, Show } from "solid-js";
 import { ChatViewer } from "@/components/logs/chat/ChatViewer";
 import { JsonSection } from "@/components/logs/JsonSection";
-import { Savings } from "@/components/logs/Savings";
 import { Badge } from "@/components/primitives/Badge";
+import { CostBadge } from "@/components/primitives/CostBadge";
+import { ProviderModelBadge } from "@/components/primitives/ProviderModelBadge";
 import { Spinner } from "@/components/primitives/Spinner";
+import { Split } from "@/components/primitives/Split";
+import { TimestampBadge } from "@/components/primitives/TimestampBadge";
+import { TokensBadge } from "@/components/primitives/TokensBadge";
 import { useAgents } from "@/lib/agent.query";
 import { useDualLlmResultsByInteraction } from "@/lib/dual-llm-result.query";
 import { useInteraction } from "@/lib/interaction.query";
-import { DynamicInteraction, formatDate } from "@/lib/interaction.utils";
+import { DynamicInteraction } from "@/lib/interaction.utils";
 import type { Agent } from "@/types";
 
-export function InteractionDetailContent(props: { interactionId: string }): JSX.Element {
+export function InteractionDetailContent(props: { interactionId: string; view: "chat" | "raw" }): JSX.Element {
     const { data: interaction, query: interactionQuery } = useInteraction(() => ({
         interactionId: props.interactionId,
     }));
     const { data: dualLlmResults } = useDualLlmResultsByInteraction(() => ({
         interactionId: props.interactionId,
     }));
-    const { data: agents } = useAgents();
 
     const dynamicInteraction = () => {
         const i = interaction();
@@ -28,14 +31,6 @@ export function InteractionDetailContent(props: { interactionId: string }): JSX.
             return undefined;
         }
     };
-
-    const getProfileName = (profileId: string): string => {
-        const agentList = agents() ?? [];
-        return agentList.find((a: Agent) => a.id === profileId)?.name ?? profileId;
-    };
-
-    const toolsUsed = () => dynamicInteraction()?.getToolNamesUsed() ?? [];
-    const toolsRefused = () => dynamicInteraction()?.getToolNamesRefused() ?? [];
 
     const uiMessages = () => {
         const di = dynamicInteraction();
@@ -58,193 +53,102 @@ export function InteractionDetailContent(props: { interactionId: string }): JSX.
             </Show>
 
             <Show when={interaction()}>
-                {/* Metadata */}
-                <div
-                    data-label="Metadata"
-                    style={{
-                        border: "1px solid var(--border)",
-                        "border-radius": "var(--radius)",
-                        padding: "1.5rem",
-                        "margin-bottom": "1.5rem",
-                    }}
-                >
-                    <div
-                        style={{
-                            display: "grid",
-                            "grid-template-columns": "repeat(auto-fit, minmax(200px, 1fr))",
-                            gap: "1.5rem",
-                        }}
-                    >
+                <Show when={props.view === "chat"}>
+                    <Split columns={[3, 7]}>
+                        <div data-label="Tools">{/* Tools will go here */}</div>
                         <div>
-                            <div
-                                style={{
-                                    "font-size": "var(--font-size-xsmall)",
-                                    color: "var(--muted-foreground)",
-                                    "margin-bottom": "0.25rem",
-                                }}
-                            >
-                                Profile
-                            </div>
-                            <Badge variant="outline">{getProfileName(interaction()!.profileId)}</Badge>
+                            <Show when={uiMessages().length > 0}>
+                                <ChatViewer messages={uiMessages()} />
+                            </Show>
                         </div>
-                        <Show when={interaction()!.externalAgentId}>
-                            <div>
-                                <div
-                                    style={{
-                                        "font-size": "var(--font-size-xsmall)",
-                                        color: "var(--muted-foreground)",
-                                        "margin-bottom": "0.25rem",
-                                    }}
-                                >
-                                    External agent
-                                </div>
-                                <div>
-                                    {(interaction()! as any).externalAgentIdLabel ?? interaction()!.externalAgentId}
-                                </div>
-                            </div>
-                        </Show>
-                        <div>
-                            <div
-                                style={{
-                                    "font-size": "var(--font-size-xsmall)",
-                                    color: "var(--muted-foreground)",
-                                    "margin-bottom": "0.25rem",
-                                }}
-                            >
-                                Provider &amp; Model
-                            </div>
-                            <div>
-                                <Badge variant="muted">{dynamicInteraction()?.provider ?? "Unknown"}</Badge>{" "}
-                                <span style={{ "font-size": "var(--font-size-small)" }}>
-                                    {dynamicInteraction()?.modelName ?? "Unknown"}
-                                </span>
-                            </div>
-                        </div>
-                        <Show when={toolsUsed().length > 0}>
-                            <div>
-                                <div
-                                    style={{
-                                        "font-size": "var(--font-size-xsmall)",
-                                        color: "var(--muted-foreground)",
-                                        "margin-bottom": "0.25rem",
-                                    }}
-                                >
-                                    Tools used
-                                </div>
-                                <div style={{ display: "flex", gap: "0.25rem", "flex-wrap": "wrap" }}>
-                                    <For each={toolsUsed()}>
-                                        {(toolName) => <Badge variant="muted">{toolName}</Badge>}
-                                    </For>
-                                </div>
-                            </div>
-                        </Show>
-                        <Show when={toolsRefused().length > 0}>
-                            <div>
-                                <div
-                                    style={{
-                                        "font-size": "var(--font-size-xsmall)",
-                                        color: "var(--muted-foreground)",
-                                        "margin-bottom": "0.25rem",
-                                    }}
-                                >
-                                    Tools blocked
-                                </div>
-                                <div style={{ display: "flex", gap: "0.25rem", "flex-wrap": "wrap" }}>
-                                    <For each={toolsRefused()}>
-                                        {(toolName) => <Badge variant="destructive">{toolName}</Badge>}
-                                    </For>
-                                </div>
-                            </div>
-                        </Show>
-                        <div>
-                            <div
-                                style={{
-                                    "font-size": "var(--font-size-xsmall)",
-                                    color: "var(--muted-foreground)",
-                                    "margin-bottom": "0.25rem",
-                                }}
-                            >
-                                Cost
-                            </div>
-                            <Savings
-                                cost={interaction()!.cost ?? "0"}
-                                baselineCost={interaction()!.baselineCost ?? "0"}
-                                toonCostSavings={interaction()!.toonCostSavings}
-                                toonTokensSaved={
-                                    interaction()!.toonTokensBefore && interaction()!.toonTokensAfter
-                                        ? interaction()!.toonTokensBefore! - interaction()!.toonTokensAfter!
-                                        : undefined
-                                }
-                                toonSkipReason={interaction()!.toonSkipReason}
-                                baselineModel={interaction()!.baselineModel}
-                                actualModel={interaction()!.model}
-                                variant="interaction"
-                            />
-                        </div>
-                        <div>
-                            <div
-                                style={{
-                                    "font-size": "var(--font-size-xsmall)",
-                                    color: "var(--muted-foreground)",
-                                    "margin-bottom": "0.25rem",
-                                }}
-                            >
-                                Tokens
-                            </div>
-                            <div style={{ "font-size": "var(--font-size-small)" }}>
-                                {(interaction()!.inputTokens ?? 0).toLocaleString()} in /{" "}
-                                {(interaction()!.outputTokens ?? 0).toLocaleString()} out
-                            </div>
-                        </div>
-                        <Show when={(dualLlmResults() ?? []).length > 0}>
-                            <div>
-                                <div
-                                    style={{
-                                        "font-size": "var(--font-size-xsmall)",
-                                        color: "var(--muted-foreground)",
-                                        "margin-bottom": "0.25rem",
-                                    }}
-                                >
-                                    Dual LLM
-                                </div>
-                                <Badge variant="muted">Active ({(dualLlmResults() ?? []).length} checks)</Badge>
-                            </div>
-                        </Show>
-                        <div>
-                            <div
-                                style={{
-                                    "font-size": "var(--font-size-xsmall)",
-                                    color: "var(--muted-foreground)",
-                                    "margin-bottom": "0.25rem",
-                                }}
-                            >
-                                Timestamp
-                            </div>
-                            <div style={{ "font-size": "var(--font-size-small)" }}>
-                                {formatDate(interaction()!.createdAt)}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Conversation */}
-                <Show when={uiMessages().length > 0}>
-                    <div data-label="Conversation" style={{ "margin-bottom": "1.5rem" }}>
-                        <h3 style={{ "font-weight": "bold", "margin-bottom": "1rem" }}>Conversation</h3>
-                        <ChatViewer messages={uiMessages()} />
-                    </div>
+                    </Split>
                 </Show>
 
-                {/* Raw Data */}
-                <div data-label="Raw data" style={{ display: "grid", gap: "1rem" }}>
-                    <h3 style={{ "font-weight": "bold" }}>Raw data</h3>
-                    <JsonSection title="Raw request (original)" data={interaction()!.request} />
-                    <Show when={interaction()!.processedRequest}>
-                        <JsonSection title="Processed request (sent to LLM)" data={interaction()!.processedRequest} />
-                    </Show>
-                    <JsonSection title="Raw response" data={interaction()!.response} />
-                </div>
+                <Show when={props.view === "raw"}>
+                    <div data-label="Raw data" style={{ display: "grid", gap: "1rem" }}>
+                        <JsonSection title="Raw request (original)" data={interaction()!.request} defaultOpen />
+                        <Show when={interaction()!.processedRequest}>
+                            <JsonSection
+                                title="Processed request (sent to LLM)"
+                                data={interaction()!.processedRequest}
+                                defaultOpen
+                            />
+                        </Show>
+                        <JsonSection title="Raw response" data={interaction()!.response} defaultOpen />
+                    </div>
+                </Show>
             </Show>
         </>
+    );
+}
+
+export function InteractionHeaderBar(props: { interactionId: string }): JSX.Element {
+    const { data: interaction } = useInteraction(() => ({
+        interactionId: props.interactionId,
+    }));
+    const { data: dualLlmResults } = useDualLlmResultsByInteraction(() => ({
+        interactionId: props.interactionId,
+    }));
+    const { data: agents } = useAgents();
+
+    const dynamicInteraction = () => {
+        const i = interaction();
+        if (!i) return undefined;
+        try {
+            return new DynamicInteraction(i);
+        } catch {
+            return undefined;
+        }
+    };
+
+    const getProfileName = (profileId: string): string => {
+        const agentList = agents() ?? [];
+        return agentList.find((a: Agent) => a.id === profileId)?.name ?? profileId;
+    };
+
+    return (
+        <Show when={interaction()}>
+            <div
+                data-label="Metadata"
+                style={{
+                    display: "flex",
+                    "flex-wrap": "wrap",
+                    gap: "0.5rem",
+                    "align-items": "center",
+                }}
+            >
+                <Badge variant="outline">{getProfileName(interaction()!.profileId)}</Badge>
+                <Show when={interaction()!.externalAgentId}>
+                    <Badge variant="ghost">
+                        {(interaction()! as any).externalAgentIdLabel ?? interaction()!.externalAgentId}
+                    </Badge>
+                </Show>
+                <ProviderModelBadge
+                    provider={dynamicInteraction()?.provider ?? "Unknown"}
+                    model={dynamicInteraction()?.modelName ?? "Unknown"}
+                />
+                <TokensBadge
+                    inputTokens={interaction()!.inputTokens ?? 0}
+                    outputTokens={interaction()!.outputTokens ?? 0}
+                    toonTokensBefore={interaction()!.toonTokensBefore}
+                    toonTokensAfter={interaction()!.toonTokensAfter}
+                />
+                <CostBadge
+                    cost={interaction()!.cost ?? "0"}
+                    baselineCost={interaction()!.baselineCost ?? "0"}
+                    toonCostSavings={interaction()!.toonCostSavings}
+                    toonTokensBefore={interaction()!.toonTokensBefore}
+                    toonTokensAfter={interaction()!.toonTokensAfter}
+                    toonSkipReason={interaction()!.toonSkipReason}
+                    baselineModel={interaction()!.baselineModel}
+                    actualModel={interaction()!.model}
+                    variant="interaction"
+                />
+                <Show when={(dualLlmResults() ?? []).length > 0}>
+                    <Badge variant="muted">Dual LLM ({(dualLlmResults() ?? []).length} checks)</Badge>
+                </Show>
+                <TimestampBadge date={interaction()!.createdAt} />
+            </div>
+        </Show>
     );
 }

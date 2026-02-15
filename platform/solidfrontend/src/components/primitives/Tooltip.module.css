@@ -6,6 +6,8 @@
     background: color-mix(in oklch, var(--foreground) 60%, var(--background));
     border-radius: var(--radius);
     z-index: 50;
+    white-space: pre-line;
+    max-width: 400px;
 }
 
 .content[data-expanded] {

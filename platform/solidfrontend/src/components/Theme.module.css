@@ -71,7 +71,7 @@ body {
 
     /* Line heights */
     --line-height-xxsmall: 1rem;
-    --line-height-xsmall: 1rem;
+    --line-height-xsmall: 1.1rem;
     --line-height-small: 1.25rem;
     --line-height-medium: 1.5rem;
     --line-height-large: 1.75rem;
