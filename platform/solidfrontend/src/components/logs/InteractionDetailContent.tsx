@@ -1,6 +1,7 @@
-import { For, type JSX, Show } from "solid-js";
+import { type JSX, Show } from "solid-js";
 import { ChatViewer } from "@/components/logs/chat/ChatViewer";
 import { JsonSection } from "@/components/logs/JsonSection";
+import { SessionToolsTable } from "@/components/logs/SessionToolsTable";
 import { Badge } from "@/components/primitives/Badge";
 import { CostBadge } from "@/components/primitives/CostBadge";
 import { ProviderModelBadge } from "@/components/primitives/ProviderModelBadge";
@@ -57,39 +58,14 @@ export function InteractionDetailContent(props: { interactionId: string; view: "
             <Show when={interaction()}>
                 <Show when={props.view === "chat"}>
                     <Split columns={[3, 7]}>
-                        <div data-label="Tools" style={{ position: "sticky", top: "0", "align-self": "start" }}>
+                        <div style={{ position: "sticky", top: "0", "align-self": "start" }}>
                             <Show when={toolNames().length > 0}>
-                                <div
-                                    style={{
-                                        display: "flex",
-                                        "flex-direction": "column",
-                                        gap: "0.5rem",
-                                    }}
-                                >
-                                    <span
-                                        style={{
-                                            "font-size": "var(--font-size-xsmall)",
-                                            "font-weight": "600",
-                                            color: "var(--muted-foreground)",
-                                        }}
-                                    >
-                                        Tool calls ({toolNames().length})
-                                    </span>
-                                    <div
-                                        style={{
-                                            display: "flex",
-                                            "flex-wrap": "wrap",
-                                            gap: "0.25rem",
-                                        }}
-                                    >
-                                        <For each={toolNames()}>{(name) => <Badge>{name}</Badge>}</For>
-                                    </div>
-                                </div>
+                                <SessionToolsTable toolNames={toolNames()} />
                             </Show>
                         </div>
                         <div>
                             <Show when={uiMessages().length > 0}>
-                                <ChatViewer messages={uiMessages()} />
+                                <ChatViewer messages={uiMessages()} timestamp={interaction()!.createdAt} />
                             </Show>
                         </div>
                     </Split>
