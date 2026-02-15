@@ -15,7 +15,7 @@
 }
 
 .trigger:hover {
-    background: var(--accent);
+    background: var(--background);
 }
 
 .trigger:disabled {
@@ -86,7 +86,7 @@
 
 .filter-toggle.active {
     background: var(--primary);
-    color: var(--primary-foreground);
+    color: oklch(from var(--primary) clamp(0, (0.5 - l) * 100, 1) 0 0);
     border-color: var(--primary);
 }
 
@@ -105,7 +105,7 @@
 
 .refresh-button:hover {
     opacity: 1;
-    background: var(--accent);
+    background: var(--background);
 }
 
 .refresh-button:disabled {
@@ -166,7 +166,7 @@
 }
 
 .model-item:hover {
-    background: var(--accent);
+    background: var(--background);
 }
 
 .model-item.disabled {
@@ -213,7 +213,7 @@
 }
 
 .copy-button:hover {
-    background: var(--accent);
+    background: var(--background);
 }
 
 .model-details {
@@ -237,13 +237,13 @@
     width: 16px;
     height: 16px;
     border-radius: 2px;
-    background: color-mix(in srgb, var(--muted) 50%, transparent);
+    background: color-mix(in srgb, var(--muted-background) 50%, transparent);
     color: var(--muted-foreground);
 }
 
 .unknown-badge {
     color: var(--muted-foreground);
-    background: var(--muted);
+    background: var(--muted-background);
     padding: 0.125rem 0.375rem;
     border-radius: var(--radius);
 }

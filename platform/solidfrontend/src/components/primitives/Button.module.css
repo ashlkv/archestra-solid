@@ -7,15 +7,17 @@
     height: var(--input-height);
     padding: 0.5rem 1rem;
     font-family: inherit;
-    font-size: var(--font-size);
+    font-size: inherit;
     font-weight: 500;
-    line-height: var(--line-height);
+    line-height: inherit;
     background: var(--primary);
-    color: var(--primary-foreground);
+    color: oklch(from var(--primary) clamp(0, (0.5 - l) * 100, 1) 0 0);
     border: 1px solid transparent;
     border-radius: var(--radius);
     cursor: pointer;
-    transition: background-color 0.15s ease, opacity 0.15s ease;
+    transition:
+        background-color 0.15s ease,
+        opacity 0.15s ease;
     white-space: nowrap;
 }
 
@@ -39,7 +41,7 @@
 }
 
 .ghost:hover {
-    background: var(--muted);
+    background: var(--muted-background);
     opacity: 1;
 }
 
@@ -50,7 +52,7 @@
 }
 
 .outline:hover {
-    background: var(--muted);
+    background: var(--muted-background);
     opacity: 1;
 }
 

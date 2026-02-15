@@ -7,8 +7,8 @@
     padding: 0 0.375rem;
     font-size: var(--font-size-xsmall);
     border-radius: 0.25rem;
-    background: var(--foreground);
-    color: var(--background);
+    background: color-mix(in srgb, var(--foreground) 8%, transparent);
+    color: var(--muted-foreground);
     white-space: nowrap;
 }
 
@@ -42,41 +42,27 @@
     color: var(--muted-foreground);
 }
 
-.primary {
-    background: var(--primary);
-    color: var(--primary-foreground);
-}
-
 .secondary {
     background: var(--secondary);
-    color: var(--secondary-foreground);
-}
-
-.accent {
-    background: var(--accent);
-    color: var(--accent-foreground);
-}
-
-.info {
-    background: color-mix(in srgb, var(--info-foreground) 15%, transparent);
-    color: var(--info-foreground);
-    border: 1px solid color-mix(in srgb, var(--info-foreground) 10%, transparent);
+    color: oklch(from var(--secondary) clamp(0, (0.5 - l) * 100, 1) 0 0);
 }
 
 .success {
-    background: color-mix(in srgb, var(--success-foreground) 15%, transparent);
-    color: var(--success-foreground);
-    border: 1px solid color-mix(in srgb, var(--success-foreground) 10%, transparent);
+    background: var(--color-7);
+    color: color-mix(in srgb, var(--color-7) 40%, black);
+}
+
+.info {
+    background: var(--color-11);
+    color: color-mix(in srgb, var(--color-11) 40%, black);
 }
 
 .warning {
-    background: color-mix(in srgb, var(--warning-foreground) 15%, transparent);
-    color: var(--warning-foreground);
-    border: 1px solid color-mix(in srgb, var(--warning-foreground) 10%, transparent);
+    background: var(--color-4);
+    color: color-mix(in srgb, var(--color-4) 40%, black);
 }
 
 .destructive {
-    background: color-mix(in srgb, var(--destructive) 15%, transparent);
-    color: var(--destructive);
-    border: 1px solid color-mix(in srgb, var(--destructive) 10%, transparent);
+    background: var(--color-2);
+    color: color-mix(in srgb, var(--color-2) 40%, black);
 }

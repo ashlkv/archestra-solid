@@ -2,11 +2,19 @@ import type { ComponentProps, JSX, ParentProps } from "solid-js";
 import { Show, splitProps } from "solid-js";
 import { Button } from "./Button";
 import { Spinner } from "./Spinner";
-import { Tooltip } from "./Tooltip";
 import styles from "./ToggleGroup.module.css";
+import { Tooltip } from "./Tooltip";
 
-export function ToggleGroup(props: ParentProps): JSX.Element {
-    return <div class={styles.container}>{props.children}</div>;
+type ToggleSize = "inherit" | "small" | "xsmall";
+
+export function ToggleGroup(props: ParentProps<{ size?: ToggleSize }>): JSX.Element {
+    const sizeClass = () => {
+        if (props.size === "small") return styles.small;
+        if (props.size === "xsmall") return styles.xsmall;
+        return "";
+    };
+
+    return <div class={`${styles.container} ${sizeClass()}`}>{props.children}</div>;
 }
 
 type ToggleItemProps = {

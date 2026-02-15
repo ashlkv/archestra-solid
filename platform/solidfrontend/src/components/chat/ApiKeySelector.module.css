@@ -15,7 +15,7 @@
 }
 
 .trigger:hover {
-    background: var(--accent);
+    background: var(--background);
 }
 
 .trigger:disabled {
@@ -73,7 +73,7 @@
 }
 
 .key-item:hover {
-    background: var(--accent);
+    background: var(--background);
 }
 
 .key-info {

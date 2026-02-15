@@ -28,8 +28,8 @@
     pointer-events: auto;
     display: flex;
     flex-direction: column;
-    background: var(--popover);
-    color: var(--popover-foreground);
+    background: var(--background);
+    color: var(--foreground);
     border-left: 1px solid var(--border);
     box-shadow: var(--shadow-lg);
     width: min(24rem, 85vw);

@@ -215,7 +215,7 @@ export default function InteractionDetailPage(): JSX.Element {
                                 >
                                     Dual LLM
                                 </div>
-                                <Badge variant="info">Active ({(dualLlmResults() ?? []).length} checks)</Badge>
+                                <Badge variant="muted">Active ({(dualLlmResults() ?? []).length} checks)</Badge>
                             </div>
                         </Show>
                         <div>

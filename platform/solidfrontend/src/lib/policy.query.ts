@@ -1,6 +1,6 @@
+import { archestraApiSdk } from "@shared";
 import { revalidate } from "@solidjs/router";
 import { createQuery, createSubmission, getAuthHeaders } from "@/lib/api";
-import { archestraApiSdk } from "@shared";
 import type { CallPolicy, ResultPolicy } from "@/types";
 
 export const useToolCallPolicies = createQuery({
@@ -8,14 +8,20 @@ export const useToolCallPolicies = createQuery({
     callback: () => archestraApiSdk.getToolInvocationPolicies({ headers: getAuthHeaders() }),
 });
 
-type CallPolicyUpdate = Pick<CallPolicy, 'id' | 'action' | 'conditions' | 'reason'>
+type CallPolicyUpdate = Pick<CallPolicy, "id" | "action" | "conditions" | "reason">;
 
 // Solid Router's action() must be defined at module level (not inside components/hooks).
 // Unlike TanStack Query where each useMutation has isolated state, Solid's useSubmission
 // tracks a shared action - so all components using it see the same pending/error state.
 // The filter in useSaveCallPolicy below isolates each component's submission tracking.
 const saveCallPolicy = createSubmission({
-    callback: async ({toolId, policy: { id, action, conditions, reason }}: { toolId: string, policy: CallPolicyUpdate }) => {
+    callback: async ({
+        toolId,
+        policy: { id, action, conditions, reason },
+    }: {
+        toolId: string;
+        policy: CallPolicyUpdate;
+    }) => {
         if (id) {
             return archestraApiSdk.updateToolInvocationPolicy({
                 headers: getAuthHeaders(),
@@ -30,10 +36,14 @@ const saveCallPolicy = createSubmission({
         }
     },
     onSuccess: () => revalidate("fetch-tool-invocation-policies"),
-})
+});
 
 export function useSaveCallPolicy(policyId: string) {
-    return saveCallPolicy(([{ policy}]) => policy?.id === policyId)
+    return saveCallPolicy(([{ policy }]) => policy?.id === policyId);
+}
+
+export function useBulkSaveCallPolicy() {
+    return saveCallPolicy();
 }
 
 export const useResultPolicies = createQuery({
@@ -41,10 +51,16 @@ export const useResultPolicies = createQuery({
     callback: () => archestraApiSdk.getTrustedDataPolicies({ headers: getAuthHeaders() }),
 });
 
-type ResultPolicyUpdate = Pick<ResultPolicy, 'id' | 'action' | 'conditions'>
+type ResultPolicyUpdate = Pick<ResultPolicy, "id" | "action" | "conditions">;
 
 const saveResultPolicy = createSubmission({
-    callback: async ({toolId, policy: { id, action, conditions }}: { toolId: string; policy: ResultPolicyUpdate }) => {
+    callback: async ({
+        toolId,
+        policy: { id, action, conditions },
+    }: {
+        toolId: string;
+        policy: ResultPolicyUpdate;
+    }) => {
         if (id) {
             return archestraApiSdk.updateTrustedDataPolicy({
                 headers: getAuthHeaders(),
@@ -59,10 +75,14 @@ const saveResultPolicy = createSubmission({
         }
     },
     onSuccess: () => revalidate("fetch-result-policies"),
-})
+});
 
 export function useSaveResultPolicy(policyId: string) {
     // Filter ensures each component only tracks its own submission state,
     // not submissions from other components using the same shared action.
-    return saveResultPolicy(([{policy}]) => policy?.id === policyId);
+    return saveResultPolicy(([{ policy }]) => policy?.id === policyId);
+}
+
+export function useBulkSaveResultPolicy() {
+    return saveResultPolicy();
 }

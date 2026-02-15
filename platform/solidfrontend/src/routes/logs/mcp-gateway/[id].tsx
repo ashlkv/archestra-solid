@@ -82,7 +82,7 @@ export default function McpToolCallDetailPage(): JSX.Element {
                             >
                                 Method
                             </div>
-                            <Badge variant="primary">{toolCall()!.method}</Badge>
+                            <Badge variant="secondary">{toolCall()!.method}</Badge>
                         </div>
                         <div>
                             <div

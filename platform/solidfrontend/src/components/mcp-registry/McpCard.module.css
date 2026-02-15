@@ -112,7 +112,7 @@
 
 .name {
     font-weight: bold;
-    color: var(--card-foreground);
+    color: var(--foreground);
     margin: 0;
     white-space: nowrap;
     text-overflow: ellipsis;

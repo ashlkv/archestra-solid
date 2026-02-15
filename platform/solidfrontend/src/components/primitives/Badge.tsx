@@ -18,7 +18,6 @@ const variantClasses: Record<string, string> = {
     primary: styles.primary,
     secondary: styles.secondary,
     accent: styles.accent,
-    info: styles.info,
     success: styles.success,
     warning: styles.warning,
     destructive: styles.destructive,

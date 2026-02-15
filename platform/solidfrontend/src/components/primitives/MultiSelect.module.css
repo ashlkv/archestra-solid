@@ -60,7 +60,7 @@
 }
 
 .trigger:hover {
-    background: var(--muted);
+    background: var(--muted-background);
 }
 
 .icon {
@@ -97,12 +97,12 @@
 }
 
 .item[data-highlighted] {
-    background: var(--muted);
+    background: var(--muted-background);
 }
 
 .item[data-selected] {
     background: var(--primary);
-    color: var(--primary-foreground);
+    color: oklch(from var(--primary) clamp(0, (0.5 - l) * 100, 1) 0 0);
 }
 
 .itemLabel {

@@ -1,3 +1,15 @@
+.row:hover {
+    background: var(--highlight-color);
+}
+
+.row.selected {
+    background: var(--background);
+}
+
+.row.selected:hover {
+    background: color-mix(in srgb, var(--highlight-color) 50%, var(--background));
+}
+
 .tool-name {
     display: block;
     max-width: 12rem;
@@ -8,10 +20,6 @@
 
 .blocked {
     opacity: 0.5;
-}
-
-.selected {
-    background: var(--accent);
 }
 
 .checkbox-cell {

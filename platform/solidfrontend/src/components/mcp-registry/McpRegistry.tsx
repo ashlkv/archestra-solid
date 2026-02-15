@@ -1,14 +1,15 @@
 import { useSearchParams } from "@solidjs/router";
-import { createSignal, For, Show } from "solid-js";
-import { useAgents } from "@/lib/agent.query";
+import { createMemo, createSignal, For, Show } from "solid-js";
+import { useAgents, useAssignTool } from "@/lib/agent.query";
 import { useDeleteMcp, useMcpServers } from "@/lib/mcp-registry.query";
 import { useDeleteMcpServer, useInstallMcpServer } from "@/lib/mcp-server.query";
 import { useResultPolicies, useToolCallPolicies } from "@/lib/policy.query";
-import { useTools } from "@/lib/tool.query";
+import { useTools, useUnassignTool } from "@/lib/tool.query";
 import type { MCP } from "@/types";
 import { Alert } from "../primitives/Alert";
 import { Button } from "../primitives/Button";
 import { Empty, EmptyDescription } from "../primitives/Empty";
+import { AgentAssignmentTabs } from "../tools/AgentAssignmentTabs";
 import { ToolTable } from "../tools/ToolTable";
 import { AddMcpCard } from "./AddMcpCard";
 import { ClaudeCodeCard } from "./ClaudeCodeCard";
@@ -68,6 +69,22 @@ export function McpRegistry(props: {
     const { data: callPolicies } = useToolCallPolicies();
     const { data: resultPolicies } = useResultPolicies();
 
+    const [selectedAgentId, setSelectedAgentId] = createSignal<string | undefined>(undefined);
+    const assignTool = useAssignTool();
+    const unassignTool = useUnassignTool();
+
+    const toolTableColumns = createMemo(() =>
+        selectedAgentId()
+            ? (["select", "name", "assignments"] as ("select" | "name" | "assignments")[])
+            : (["select", "name", "assignments", "call-policy", "result-policy"] as (
+                  | "select"
+                  | "name"
+                  | "assignments"
+                  | "call-policy"
+                  | "result-policy"
+              )[]),
+    );
+
     const regularCatalog = () => (props.catalog ?? []).filter((item) => item.serverType !== "builtin");
     const builtinCatalog = () => (props.catalog ?? []).filter((item) => item.serverType === "builtin");
 
@@ -84,6 +101,27 @@ export function McpRegistry(props: {
         if (selected === CLAUDE_CODE_VIRTUAL_ID) return autoDiscoveredTools();
         return (allTools() ?? []).filter((tool) => tool.catalogId === selected);
     };
+
+    const initialSelectedIds = createMemo(() => {
+        const agentId = selectedAgentId();
+        if (!agentId) return undefined;
+        const currentTools = selectedId() && isVirtualSelected() ? autoDiscoveredTools() : tools();
+        return new Set(
+            currentTools.filter((tool) => tool.assignments.some((a) => a.agent.id === agentId)).map((tool) => tool.id),
+        );
+    });
+
+    function handleSelectionChange(nextIds: Set<string>) {
+        const agentId = selectedAgentId();
+        if (!agentId) return;
+        const currentIds = initialSelectedIds() ?? new Set<string>();
+        for (const toolId of nextIds) {
+            if (!currentIds.has(toolId)) assignTool.submit({ agentId, toolId });
+        }
+        for (const toolId of currentIds) {
+            if (!nextIds.has(toolId)) unassignTool.submit({ agentId, toolId });
+        }
+    }
 
     const onInstallSubmit = async (
         catalogItem: MCP,
@@ -200,6 +238,12 @@ export function McpRegistry(props: {
                     </Show>
                     <Show when={isVirtualSelected()}>
                         <div class={styles["tab-content"]} data-label="Tools content">
+                            <AgentAssignmentTabs
+                                agents={agents}
+                                tools={autoDiscoveredTools}
+                                selectedAgentId={selectedAgentId()}
+                                onSelect={setSelectedAgentId}
+                            />
                             <ToolTable
                                 tools={autoDiscoveredTools}
                                 agents={() => agents() ?? []}
@@ -207,7 +251,10 @@ export function McpRegistry(props: {
                                 resultPolicies={() => resultPolicies() ?? []}
                                 error={toolsQuery.error}
                                 pending={toolsQuery.pending}
-                                columns={["name", "assignments", "call-policy", "result-policy"]}
+                                columns={toolTableColumns()}
+                                initialSelectedIds={initialSelectedIds}
+                                onSelectionChange={handleSelectionChange}
+                                selectedAgentId={selectedAgentId()}
                             />
                         </div>
                     </Show>
@@ -223,7 +270,7 @@ export function McpRegistry(props: {
                                         This server is not installed yet. Install it to discover available tools.
                                     </EmptyDescription>
                                     <Button
-                                        variant="success"
+                                        variant="muted"
                                         size="large"
                                         onClick={() => setInstallItem(selectedMcp()!)}
                                     >
@@ -234,6 +281,12 @@ export function McpRegistry(props: {
                             <Show
                                 when={selectedMcp()?.serverType === "builtin" || getInstances(selectedId()!).length > 0}
                             >
+                                <AgentAssignmentTabs
+                                    agents={agents}
+                                    tools={tools}
+                                    selectedAgentId={selectedAgentId()}
+                                    onSelect={setSelectedAgentId}
+                                />
                                 <ToolTable
                                     tools={tools}
                                     agents={() => agents() ?? []}
@@ -241,7 +294,10 @@ export function McpRegistry(props: {
                                     resultPolicies={() => resultPolicies() ?? []}
                                     error={toolsQuery.error}
                                     pending={toolsQuery.pending}
-                                    columns={["name", "assignments", "call-policy", "result-policy"]}
+                                    columns={toolTableColumns()}
+                                    initialSelectedIds={initialSelectedIds}
+                                    onSelectionChange={handleSelectionChange}
+                                    selectedAgentId={selectedAgentId()}
                                 />
                             </Show>
                         </div>

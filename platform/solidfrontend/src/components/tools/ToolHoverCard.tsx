@@ -28,7 +28,7 @@ export function ToolHoverCard(props: {
     };
 
     return (
-        <HoverCard>
+        <HoverCard placement="left">
             <HoverCardTrigger>{props.children}</HoverCardTrigger>
             <HoverCardContent>
                 <div class={styles.card}>

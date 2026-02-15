@@ -1,3 +1,5 @@
+/* === Vertical (default) === */
+
 .root {
     display: grid;
     gap: 1.5rem;
@@ -22,10 +24,13 @@
     border: none;
     color: var(--muted-foreground);
     text-align: left;
+    font-family: inherit;
+    font-weight: inherit;
+    font-size: inherit;
 }
 
 .trigger:hover {
-    background: var(--muted);
+    background: var(--muted-background);
     color: var(--foreground);
 }
 
@@ -35,7 +40,7 @@
 }
 
 .trigger[data-selected] {
-    background: var(--muted);
+    background: var(--muted-background);
     color: var(--foreground);
     font-weight: bold;
 }
@@ -48,4 +53,41 @@
 .content {
     grid-column: 2;
     min-width: 0;
+}
+
+/* === Horizontal === */
+
+.root[data-orientation="horizontal"] {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.root[data-orientation="horizontal"] .list {
+    grid-column: unset;
+    flex-direction: row;
+    gap: 0;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    padding-right: 0;
+}
+
+.root[data-orientation="horizontal"] .trigger {
+    border-radius: 0;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+}
+
+.root[data-orientation="horizontal"] .trigger[data-selected] {
+    background: transparent;
+    border-bottom-color: var(--foreground);
+}
+
+.root[data-orientation="horizontal"] .trigger:hover {
+    background: transparent;
+    border-bottom-color: var(--muted-foreground);
+}
+
+.root[data-orientation="horizontal"] .content {
+    grid-column: unset;
 }
