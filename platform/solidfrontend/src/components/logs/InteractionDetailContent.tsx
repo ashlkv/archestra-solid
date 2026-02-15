@@ -1,4 +1,4 @@
-import { type JSX, Show } from "solid-js";
+import { For, type JSX, Show } from "solid-js";
 import { ChatViewer } from "@/components/logs/chat/ChatViewer";
 import { JsonSection } from "@/components/logs/JsonSection";
 import { Badge } from "@/components/primitives/Badge";
@@ -38,6 +38,8 @@ export function InteractionDetailContent(props: { interactionId: string; view: "
         return di.mapToUiMessages(dualLlmResults() ?? []);
     };
 
+    const toolNames = () => dynamicInteraction()?.getToolNamesUsed() ?? [];
+
     return (
         <>
             <Show when={interactionQuery.pending}>
@@ -55,7 +57,36 @@ export function InteractionDetailContent(props: { interactionId: string; view: "
             <Show when={interaction()}>
                 <Show when={props.view === "chat"}>
                     <Split columns={[3, 7]}>
-                        <div data-label="Tools">{/* Tools will go here */}</div>
+                        <div data-label="Tools" style={{ position: "sticky", top: "0", "align-self": "start" }}>
+                            <Show when={toolNames().length > 0}>
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        "flex-direction": "column",
+                                        gap: "0.5rem",
+                                    }}
+                                >
+                                    <span
+                                        style={{
+                                            "font-size": "var(--font-size-xsmall)",
+                                            "font-weight": "600",
+                                            color: "var(--muted-foreground)",
+                                        }}
+                                    >
+                                        Tool calls ({toolNames().length})
+                                    </span>
+                                    <div
+                                        style={{
+                                            display: "flex",
+                                            "flex-wrap": "wrap",
+                                            gap: "0.25rem",
+                                        }}
+                                    >
+                                        <For each={toolNames()}>{(name) => <Badge>{name}</Badge>}</For>
+                                    </div>
+                                </div>
+                            </Show>
+                        </div>
                         <div>
                             <Show when={uiMessages().length > 0}>
                                 <ChatViewer messages={uiMessages()} />
@@ -66,21 +97,57 @@ export function InteractionDetailContent(props: { interactionId: string; view: "
 
                 <Show when={props.view === "raw"}>
                     <div data-label="Raw data" style={{ display: "grid", gap: "1rem" }}>
-                        <JsonSection title="Raw request (original)" data={interaction()!.request} defaultOpen />
-                        <Show when={interaction()!.processedRequest}>
-                            <JsonSection
-                                title="Processed request (sent to LLM)"
-                                data={interaction()!.processedRequest}
-                                defaultOpen
-                            />
+                        <Show
+                            when={interaction()!.processedRequest}
+                            fallback={
+                                <JsonSection
+                                    title="Raw request (original)"
+                                    data={interaction()!.request}
+                                    expandable={false}
+                                    help={HELP_ORIGINAL_REQUEST}
+                                />
+                            }
+                        >
+                            <Split columns={[5, 5]}>
+                                <JsonSection
+                                    title="Raw request (original)"
+                                    data={interaction()!.request}
+                                    expandable={false}
+                                    help={HELP_ORIGINAL_REQUEST}
+                                />
+                                <JsonSection
+                                    title="Processed request (sent to LLM)"
+                                    data={interaction()!.processedRequest}
+                                    diffOriginal={interaction()!.request}
+                                    expandable={false}
+                                    help={HELP_PROCESSED_REQUEST}
+                                />
+                            </Split>
                         </Show>
-                        <JsonSection title="Raw response" data={interaction()!.response} defaultOpen />
+                        <JsonSection title="Raw response" data={interaction()!.response} expandable={false} />
                     </div>
                 </Show>
             </Show>
         </>
     );
 }
+
+const helpTextStyle = { "font-size": "var(--font-size-xsmall)", "line-height": "var(--line-height-small)" };
+
+const HELP_ORIGINAL_REQUEST = (
+    <p style={helpTextStyle}>
+        The original request as sent by the client application before any Archestra processing. This is the unmodified
+        payload received by the LLM proxy.
+    </p>
+);
+
+const HELP_PROCESSED_REQUEST = (
+    <p style={helpTextStyle}>
+        The request after Archestra processing (e.g. tool invocation policies, trusted data policies, system prompt
+        injection, or model routing). This is the actual payload sent to the LLM provider. Use the diff toggle to
+        compare against the original request.
+    </p>
+);
 
 export function InteractionHeaderBar(props: { interactionId: string }): JSX.Element {
     const { data: interaction } = useInteraction(() => ({

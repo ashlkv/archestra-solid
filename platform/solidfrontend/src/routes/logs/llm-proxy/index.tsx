@@ -278,7 +278,17 @@ export function LlmProxyLogsPage(props: { initialExpandedSessionId?: string; ini
 
                                     return (
                                         <>
-                                            <tr onClick={() => onRowClick(session)} style={{ cursor: "pointer" }}>
+                                            <tr
+                                                onClick={() => onRowClick(session)}
+                                                style={{
+                                                    cursor: "pointer",
+                                                    background:
+                                                        session.interactionId &&
+                                                        session.interactionId === drawerInteractionId()
+                                                            ? "color-mix(in srgb, var(--foreground) 10%, transparent)"
+                                                            : undefined,
+                                                }}
+                                            >
                                                 <TableCell data-label="Session">
                                                     <div
                                                         style={{
@@ -366,6 +376,7 @@ export function LlmProxyLogsPage(props: { initialExpandedSessionId?: string; ini
                                             <Show when={isExpanded() && session.sessionId}>
                                                 <SessionExpandedRow
                                                     session={session}
+                                                    activeInteractionId={drawerInteractionId()}
                                                     onInteractionClick={(id) => openDrawer(id)}
                                                 />
                                             </Show>

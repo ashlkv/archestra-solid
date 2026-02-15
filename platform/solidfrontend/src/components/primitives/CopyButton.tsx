@@ -2,6 +2,7 @@ import { createSignal, type JSX, Show } from "solid-js";
 import { Check, Copy } from "@/components/icons";
 import { Button } from "./Button";
 import styles from "./CopyButton.module.css";
+import { Tooltip } from "./Tooltip";
 
 type Props = {
     text: string;
@@ -37,22 +38,24 @@ export function CopyButton(props: Props): JSX.Element {
     };
 
     return (
-        <Button
-            variant="ghost"
-            size={props.label ? "small" : "icon"}
-            class={`${styles.button} ${props.class ?? ""}`}
-            onClick={handleCopy}
-            disabled={props.disabled}
-        >
-            <Show when={copied()}>
-                <Check size={14} class={styles.check} />
-            </Show>
-            <Show when={!copied()}>
-                <Copy size={14} />
-            </Show>
-            <Show when={props.label}>
-                <span class={styles.label}>{copied() ? "Copied!" : props.label}</span>
-            </Show>
-        </Button>
+        <Tooltip content={copied() ? "Copied!" : "Copy to clipboard"}>
+            <Button
+                variant="ghost"
+                size={props.label ? "small" : "icon"}
+                class={`${styles.button} ${props.class ?? ""}`}
+                onClick={handleCopy}
+                disabled={props.disabled}
+            >
+                <Show when={copied()}>
+                    <Check size={14} class={styles.check} />
+                </Show>
+                <Show when={!copied()}>
+                    <Copy size={14} />
+                </Show>
+                <Show when={props.label}>
+                    <span class={styles.label}>{copied() ? "Copied!" : props.label}</span>
+                </Show>
+            </Button>
+        </Tooltip>
     );
 }

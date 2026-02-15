@@ -72,7 +72,7 @@ export function CostBadge(props: Props): JSX.Element {
 
     return (
         <Tooltip content={tooltipContent()}>
-            <Badge variant="muted" class={props.class}>
+            <Badge class={props.class}>
                 {formatCost(savings().actualCost)}
                 <Show when={savings().savingsPercent >= 0.05}>
                     <span style={{ color: "var(--success)", "margin-left": "0.25rem" }}>-{savingsPercent()}%</span>

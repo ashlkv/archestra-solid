@@ -1,0 +1,18 @@
+.trigger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted-foreground);
+    cursor: help;
+    padding: 0;
+    border: none;
+    background: none;
+    border-radius: 50%;
+    transition: color 0.15s;
+    flex-shrink: 0;
+    text-decoration: none;
+}
+
+.trigger:hover {
+    color: var(--foreground);
+}

@@ -21,23 +21,28 @@ type ToggleItemProps = {
     selected: boolean;
     loading?: boolean;
     tooltip: string;
+    label?: string;
     children: JSX.Element;
 } & Omit<ComponentProps<typeof Button>, "variant" | "size" | "class" | "children">;
 
 export function ToggleItem(props: ToggleItemProps): JSX.Element {
-    const [local, rest] = splitProps(props, ["selected", "loading", "tooltip", "children"]);
+    const [local, rest] = splitProps(props, ["selected", "loading", "tooltip", "label", "children"]);
+    const hasLabel = () => !!local.label;
 
     return (
         <Tooltip content={local.tooltip}>
             <Button
                 variant="ghost"
                 size="icon"
-                class={styles.button}
+                class={hasLabel() ? styles.buttonWithLabel : styles.button}
                 data-selected={local.selected || undefined}
                 {...rest}
             >
                 <Show when={local.loading} fallback={local.children}>
                     <Spinner size={14} />
+                </Show>
+                <Show when={local.label}>
+                    <span>{local.label}</span>
                 </Show>
             </Button>
         </Tooltip>

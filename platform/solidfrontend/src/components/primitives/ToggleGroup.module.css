@@ -25,9 +25,23 @@
     color: color-mix(in oklch, var(--foreground) 40%, transparent);
 }
 
+.buttonWithLabel {
+    height: calc(var(--input-height) - 4px);
+    width: auto;
+    padding: 0 0.5rem;
+    gap: 0.35rem;
+    background: var(--muted-background);
+    color: color-mix(in oklch, var(--foreground) 40%, transparent);
+}
+
 .container.small .button {
     height: calc(2rem - 4px);
     width: calc(2rem - 4px);
+}
+
+.container.small .buttonWithLabel {
+    height: calc(2rem - 4px);
+    width: auto;
 }
 
 .container.xsmall .button {
@@ -35,19 +49,27 @@
     width: calc(1.625rem - 4px);
 }
 
-.button:hover {
+.container.xsmall .buttonWithLabel {
+    height: calc(1.625rem - 4px);
+    width: auto;
+}
+
+.button:hover,
+.buttonWithLabel:hover {
     background: var(--background);
     color: var(--foreground);
 }
 
-.button[data-selected] {
+.button[data-selected],
+.buttonWithLabel[data-selected] {
     background: var(--background);
     color: var(--foreground);
     border: 1px solid var(--border);
     box-shadow: var(--shadow-xs);
 }
 
-.button[data-selected]:hover {
+.button[data-selected]:hover,
+.buttonWithLabel[data-selected]:hover {
     background: var(--background);
     opacity: 1;
 }

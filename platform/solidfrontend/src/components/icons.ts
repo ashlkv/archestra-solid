@@ -17,6 +17,7 @@ export { default as ChevronRight } from "lucide-solid/icons/chevron-right";
 export { default as ChevronUp } from "lucide-solid/icons/chevron-up";
 export { default as Circle } from "lucide-solid/icons/circle";
 export { default as CircleCheck } from "lucide-solid/icons/circle-check";
+export { default as CircleHelp } from "lucide-solid/icons/circle-help";
 export { default as CircleX } from "lucide-solid/icons/circle-x";
 export { default as Clock } from "lucide-solid/icons/clock";
 export { default as Code2 } from "lucide-solid/icons/code-2";
@@ -26,7 +27,7 @@ export { default as Ellipsis } from "lucide-solid/icons/ellipsis";
 export { default as ExternalLink } from "lucide-solid/icons/external-link";
 export { default as FileText } from "lucide-solid/icons/file-text";
 export { default as FoldVertical } from "lucide-solid/icons/fold-vertical";
-
+export { default as GitCompareArrows } from "lucide-solid/icons/git-compare-arrows";
 export { default as Github } from "lucide-solid/icons/github";
 export { default as Globe } from "lucide-solid/icons/globe";
 export { default as Hammer } from "lucide-solid/icons/hammer";
