@@ -1,0 +1,75 @@
+.tool {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.tool-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    cursor: pointer;
+    user-select: none;
+    width: 100%;
+    border: none;
+    background: none;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+}
+
+.tool-header:hover {
+    background: color-mix(in srgb, var(--foreground) 4%, transparent);
+}
+
+.tool-name {
+    font-weight: 500;
+}
+
+.tool-status {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    color: color-mix(in srgb, var(--foreground) 60%, transparent);
+}
+
+.tool-status svg {
+    width: 14px;
+    height: 14px;
+}
+
+.tool-status.completed {
+    color: var(--success, #22c55e);
+}
+
+.tool-status.error {
+    color: var(--destructive, #ef4444);
+}
+
+.tool-status.running {
+    color: var(--primary);
+}
+
+.tool-content {
+    border-top: 1px solid var(--border);
+    padding: 0.75rem;
+}
+
+.tool-section-label {
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+    color: color-mix(in srgb, var(--foreground) 60%, transparent);
+}
+
+.tool-json {
+    font-family: monospace;
+    white-space: pre-wrap;
+    word-break: break-all;
+    background: color-mix(in srgb, var(--foreground) 4%, transparent);
+    border-radius: 4px;
+    padding: 0.5rem;
+    max-height: 300px;
+    overflow-y: auto;
+}
