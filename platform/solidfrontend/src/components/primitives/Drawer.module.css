@@ -1,0 +1,155 @@
+.trigger {
+    cursor: pointer;
+}
+
+.overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 50;
+    animation: fadeIn 0.2s ease;
+}
+
+.overlay[data-closed] {
+    animation: fadeOut 0.2s ease;
+}
+
+.positioner {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: stretch;
+    justify-content: flex-end;
+    z-index: 50;
+    pointer-events: none;
+}
+
+.content {
+    pointer-events: auto;
+    display: flex;
+    flex-direction: column;
+    background: var(--popover);
+    color: var(--popover-foreground);
+    border-left: 1px solid var(--border);
+    box-shadow: var(--shadow-lg);
+    width: min(24rem, 85vw);
+    height: 100%;
+    animation: slideInFromRight 0.2s ease;
+}
+
+.content[data-closed] {
+    animation: slideOutToRight 0.2s ease;
+}
+
+.content.small {
+    width: min(20rem, 85vw);
+}
+
+.content.medium {
+    width: min(24rem, 85vw);
+}
+
+.content.large {
+    width: min(32rem, 90vw);
+}
+
+.content.xlarge {
+    width: min(42rem, 90vw);
+}
+
+.header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 1rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.headerRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.title {
+    font-weight: 600;
+    font-size: 1rem;
+    margin: 0;
+}
+
+.description {
+    font-size: 0.875rem;
+    color: var(--muted-foreground);
+    margin: 0;
+}
+
+.close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    background: none;
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+    color: var(--muted-foreground);
+    flex-shrink: 0;
+}
+
+.close:hover {
+    background: color-mix(in srgb, var(--foreground) 10%, transparent);
+    color: var(--foreground);
+}
+
+.body {
+    flex: 1;
+    min-height: 0;
+    padding: 1rem;
+    overflow-y: auto;
+}
+
+.footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    padding: 1rem;
+    border-top: 1px solid var(--border);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+@keyframes slideInFromRight {
+    from {
+        transform: translateX(100%);
+    }
+    to {
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideOutToRight {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(100%);
+    }
+}
