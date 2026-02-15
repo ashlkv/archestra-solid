@@ -173,6 +173,16 @@ class OpenAiChatCompletionInteraction implements InteractionUtils {
                 }
             } else if (refusal) {
                 parts.push({ type: "text", text: refusal });
+            } else if (typeof content === "string" && content) {
+                parts.push({ type: "text", text: content });
+            } else if (Array.isArray(content)) {
+                for (const part of content) {
+                    if (part.type === "text") {
+                        parts.push({ type: "text", text: part.text });
+                    } else if (part.type === "refusal") {
+                        parts.push({ type: "text", text: part.refusal });
+                    }
+                }
             }
         } else if (message.role === "tool") {
             const toolContent = message.content;

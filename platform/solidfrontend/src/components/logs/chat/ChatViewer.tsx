@@ -5,9 +5,10 @@ import { TextBubble } from "@/components/primitives/TextBubble";
 import type { BlockedToolPart, DualLlmPart, PartialUIMessage } from "@/lib/llm-providers/common";
 import { parsePolicyDenied } from "@/lib/llm-providers/common";
 import styles from "./ChatViewer.module.css";
-import { ToolCall } from "./ToolCall";
+import { ToolCall, type ToolState } from "./ToolCall";
+import { Button } from '~/components/primitives/Button';
 
-export function ChatViewer(props: { messages: PartialUIMessage[] }): JSX.Element {
+export function ChatViewer(props: { messages: PartialUIMessage[]; timestamp?: string }): JSX.Element {
     const [expanded, setExpanded] = createSignal(false);
 
     const splitIndex = () => findLastExchangeStart(props.messages);
@@ -22,34 +23,119 @@ export function ChatViewer(props: { messages: PartialUIMessage[] }): JSX.Element
                     <For each={previousMessages()}>{(message) => <ChatMessage message={message} />}</For>
                 </div>
                 <Show when={!expanded()}>
-                    <button type="button" class={styles["previous-reveal"]} onClick={() => setExpanded(true)}>
+                    <Button size="small" class={styles["previous-reveal"]} onClick={() => setExpanded(true)}>
                         <UnfoldVertical style={{ width: "14px", height: "14px" }} />
                         Show {previousMessages().length} previous messages
-                    </button>
+                    </Button>
                 </Show>
             </Show>
 
-            <For each={visibleMessages()}>{(message) => <ChatMessage message={message} />}</For>
+            <For each={visibleMessages()}>
+                {(message) => <ChatMessage message={message} timestamp={props.timestamp} />}
+            </For>
         </div>
     );
 }
 
-function ChatMessage(props: { message: PartialUIMessage }): JSX.Element {
+function ChatMessage(props: { message: PartialUIMessage; timestamp?: string }): JSX.Element {
     const roleLabel = () => {
         if (props.message.role === "user") return "Client";
         if (props.message.role === "assistant") return "Server";
         return "System";
     };
 
+    // Split parts into groups: consecutive non-tool parts form message bubbles,
+    // tool parts render as separate centered elements between them.
+    const groups = () => {
+        const result: Array<{
+            kind: "message" | "tool";
+            parts: Array<{ part: PartialUIMessage["parts"][number]; index: number }>;
+        }> = [];
+        for (let i = 0; i < props.message.parts.length; i++) {
+            const part = props.message.parts[i];
+            const isTool = isToolPart(part);
+            const last = result[result.length - 1];
+            if (last && last.kind === (isTool ? "tool" : "message")) {
+                last.parts.push({ part, index: i });
+            } else {
+                result.push({ kind: isTool ? "tool" : "message", parts: [{ part, index: i }] });
+            }
+        }
+        return result;
+    };
+
     return (
-        <div class={`${styles.message} ${styles[props.message.role]}`} data-label={`Message: ${props.message.role}`}>
-            <span class={styles["message-role"]}>{roleLabel()}</span>
-            <For each={props.message.parts}>{(part) => <MessagePart part={part} role={props.message.role} />}</For>
-        </div>
+        <>
+            <For each={groups()}>
+                {(group, groupIndex) => (
+                    <Show
+                        when={group.kind === "message"}
+                        fallback={
+                            <div class={styles["tool-parts"]}>
+                                <For each={group.parts}>
+                                    {(item) => (
+                                        <MessagePart
+                                            part={item.part}
+                                            index={item.index}
+                                            parts={props.message.parts}
+                                            role={props.message.role}
+                                        />
+                                    )}
+                                </For>
+                                <Show when={props.timestamp && groupIndex() === groups().length - 1}>
+                                    <span class={styles.timestamp}>{formatTimestamp(props.timestamp!)}</span>
+                                </Show>
+                            </div>
+                        }
+                    >
+                        <div
+                            class={`${styles.message} ${styles[props.message.role]}`}
+                            data-label={`Message: ${props.message.role}`}
+                        >
+                            <Show when={groupIndex() === 0}>
+                                <span class={styles["message-role"]}>{roleLabel()}</span>
+                            </Show>
+                            <For each={group.parts}>
+                                {(item) => (
+                                    <MessagePart
+                                        part={item.part}
+                                        index={item.index}
+                                        parts={props.message.parts}
+                                        role={props.message.role}
+                                    />
+                                )}
+                            </For>
+                            <Show when={props.timestamp && groupIndex() === groups().length - 1}>
+                                <span class={styles.timestamp}>{formatTimestamp(props.timestamp!)}</span>
+                            </Show>
+                        </div>
+                    </Show>
+                )}
+            </For>
+        </>
     );
 }
 
-function MessagePart(props: { part: PartialUIMessage["parts"][number]; role: string }): JSX.Element {
+type ToolPart = {
+    type: "dynamic-tool" | "tool-invocation";
+    toolName: string;
+    toolCallId: string;
+    state: "input-available" | "output-available";
+    input: unknown;
+    output?: unknown;
+    errorText?: string;
+};
+
+function isToolPart(part: PartialUIMessage["parts"][number]): part is ToolPart {
+    return (part.type === "dynamic-tool" || part.type === "tool-invocation") && "toolName" in part;
+}
+
+function MessagePart(props: {
+    part: PartialUIMessage["parts"][number];
+    index: number;
+    parts: PartialUIMessage["parts"];
+    role: string;
+}): JSX.Element {
     const part = () => props.part;
     const bubbleVariant = (): "user" | "agent" | "system" => {
         if (props.role === "system") return "system";
@@ -61,16 +147,53 @@ function MessagePart(props: { part: PartialUIMessage["parts"][number]; role: str
         return "agent";
     };
 
+    // Skip output-available tool parts when the previous part is the matching input-available part.
+    // The input-available part will look ahead and merge the output into a single ToolCall.
+    const shouldSkip = () => {
+        const p = part();
+        if (!isToolPart(p) || p.state !== "output-available") return false;
+        if (props.index === 0) return false;
+        const prev = props.parts[props.index - 1];
+        return isToolPart(prev) && prev.state === "input-available" && prev.toolCallId === p.toolCallId;
+    };
+
+    // Skip dual-llm-analysis parts that are rendered inside the merged ToolCall
+    const shouldSkipDualLlm = () => {
+        const p = part();
+        if (p.type !== "dual-llm-analysis") return false;
+        if (props.index < 1) return false;
+        const prev = props.parts[props.index - 1];
+
+        // Case 1: dual-llm directly after input-available (no result part)
+        if (
+            isToolPart(prev) &&
+            prev.state === "input-available" &&
+            "toolCallId" in p &&
+            (p as DualLlmPart).toolCallId === prev.toolCallId
+        ) {
+            return true;
+        }
+
+        // Case 2: dual-llm after output-available that was merged into input-available
+        if (props.index < 2) return false;
+        const prevPrev = props.parts[props.index - 2];
+        return (
+            isToolPart(prev) &&
+            prev.state === "output-available" &&
+            isToolPart(prevPrev) &&
+            prevPrev.state === "input-available" &&
+            prevPrev.toolCallId === prev.toolCallId
+        );
+    };
+
     return (
-        <>
+        <Show when={!shouldSkip() && !shouldSkipDualLlm()}>
             <Show when={part().type === "text" && "text" in part()}>
                 <TextPart text={(part() as { type: "text"; text: string }).text} variant={bubbleVariant()} />
             </Show>
 
-            <Show when={(part().type === "dynamic-tool" || part().type === "tool-invocation") && "toolName" in part()}>
-                <div class={styles["tool-parts"]}>
-                    <ToolCallPart part={part() as any} />
-                </div>
+            <Show when={isToolPart(part())}>
+                <MergedToolCallPart part={part() as ToolPart} index={props.index} parts={props.parts} />
             </Show>
 
             <Show when={part().type === "dual-llm-analysis"}>
@@ -87,7 +210,7 @@ function MessagePart(props: { part: PartialUIMessage["parts"][number]; role: str
                     {(part() as { text: string }).text}
                 </div>
             </Show>
-        </>
+        </Show>
     );
 }
 
@@ -127,23 +250,75 @@ function TextPart(props: { text: string; variant: "user" | "agent" | "system" })
     );
 }
 
-function ToolCallPart(props: {
-    part: {
-        toolName: string;
-        toolCallId: string;
-        state: string;
-        input?: unknown;
-        output?: unknown;
-        errorText?: string;
+/**
+ * Renders an input-available tool part merged with its matching output-available part (if next).
+ * Matches the Next.js behavior: one card per tool call showing both parameters and result.
+ */
+function MergedToolCallPart(props: { part: ToolPart; index: number; parts: PartialUIMessage["parts"] }): JSX.Element {
+    const resultPart = (): ToolPart | undefined => {
+        const next = props.parts[props.index + 1];
+        if (
+            next &&
+            isToolPart(next) &&
+            next.state === "output-available" &&
+            next.toolCallId === props.part.toolCallId
+        ) {
+            return next;
+        }
+        return undefined;
     };
-}): JSX.Element {
+
+    const dualLlmPart = (): DualLlmPart | undefined => {
+        const rp = resultPart();
+        if (!rp) {
+            // Check if the next part is a dual-llm-analysis directly (no result part)
+            const next = props.parts[props.index + 1];
+            if (
+                next &&
+                next.type === "dual-llm-analysis" &&
+                "toolCallId" in next &&
+                (next as DualLlmPart).toolCallId === props.part.toolCallId
+            ) {
+                return next as DualLlmPart;
+            }
+            return undefined;
+        }
+        // Result part exists, check the part after it for dual-llm-analysis
+        const afterResult = props.parts[props.index + 2];
+        if (afterResult && afterResult.type === "dual-llm-analysis") {
+            return afterResult as DualLlmPart;
+        }
+        return undefined;
+    };
+
+    const state = (): ToolState => {
+        const rp = resultPart();
+        const dlp = dualLlmPart();
+        if (rp?.errorText) return "output-available";
+        if (dlp) return "output-available-dual-llm";
+        if (rp) return "output-available";
+        return props.part.state;
+    };
+
+    const errorText = () => {
+        const rp = resultPart();
+        if (rp?.errorText) return rp.errorText;
+        // Check if output contains an error object
+        const output = rp?.output ?? props.part.output;
+        if (output && typeof output === "object" && "error" in (output as Record<string, unknown>)) {
+            return String((output as Record<string, unknown>).error);
+        }
+        return props.part.errorText;
+    };
+
     return (
         <ToolCall
             toolName={props.part.toolName}
-            state={props.part.state as "input-available" | "output-available"}
+            state={state()}
             input={props.part.input}
-            output={props.part.output}
-            errorText={props.part.errorText}
+            output={resultPart()?.output ?? props.part.output}
+            errorText={errorText()}
+            conversations={dualLlmPart()?.conversations}
         />
     );
 }
@@ -262,6 +437,22 @@ function BlockedToolPartView(props: { part: BlockedToolPart }): JSX.Element {
             </div>
         </div>
     );
+}
+
+function formatTimestamp(dateStr: string): string {
+    try {
+        const date = new Date(dateStr);
+        return date.toLocaleString(undefined, {
+            month: "2-digit",
+            day: "2-digit",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+        });
+    } catch {
+        return dateStr;
+    }
 }
 
 function isSystemReminderText(text: string): boolean {

@@ -107,6 +107,16 @@
 .icon.small {
     width: var(--input-height-xsmall);
 }
+.icon-small {
+    width: var(--input-height-xsmall);
+    height: var(--input-height-xsmall);
+    padding: 0;
+}
 .icon.xsmall {
     width: var(--input-height-xxsmall);
+}
+.icon-xsmall {
+    width: var(--input-height-xxsmall);
+    height: var(--input-height-xxsmall);
+    padding: 0;
 }

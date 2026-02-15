@@ -9,8 +9,6 @@ body {
     margin: 0;
 }
 
-
-
 :root {
     --background: oklch(1 0 0);
     --foreground: oklch(0.145 0 0);
@@ -52,7 +50,7 @@ body {
     --font-sans: Manrope, sans-serif;
     --font-heading: "Nunito", serif;
     --font-serif: "Source Serif 4", serif;
-    --font-mono: "JetBrains Mono", monospace;
+    --font-mono: monospace;
     --letter-spacing: 0em;
     --tracking-normal: 0em;
     --font-weight: 400;

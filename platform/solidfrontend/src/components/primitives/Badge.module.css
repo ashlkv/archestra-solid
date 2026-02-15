@@ -1,6 +1,7 @@
 .badge {
     display: inline-flex;
     align-items: center;
+    gap: 0.25rem;
     height: 1.375rem;
     line-height: 1.375rem;
     box-sizing: border-box;

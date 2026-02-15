@@ -1,0 +1,35 @@
+.root {
+    font-size: var(--font-size-xsmall);
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+.caption {
+    display: block;
+    font-weight: 600;
+    color: var(--muted-foreground);
+    margin-bottom: 0.5rem;
+}
+
+.row:hover .edit-button {
+    opacity: 1;
+}
+
+.cell {
+    padding: 0.05rem 0.15rem;
+}
+
+.edit-cell {
+    width: 1.5rem;
+    text-align: right;
+}
+
+.edit-button {
+    opacity: 0;
+    transition: opacity 150ms ease;
+}
+
+.edit-button:hover {
+    color: var(--foreground);
+}
