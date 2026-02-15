@@ -57,6 +57,10 @@
     width: min(42rem, 90vw);
 }
 
+.content.full {
+    width: min(64rem, 95vw);
+}
+
 .header {
     display: flex;
     flex-direction: column;

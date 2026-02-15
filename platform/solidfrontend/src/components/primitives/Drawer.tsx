@@ -23,7 +23,7 @@ export function DrawerContent(
     props: ParentProps<{
         title?: string;
         description?: string;
-        size?: "small" | "medium" | "large" | "xlarge";
+        size?: "small" | "medium" | "large" | "xlarge" | "full";
     }>,
 ): JSX.Element {
     const contentClass = () => {
@@ -31,6 +31,7 @@ export function DrawerContent(
         if (props.size === "small") classes.push(styles.small);
         else if (props.size === "large") classes.push(styles.large);
         else if (props.size === "xlarge") classes.push(styles.xlarge);
+        else if (props.size === "full") classes.push(styles.full);
         else classes.push(styles.medium);
         return classes.join(" ");
     };

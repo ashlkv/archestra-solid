@@ -1,6 +1,7 @@
-import { A, useNavigate, useParams, useSearchParams } from "@solidjs/router";
+import { A, useParams, useSearchParams } from "@solidjs/router";
 import { For, type JSX, Show } from "solid-js";
 import { ArrowLeft } from "@/components/icons";
+import { InteractionDrawer } from "@/components/logs/InteractionDrawer";
 import { Pagination } from "@/components/logs/Pagination";
 import { Savings } from "@/components/logs/Savings";
 import { TruncatedText } from "@/components/logs/TruncatedText";
@@ -21,7 +22,6 @@ function asString(value: string | string[] | undefined): string {
 export default function SessionDetailPage(): JSX.Element {
     const params = useParams<{ sessionId: string }>();
     const [searchParams, setSearchParams] = useSearchParams();
-    const navigate = useNavigate();
 
     const page = () => Number(asString(searchParams.page) || "0");
 
@@ -36,6 +36,9 @@ export default function SessionDetailPage(): JSX.Element {
         offset: 0,
         sessionId: params.sessionId,
     });
+
+    const drawerInteractionId = () => asString(searchParams.logId) || null;
+    const drawerOpen = () => drawerInteractionId() !== null;
 
     const { data: interactionsData, query: interactionsQuery } = useInteractions(interactionsParams);
     const { data: sessionMeta } = useInteractionSessions(sessionParams);
@@ -182,7 +185,7 @@ export default function SessionDetailPage(): JSX.Element {
 
                                 return (
                                     <tr
-                                        onClick={() => navigate(`/logs/${interaction.id}`)}
+                                        onClick={() => setSearchParams({ logId: interaction.id })}
                                         style={{ cursor: "pointer" }}
                                     >
                                         <TableCell>
@@ -247,6 +250,14 @@ export default function SessionDetailPage(): JSX.Element {
                     onPageChange={(newPage) => setSearchParams({ page: String(newPage) })}
                 />
             </Show>
+
+            <InteractionDrawer
+                interactionId={drawerInteractionId()}
+                open={drawerOpen()}
+                onOpenChange={(open) => {
+                    if (!open) setSearchParams({ logId: undefined });
+                }}
+            />
         </>
     );
 }

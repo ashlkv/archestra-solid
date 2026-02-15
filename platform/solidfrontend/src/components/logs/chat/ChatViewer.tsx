@@ -3,11 +3,12 @@ import { ShieldCheck, TriangleAlert } from "@/components/icons";
 import { Markdown } from "@/components/primitives/Markdown";
 import type { BlockedToolPart, DualLlmPart, PartialUIMessage } from "@/lib/llm-providers/common";
 import { parsePolicyDenied } from "@/lib/llm-providers/common";
+import styles from "./ChatViewer.module.css";
 import { ToolCall } from "./ToolCall";
 
 export function ChatViewer(props: { messages: PartialUIMessage[] }): JSX.Element {
     return (
-        <div data-label="ChatViewer" style={{ display: "grid", gap: "0.75rem" }}>
+        <div class={styles.container} data-label="ChatViewer">
             <For each={props.messages}>{(message) => <ChatMessage message={message} />}</For>
         </div>
     );
@@ -20,41 +21,10 @@ function ChatMessage(props: { message: PartialUIMessage }): JSX.Element {
         return "System";
     };
 
-    const roleColor = () => {
-        if (props.message.role === "user") return "var(--primary)";
-        if (props.message.role === "system") return "var(--warning)";
-        return "var(--foreground)";
-    };
-
-    const roleBg = () => {
-        if (props.message.role === "user") return "var(--background)";
-        return "transparent";
-    };
-
     return (
-        <div
-            data-label={`Message: ${props.message.role}`}
-            style={{
-                border: "1px solid var(--border)",
-                "border-radius": "var(--radius)",
-                overflow: "hidden",
-            }}
-        >
-            <div
-                style={{
-                    padding: "0.5rem 0.75rem",
-                    background: roleBg(),
-                    "border-bottom": "1px solid var(--border)",
-                    "font-size": "var(--font-size-xsmall)",
-                    "font-weight": "bold",
-                    color: roleColor(),
-                }}
-            >
-                {roleLabel()}
-            </div>
-            <div style={{ padding: "0.75rem" }}>
-                <For each={props.message.parts}>{(part) => <MessagePart part={part} />}</For>
-            </div>
+        <div class={`${styles.message} ${styles[props.message.role]}`} data-label={`Message: ${props.message.role}`}>
+            <span class={styles["message-role"]}>{roleLabel()}</span>
+            <For each={props.message.parts}>{(part) => <MessagePart part={part} />}</For>
         </div>
     );
 }
@@ -65,11 +35,13 @@ function MessagePart(props: { part: PartialUIMessage["parts"][number] }): JSX.El
     return (
         <>
             <Show when={part().type === "text" && "text" in part()}>
-                <TextPart text={(part() as { type: "text"; text: string }).text} />
+                <TextBubble text={(part() as { type: "text"; text: string }).text} />
             </Show>
 
             <Show when={(part().type === "dynamic-tool" || part().type === "tool-invocation") && "toolName" in part()}>
-                <ToolCallPart part={part() as any} />
+                <div class={styles["tool-parts"]}>
+                    <ToolCallPart part={part() as any} />
+                </div>
             </Show>
 
             <Show when={part().type === "dual-llm-analysis"}>
@@ -81,18 +53,8 @@ function MessagePart(props: { part: PartialUIMessage["parts"][number] }): JSX.El
             </Show>
 
             <Show when={part().type === "reasoning" && "text" in part()}>
-                <div
-                    style={{
-                        background: "var(--muted-background)",
-                        "border-radius": "var(--radius)",
-                        padding: "0.75rem",
-                        margin: "0.5rem 0",
-                        "font-size": "var(--font-size-small)",
-                        color: "var(--muted-foreground)",
-                        "font-style": "italic",
-                    }}
-                >
-                    <div style={{ "font-weight": "bold", "margin-bottom": "0.25rem" }}>Thinking</div>
+                <div class={styles.reasoning}>
+                    <div class={styles["reasoning-label"]}>Thinking</div>
                     {(part() as { text: string }).text}
                 </div>
             </Show>
@@ -100,7 +62,7 @@ function MessagePart(props: { part: PartialUIMessage["parts"][number] }): JSX.El
     );
 }
 
-function TextPart(props: { text: string }): JSX.Element {
+function TextBubble(props: { text: string }): JSX.Element {
     const policyDenied = () => parsePolicyDenied(props.text);
 
     return (
@@ -110,9 +72,8 @@ function TextPart(props: { text: string }): JSX.Element {
                     style={{
                         background: "color-mix(in srgb, var(--destructive) 10%, transparent)",
                         border: "1px solid var(--destructive)",
-                        "border-radius": "var(--radius)",
-                        padding: "0.75rem",
-                        margin: "0.5rem 0",
+                        "border-radius": "12px",
+                        padding: "0.75rem 1rem",
                     }}
                 >
                     <div
@@ -131,7 +92,7 @@ function TextPart(props: { text: string }): JSX.Element {
                 </div>
             </Show>
             <Show when={!policyDenied()}>
-                <div style={{ margin: "0.25rem 0" }}>
+                <div class={styles.bubble}>
                     <Markdown>{props.text}</Markdown>
                 </div>
             </Show>
@@ -165,8 +126,8 @@ function DualLlmPartView(props: { part: DualLlmPart }): JSX.Element {
         <div
             style={{
                 border: "1px solid var(--info)",
-                "border-radius": "var(--radius)",
-                margin: "0.5rem 0",
+                "border-radius": "12px",
+                overflow: "hidden",
             }}
         >
             <div
@@ -233,9 +194,8 @@ function BlockedToolPartView(props: { part: BlockedToolPart }): JSX.Element {
             style={{
                 background: "color-mix(in srgb, var(--destructive) 10%, transparent)",
                 border: "1px solid var(--destructive)",
-                "border-radius": "var(--radius)",
-                padding: "0.75rem",
-                margin: "0.5rem 0",
+                "border-radius": "12px",
+                padding: "0.75rem 1rem",
             }}
         >
             <div style={{ display: "flex", "align-items": "start", gap: "0.5rem" }}>
