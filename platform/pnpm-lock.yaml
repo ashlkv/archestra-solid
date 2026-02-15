@@ -641,9 +641,15 @@ importers:
       ai:
         specifier: ^6.0.37
         version: 6.0.50(zod@4.3.6)
+      dompurify:
+        specifier: ^3.3.1
+        version: 3.3.1
       lucide-solid:
         specifier: ^0.563.0
         version: 0.563.0(solid-js@1.9.11)
+      marked:
+        specifier: ^17.0.2
+        version: 17.0.2
       solid-js:
         specifier: ^1.9.5
         version: 1.9.11
@@ -7417,6 +7423,11 @@ packages:
 
   marked@17.0.1:
     resolution: {integrity: sha512-boeBdiS0ghpWcSwoNm/jJBwdpFaMnZWRzjA6SkUMYb40SVaN1x7mmfGKp0jvexGcx+7y2La5zRZsYFZI6Qpypg==}
+    engines: {node: '>= 20'}
+    hasBin: true
+
+  marked@17.0.2:
+    resolution: {integrity: sha512-s5HZGFQea7Huv5zZcAGhJLT3qLpAfnY7v7GWkICUr0+Wd5TFEtdlRR2XUL5Gg+RH7u2Df595ifrxR03mBaw7gA==}
     engines: {node: '>= 20'}
     hasBin: true
 
@@ -14797,7 +14808,7 @@ snapshots:
 
   '@types/pg@8.16.0':
     dependencies:
-      '@types/node': 25.0.10
+      '@types/node': 25.1.0
       pg-protocol: 1.11.0
       pg-types: 2.2.0
 
@@ -17454,6 +17465,8 @@ snapshots:
   marked@16.4.2: {}
 
   marked@17.0.1: {}
+
+  marked@17.0.2: {}
 
   math-intrinsics@1.1.0: {}
 

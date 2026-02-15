@@ -9,13 +9,15 @@
         "type-check": "tsc --noEmit"
     },
     "dependencies": {
-        "ai": "^6.0.37",
         "@kobalte/core": "^0.13.11",
         "@shared": "workspace:*",
         "@solidjs/meta": "^0.29.4",
         "@solidjs/router": "^0.15.0",
         "@solidjs/start": "^1.1.0",
+        "ai": "^6.0.37",
+        "dompurify": "^3.3.1",
         "lucide-solid": "^0.563.0",
+        "marked": "^17.0.2",
         "solid-js": "^1.9.5",
         "vinxi": "^0.5.7",
         "ws": "^8.19.0"
