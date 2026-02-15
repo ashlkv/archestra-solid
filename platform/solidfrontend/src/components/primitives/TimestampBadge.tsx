@@ -10,7 +10,7 @@ interface Props {
 
 export function TimestampBadge(props: Props): JSX.Element {
     return (
-        <Badge variant="muted" class={props.class}>
+        <Badge class={props.class}>
             <Clock style={{ width: "12px", height: "12px", "flex-shrink": "0" }} />
             {formatDate(props.date)}
         </Badge>

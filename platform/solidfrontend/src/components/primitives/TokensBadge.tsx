@@ -34,7 +34,7 @@ export function TokensBadge(props: Props): JSX.Element {
 
     return (
         <Tooltip content={tooltipContent()}>
-            <Badge variant="muted" class={props.class}>
+            <Badge class={props.class}>
                 {props.inputTokens.toLocaleString()} in / {props.outputTokens.toLocaleString()} out
             </Badge>
         </Tooltip>

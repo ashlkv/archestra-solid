@@ -17,6 +17,10 @@
 .row {
 }
 
+.headerCell {
+    font-weight: 600;
+}
+
 .headerCell,
 .cell {
     padding: 0.5rem 0.75rem;

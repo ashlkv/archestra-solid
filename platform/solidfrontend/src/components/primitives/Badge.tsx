@@ -30,7 +30,7 @@ export function Badge(props: Props): JSX.Element {
     const pillClass = () => (local.pill ? styles.pill : "");
 
     return (
-        <span class={`${styles.badge} ${variantClass()} ${capsClass()} ${pillClass()} ${local.class ?? ""}`} {...rest}>
+        <span data-label="Badge" class={`${styles.badge} ${variantClass()} ${capsClass()} ${pillClass()} ${local.class ?? ""}`} {...rest}>
             {local.children}
         </span>
     );

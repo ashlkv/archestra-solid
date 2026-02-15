@@ -1,0 +1,34 @@
+.jsonHighlight {
+    overflow: hidden;
+}
+
+.jsonHighlight :global(.cm-editor) {
+    background: var(--muted-background);
+    max-height: 400px;
+    font-family: var(--font-mono);
+    font-size: var(--font-size-xsmall);
+}
+
+.jsonHighlight :global(.cm-scroller) {
+    overflow: auto;
+}
+
+.jsonHighlight :global(.cm-gutters) {
+    background: var(--muted-background);
+    border-right: 1px solid var(--border);
+    color: var(--muted-foreground);
+    font-size: var(--font-size-xxsmall);
+}
+
+.jsonHighlight :global(.cm-activeLineGutter),
+.jsonHighlight :global(.cm-activeLine) {
+    background: transparent;
+}
+
+.jsonHighlight :global(.cm-content) {
+    cursor: default;
+}
+
+.jsonHighlight :global(.cm-cursor) {
+    display: none;
+}

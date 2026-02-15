@@ -2,6 +2,7 @@ import { For, type JSX, Show } from "solid-js";
 import { Savings } from "@/components/logs/Savings";
 import { TruncatedText } from "@/components/logs/TruncatedText";
 import { Badge } from "@/components/primitives/Badge";
+import { ProviderModelBadge } from "@/components/primitives/ProviderModelBadge";
 import { Spinner } from "@/components/primitives/Spinner";
 import { TableCell } from "@/components/primitives/Table";
 import { useInteractions } from "@/lib/interaction.query";
@@ -10,6 +11,7 @@ import type { Interaction, SessionData } from "@/types";
 
 interface Props {
     session: SessionData;
+    activeInteractionId?: string | null;
     onInteractionClick: (interactionId: string) => void;
 }
 
@@ -65,7 +67,10 @@ export function SessionExpandedRow(props: Props): JSX.Element {
                                 }}
                                 style={{
                                     cursor: "pointer",
-                                    background: "var(--muted)",
+                                    background:
+                                        interaction.id === props.activeInteractionId
+                                            ? "color-mix(in srgb, var(--foreground) 10%, transparent)"
+                                            : "var(--muted)",
                                 }}
                             >
                                 <TableCell>
@@ -88,9 +93,10 @@ export function SessionExpandedRow(props: Props): JSX.Element {
                                 </TableCell>
                                 <TableCell />
                                 <TableCell>
-                                    <span style={{ "font-size": "var(--font-size-small)" }}>
-                                        {dynamicInteraction?.modelName ?? "Unknown"}
-                                    </span>
+                                    <ProviderModelBadge
+                                        provider={dynamicInteraction?.provider ?? "Unknown"}
+                                        model={dynamicInteraction?.modelName ?? "Unknown"}
+                                    />
                                 </TableCell>
                                 <TableCell>
                                     <Savings
