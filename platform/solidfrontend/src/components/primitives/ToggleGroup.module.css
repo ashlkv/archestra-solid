@@ -4,15 +4,35 @@
     gap: 1px;
     padding: 2px;
     height: var(--input-height);
-    background: var(--secondary);
+    background: var(--muted-background);
     border-radius: var(--radius);
+}
+
+.container.small {
+    height: 2rem;
+    font-size: 0.875rem;
+}
+
+.container.xsmall {
+    height: 1.625rem;
+    font-size: 0.75rem;
 }
 
 .button {
     height: calc(var(--input-height) - 4px);
     width: calc(var(--input-height) - 4px);
-    background: var(--secondary);
+    background: var(--muted-background);
     color: color-mix(in oklch, var(--foreground) 40%, transparent);
+}
+
+.container.small .button {
+    height: calc(2rem - 4px);
+    width: calc(2rem - 4px);
+}
+
+.container.xsmall .button {
+    height: calc(1.625rem - 4px);
+    width: calc(1.625rem - 4px);
 }
 
 .button:hover {

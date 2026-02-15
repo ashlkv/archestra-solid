@@ -54,7 +54,7 @@
 
 .message.user .message-content {
     background: var(--primary);
-    color: var(--primary-foreground, white);
+    color: oklch(from var(--primary) clamp(0, (0.5 - l) * 100, 1) 0 0);
     border-bottom-right-radius: 4px;
 }
 

@@ -1,4 +1,4 @@
-import { type Accessor, createSignal, For, Show } from "solid-js";
+import { type Accessor, createEffect, createSignal, For, on, Show } from "solid-js";
 import type { CallPolicy, ResultPolicy, ToolWithAssignments } from "@/types";
 import { Alert } from "../primitives/Alert";
 import { Badge } from "../primitives/Badge";
@@ -7,6 +7,7 @@ import { Empty, EmptyDescription } from "../primitives/Empty";
 import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "../primitives/Table";
 import { Assignments } from "./Assignments";
 import { CallPolicyToggle } from "./CallPolicyToggle";
+import { GroupPolicyBar } from "./GroupPolicyBar";
 import { ResultPolicySelect } from "./ResultPolicySelect";
 import { ToolHoverCard } from "./ToolHoverCard";
 import styles from "./ToolTable.module.css";
@@ -25,14 +26,29 @@ export function ToolTable(props: {
     error: Error | undefined;
     pending: boolean;
     columns?: Column[];
+    initialSelectedIds?: Accessor<Set<string> | undefined>;
     onSelectionChange?: (selectedIds: Set<string>) => void;
+    selectedAgentId?: string;
 }) {
     const [selectedIds, setSelectedIds] = createSignal<Set<string>>(new Set());
 
+    // Sync selection from parent when in agent mode (initialSelectedIds returns a Set).
+    // In master mode, initialSelectedIds returns undefined — a stable primitive that won't
+    // re-trigger, so the user's manual checkbox selections are preserved across data reloads.
+    // When switching back from agent to master, it transitions from Set → undefined,
+    // which triggers the effect and clears the agent's selection.
+    createEffect(
+        on(
+            () => props.initialSelectedIds?.(),
+            (ids) => {
+                setSelectedIds(ids ?? new Set<string>());
+            },
+        ),
+    );
+
     const showColumn = (column: Column) => {
         if (props.columns?.length) return props.columns.includes(column);
-        // When no columns specified, show all except opt-in columns
-        return column !== "select";
+        return true;
     };
 
     const callPolicyDictionary = () => {
@@ -84,6 +100,13 @@ export function ToolTable(props: {
         updateSelection(next);
     }
 
+    const groupBarDisabled = () => selectedCount() === 0;
+    const showGroupBar = () => !props.selectedAgentId;
+
+    function clearSelection() {
+        updateSelection(new Set());
+    }
+
     return (
         <>
             <Show when={props.error}>
@@ -92,6 +115,16 @@ export function ToolTable(props: {
 
             <Show when={props.pending}>
                 <p>Loading...</p>
+            </Show>
+
+            <Show when={showGroupBar()}>
+                <GroupPolicyBar
+                    selectedIds={selectedIds}
+                    callPolicyDictionary={callPolicyDictionary}
+                    resultPolicyDictionary={resultPolicyDictionary}
+                    onClear={clearSelection}
+                    disabled={groupBarDisabled()}
+                />
             </Show>
 
             <Show when={props.tools()?.length}>
@@ -135,6 +168,7 @@ export function ToolTable(props: {
                                     columns={props.columns}
                                     selected={selectedIds().has(tool.id)}
                                     onToggle={(checked) => toggleOne(tool.id, checked)}
+                                    selectedAgentId={props.selectedAgentId}
                                 />
                             )}
                         </For>
@@ -159,24 +193,24 @@ function ToolRow(props: {
     columns?: Column[];
     selected: boolean;
     onToggle: (checked: boolean) => void;
+    selectedAgentId?: string;
 }) {
     const isAutoDiscovered = () =>
         !props.tool.catalogId && !props.tool.mcpServerName && !props.tool.name.startsWith("archestra__");
     const origin = () =>
         props.tool.name.startsWith("archestra__") ? "archestra" : (props.tool.mcpServerName ?? "LLM Proxy");
     const methodName = () => {
-        if (props.tool.catalogId) return props.tool.name.replace(props.tool.catalogId + "__", "");
-        if (props.tool.name.startsWith("archestra__")) return props.tool.name.replace("archestra__", "");
-        return props.tool.name;
+        const lastSep = props.tool.name.lastIndexOf("__");
+        return lastSep !== -1 ? props.tool.name.slice(lastSep + 2) : props.tool.name;
     };
     const showColumn = (column: Column) => {
         if (props.columns?.length) return props.columns.includes(column);
-        return column !== "select";
+        return true;
     };
     const isBlocked = () => props.callPolicy?.action === "block_always";
 
     const rowClass = () => {
-        const classes: string[] = [];
+        const classes: string[] = [styles.row];
         if (isBlocked()) classes.push(styles.blocked);
         if (props.selected) classes.push(styles.selected);
         return classes.join(" ");
@@ -212,6 +246,7 @@ function ToolRow(props: {
                         assignments={props.tool.assignments}
                         agents={props.agents}
                         readOnly={isAutoDiscovered()}
+                        priorityAgentId={props.selectedAgentId}
                     />
                 </TableCell>
             </Show>

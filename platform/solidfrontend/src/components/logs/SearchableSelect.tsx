@@ -71,7 +71,7 @@ export function SearchableSelect(props: {
                                         "justify-content": "space-between",
                                         padding: "0.375rem 0.5rem",
                                         border: "none",
-                                        background: props.value === item.value ? "var(--accent)" : "transparent",
+                                        background: props.value === item.value ? "var(--background)" : "transparent",
                                         color: "var(--foreground)",
                                         "font-size": "var(--font-size-small)",
                                         "border-radius": "var(--radius)",

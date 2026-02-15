@@ -44,7 +44,7 @@
 
 .destructive {
     background: var(--destructive);
-    color: var(--destructive-foreground);
+    color: var(--background);
 }
 
 .closeButton {

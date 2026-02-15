@@ -20,7 +20,7 @@
 }
 
 .trigger:hover {
-    background: var(--accent);
+    background: var(--background);
 }
 
 .content {

@@ -8,11 +8,12 @@ type Variant = "default" | "ghost" | "outline" | "info" | "success" | "warning" 
 type Props = ParentProps<{
     type?: "button" | "submit" | "reset";
     variant?: Variant;
-    size?: "default" | "large" | "small" | "xsmall" | "icon";
+    size?: "inherit" | "large" | "small" | "xsmall" | "icon";
     disabled?: boolean;
     onClick?: (e: MouseEvent) => void;
     class?: string;
-}> & Omit<ComponentProps<"button">, "type" | "disabled" | "onClick" | "class">;
+}> &
+    Omit<ComponentProps<"button">, "type" | "disabled" | "onClick" | "class">;
 
 const sizeClasses: Record<string, string> = {
     large: styles.large,
@@ -32,8 +33,8 @@ const variantClasses: Record<string, string> = {
 
 export function Button(props: Props): JSX.Element {
     const [local, rest] = splitProps(props, ["type", "variant", "size", "disabled", "onClick", "class", "children"]);
-    const variantClass = () => (local.variant ? variantClasses[local.variant] ?? "" : "");
-    const sizeClass = () => (local.size ? sizeClasses[local.size] ?? "" : "");
+    const variantClass = () => (local.variant ? (variantClasses[local.variant] ?? "") : "");
+    const sizeClass = () => (local.size ? (sizeClasses[local.size] ?? "") : "");
 
     return (
         <KobalteButton

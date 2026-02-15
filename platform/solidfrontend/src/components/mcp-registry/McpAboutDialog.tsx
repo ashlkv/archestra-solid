@@ -72,7 +72,7 @@ export function McpAboutDialog(props: Props): JSX.Element {
                                         <Badge variant="muted">Quality: {Math.round(server()!.quality_score!)}</Badge>
                                     </Show>
                                     <Show when={server()?.category}>
-                                        <Badge variant="info">{server()!.category}</Badge>
+                                        <Badge variant="muted">{server()!.category}</Badge>
                                     </Show>
                                     <Show when={server()?.programming_language}>
                                         <Badge variant="muted">{server()!.programming_language}</Badge>
@@ -157,7 +157,7 @@ export function McpAboutDialog(props: Props): JSX.Element {
                                 <>
                                     <div class={styles.field}>
                                         <span class={styles["field-label"]}>Type:</span>
-                                        <Badge variant="info">{server()!.server!.type}</Badge>
+                                        <Badge variant="muted">{server()!.server!.type}</Badge>
                                     </div>
                                     <Show when={server()!.server!.type === "local"}>
                                         <div class={styles.field}>

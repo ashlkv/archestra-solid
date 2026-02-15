@@ -27,7 +27,7 @@ function ChatMessage(props: { message: PartialUIMessage }): JSX.Element {
     };
 
     const roleBg = () => {
-        if (props.message.role === "user") return "var(--accent)";
+        if (props.message.role === "user") return "var(--background)";
         return "transparent";
     };
 
@@ -83,7 +83,7 @@ function MessagePart(props: { part: PartialUIMessage["parts"][number] }): JSX.El
             <Show when={part().type === "reasoning" && "text" in part()}>
                 <div
                     style={{
-                        background: "var(--muted)",
+                        background: "var(--muted-background)",
                         "border-radius": "var(--radius)",
                         padding: "0.75rem",
                         margin: "0.5rem 0",
@@ -210,7 +210,7 @@ function DualLlmPartView(props: { part: DualLlmPart }): JSX.Element {
                             <div
                                 style={{
                                     padding: "0.5rem",
-                                    background: conv.role === "user" ? "var(--accent)" : "transparent",
+                                    background: conv.role === "user" ? "var(--background)" : "transparent",
                                     "border-radius": "var(--radius)",
                                     "margin-bottom": "0.25rem",
                                     "font-size": "var(--font-size-small)",
@@ -255,7 +255,7 @@ function BlockedToolPartView(props: { part: BlockedToolPart }): JSX.Element {
                         <code
                             style={{
                                 "font-family": "var(--font-mono)",
-                                background: "var(--muted)",
+                                background: "var(--muted-background)",
                                 padding: "0.125rem 0.375rem",
                                 "border-radius": "var(--radius)",
                             }}

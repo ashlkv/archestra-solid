@@ -2,15 +2,18 @@ import { Tabs as KobalteTabs } from "@kobalte/core/tabs";
 import type { JSX, ParentProps } from "solid-js";
 import styles from "./Tabs.module.css";
 
-export function Tabs(props: ParentProps<{
-    value?: string;
-    defaultValue?: string;
-    onChange?: (value: string) => void;
-}>): JSX.Element {
+export function Tabs(
+    props: ParentProps<{
+        value?: string;
+        defaultValue?: string;
+        onChange?: (value: string) => void;
+        orientation?: "vertical" | "horizontal";
+    }>,
+): JSX.Element {
     return (
         <KobalteTabs
             class={styles.root}
-            orientation="vertical"
+            orientation={props.orientation ?? "vertical"}
             value={props.value}
             defaultValue={props.defaultValue}
             onChange={props.onChange}
@@ -38,7 +41,13 @@ export function Tab(props: {
     children: TabChildren;
 }): JSX.Element {
     return (
-        <KobalteTabs.Trigger as={props.as} class={`${styles.trigger} ${props.class ?? ""}`} value={props.value} disabled={props.disabled} data-label="Tab">
+        <KobalteTabs.Trigger
+            as={props.as}
+            class={`${styles.trigger} ${props.class ?? ""}`}
+            value={props.value}
+            disabled={props.disabled}
+            data-label="Tab"
+        >
             {props.children}
         </KobalteTabs.Trigger>
     );

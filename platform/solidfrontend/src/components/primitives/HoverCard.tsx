@@ -2,12 +2,33 @@ import { HoverCard as KobalteHoverCard } from "@kobalte/core/hover-card";
 import type { JSX, ParentProps } from "solid-js";
 import styles from "./HoverCard.module.css";
 
-export function HoverCard(props: ParentProps<{
-    openDelay?: number;
-    closeDelay?: number;
-}>): JSX.Element {
+type Placement =
+    | "top"
+    | "top-start"
+    | "top-end"
+    | "right"
+    | "right-start"
+    | "right-end"
+    | "bottom"
+    | "bottom-start"
+    | "bottom-end"
+    | "left"
+    | "left-start"
+    | "left-end";
+
+export function HoverCard(
+    props: ParentProps<{
+        openDelay?: number;
+        closeDelay?: number;
+        placement?: Placement;
+    }>,
+): JSX.Element {
     return (
-        <KobalteHoverCard openDelay={props.openDelay ?? 400} closeDelay={props.closeDelay ?? 100}>
+        <KobalteHoverCard
+            openDelay={props.openDelay ?? 400}
+            closeDelay={props.closeDelay ?? 100}
+            placement={props.placement}
+        >
             {props.children}
         </KobalteHoverCard>
     );
