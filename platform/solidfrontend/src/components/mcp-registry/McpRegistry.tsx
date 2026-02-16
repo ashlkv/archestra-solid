@@ -1,4 +1,4 @@
-import { useSearchParams } from "@solidjs/router";
+import { useNavigate, useSearchParams } from "@solidjs/router";
 import { createMemo, createSignal, For, Show } from "solid-js";
 import { useAgents, useAssignTool } from "@/lib/agent.query";
 import { useDeleteMcp, useMcpServers } from "@/lib/mcp-registry.query";
@@ -30,6 +30,7 @@ export function McpRegistry(props: {
     pending?: boolean;
     onAddClick?: () => void;
 }) {
+    const navigate = useNavigate();
     const { data: mcpServers } = useMcpServers();
     const { submit: installServer, submission: installSubmission } = useInstallMcpServer();
     const { submit: deleteMcp, submission: deleteSubmission } = useDeleteMcp();
@@ -256,6 +257,7 @@ export function McpRegistry(props: {
                                 initialSelectedIds={initialSelectedIds}
                                 onSelectionChange={handleSelectionChange}
                                 selectedAgentId={selectedAgentId()}
+                                onToolClick={(toolId) => navigate(`/tools/${toolId}`)}
                             />
                         </div>
                     </Show>
@@ -295,6 +297,7 @@ export function McpRegistry(props: {
                                     initialSelectedIds={initialSelectedIds}
                                     onSelectionChange={handleSelectionChange}
                                     selectedAgentId={selectedAgentId()}
+                                    onToolClick={(toolId) => navigate(`/tools/${toolId}`)}
                                 />
                             </Show>
                         </div>
