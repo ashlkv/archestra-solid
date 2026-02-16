@@ -1,10 +1,29 @@
 {
+  "$schema": "https://opencode.ai/config.json",
   "provider": {
-    "anthropic": {
+    "archestra": {
+      "npm": "@ai-sdk/anthropic",
+      "name": "Archestra",
       "options": {
-        "baseURL": "http://localhost:9000/v1/anthropic/25a3d2cd-265e-4d11-9bda-beca2b5935d7",
+        "baseURL": "http://localhost:9000/v1/anthropic/25a3d2cd-265e-4d11-9bda-beca2b5935d7/v1",
         "headers": {
-          "X-Archestra-Session-Id": "opencode-session-1"
+          "X-Archestra-Session-Id": "opencode-1"
+        }
+      },
+      "models": {
+        "claude-sonnet-4-20250514": {
+          "name": "Claude Sonnet 4 (via Archestra)",
+          "limit": {
+            "context": 200000,
+            "output": 16384
+          }
+        },
+        "claude-opus-4-6": {
+          "name": "Claude Opus 4.6 (via Archestra)",
+          "limit": {
+            "context": 200000,
+            "output": 16384
+          }
         }
       }
     }
