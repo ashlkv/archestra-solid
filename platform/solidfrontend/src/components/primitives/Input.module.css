@@ -8,6 +8,8 @@
     color: var(--foreground);
     border: 1px solid var(--border);
     border-radius: var(--radius);
+    font-family: inherit;
+    font-size: inherit;
     transition: border-color 0.15s ease;
 }
 

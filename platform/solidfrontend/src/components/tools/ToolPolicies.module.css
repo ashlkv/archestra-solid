@@ -1,0 +1,130 @@
+.container {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    background: var(--card);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.heading {
+    font-size: var(--font-size-small);
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.description {
+    font-size: var(--font-size-small);
+    color: var(--muted-foreground);
+}
+
+.defaultBar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem;
+    background: var(--muted);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+}
+
+.defaultLabel {
+    font-size: var(--font-size-xsmall);
+    font-weight: 500;
+    color: var(--muted-foreground);
+}
+
+.conditions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.conditionRows {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.conditionRow {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.conditionPrefix {
+    font-size: var(--font-size-small);
+    color: var(--muted-foreground);
+    width: 1rem;
+    flex-shrink: 0;
+}
+
+.andLabel {
+    font-size: var(--font-size-small);
+    color: var(--muted-foreground);
+}
+
+.actionRow {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    padding-left: 3rem;
+}
+
+.addButton {
+    width: 100%;
+}
+
+.cheatSheet {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--card);
+    overflow: hidden;
+}
+
+.cheatSheetHeader {
+    font-size: var(--font-size-small);
+    font-weight: 500;
+}
+
+.cheatSheetContent {
+    font-size: var(--font-size-small);
+    color: var(--muted-foreground);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 0 1rem 1rem;
+}
+
+.cheatSheetExample {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.cheatSheetCode {
+    background: var(--muted);
+    padding: 0.75rem;
+    border-radius: var(--radius);
+    overflow-x: auto;
+    font-size: var(--font-size-xsmall);
+    font-family: var(--font-family-mono);
+}
+
+.code {
+    font-family: var(--font-family-mono);
+    background: var(--muted);
+    padding: 0.125rem 0.375rem;
+    border-radius: 0.25rem;
+    font-size: var(--font-size-xsmall);
+}
+
+.link {
+    text-decoration: underline;
+}
+
+.link:hover {
+    color: var(--foreground);
+}

@@ -4,9 +4,9 @@ import { Markdown } from "@/components/primitives/Markdown";
 import { TextBubble } from "@/components/primitives/TextBubble";
 import type { BlockedToolPart, DualLlmPart, PartialUIMessage } from "@/lib/llm-providers/common";
 import { parsePolicyDenied } from "@/lib/llm-providers/common";
+import { Button } from "~/components/primitives/Button";
 import styles from "./ChatViewer.module.css";
 import { ToolCall, type ToolState } from "./ToolCall";
-import { Button } from '~/components/primitives/Button';
 
 export function ChatViewer(props: { messages: PartialUIMessage[]; timestamp?: string }): JSX.Element {
     const [expanded, setExpanded] = createSignal(false);

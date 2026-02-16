@@ -16,7 +16,7 @@ export function ResultPolicySelect(props: {
 }): JSX.Element {
     const [selected, setSelected] = createSignal(props.value);
     const [loading, setLoading] = createSignal(false);
-    const { submission, submit } = useSaveResultPolicy(props.policyId);
+    const { submission, submit } = useSaveResultPolicy(props.policyId ?? "");
 
     createEffect(() => {
         setSelected(props.value);
@@ -29,7 +29,7 @@ export function ResultPolicySelect(props: {
         setSelected(action);
         const startTime = Date.now();
         try {
-            await submit({ toolId: props.toolId, policy: { id: props.policyId, action, conditions: [] } });
+            await submit({ toolId: props.toolId, policy: { id: props.policyId ?? "", action, conditions: [] } });
         } catch (exception) {
             setSelected(previousValue);
             showError(exception instanceof Error ? exception.message : "Failed to save policy");

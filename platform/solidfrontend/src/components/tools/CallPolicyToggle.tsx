@@ -25,7 +25,7 @@ export function CallPolicyToggle(props: {
 }): JSX.Element {
     const [selected, setSelected] = createSignal(props.value);
     const [pendingAction, setPendingAction] = createSignal<PolicyAction | null>(null);
-    const { submission, submit } = useSaveCallPolicy(props.policyId);
+    const { submission, submit } = useSaveCallPolicy(props.policyId ?? "");
 
     createEffect(() => {
         setSelected(props.value);
@@ -40,7 +40,7 @@ export function CallPolicyToggle(props: {
         try {
             await submit({
                 toolId: props.toolId,
-                policy: { id: props.policyId, action, conditions: [], reason: null },
+                policy: { id: props.policyId ?? "", action, conditions: [], reason: null },
             });
         } catch (exception) {
             setSelected(previousValue);

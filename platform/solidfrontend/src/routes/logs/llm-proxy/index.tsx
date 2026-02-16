@@ -2,7 +2,6 @@ import { A, useNavigate, useSearchParams } from "@solidjs/router";
 import { createSignal, For, type JSX, Show } from "solid-js";
 import { X } from "@/components/icons";
 import { DateTimeRangePicker } from "@/components/logs/DateTimeRangePicker";
-import { DebouncedInput } from "@/components/logs/DebouncedInput";
 import { InteractionDrawer } from "@/components/logs/InteractionDrawer";
 import { Pagination } from "@/components/logs/Pagination";
 import { Savings } from "@/components/logs/Savings";
@@ -16,6 +15,8 @@ import { Empty, EmptyDescription, EmptyTitle } from "@/components/primitives/Emp
 import { ExpandCollapseButton } from "@/components/primitives/ExpandCollapseButton";
 import { ModelBadge } from "@/components/primitives/ModelBadge";
 import { PageHeader } from "@/components/primitives/PageHeader";
+import { SearchInput } from "@/components/primitives/SearchInput";
+import { SessionSourceBadge } from "@/components/primitives/SessionSourceBadge";
 import { Spinner } from "@/components/primitives/Spinner";
 import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "@/components/primitives/Table";
 import { Tab, TabList, Tabs } from "@/components/primitives/Tabs";
@@ -196,22 +197,21 @@ export function LlmProxyLogsPage(props: { initialExpandedSessionId?: string; ini
                     </TabList>
                 </Tabs>*/}
 
-                {/*<div
+                <div
                     data-label="Filters"
                     style={{
                         display: "flex",
                         "flex-wrap": "wrap",
                         gap: "0.5rem",
                         "align-items": "center",
-                        "margin-top": "1rem",
                     }}
                 >
-                    <DebouncedInput
+                    <SearchInput
                         value={search()}
                         onChange={(value) => setSearchParams({ search: value || undefined, page: "0" })}
                         placeholder="Search sessions..."
                     />
-                    <SearchableSelect
+                    {/*<SearchableSelect
                         value={profileId()}
                         onValueChange={(value) => setSearchParams({ profileId: value || undefined, page: "0" })}
                         items={profileItems()}
@@ -233,8 +233,8 @@ export function LlmProxyLogsPage(props: { initialExpandedSessionId?: string; ini
                         <Button variant="ghost" size="small" onClick={clearFilters}>
                             <X style={{ width: "14px", height: "14px" }} /> Clear filters
                         </Button>
-                    </Show>
-                </div>*/}
+                    </Show>*/}
+                </div>
 
                 <Show when={sessionsQuery.pending}>
                     <div style={{ display: "flex", "justify-content": "center", padding: "3rem" }}>
@@ -308,7 +308,7 @@ export function LlmProxyLogsPage(props: { initialExpandedSessionId?: string; ini
                                                             message={getSessionTitle(session)}
                                                             maxLength={80}
                                                         />
-                                                        <AgentBadge source={session.sessionSource} />
+                                                        <SessionSourceBadge source={session.sessionSource} />
                                                     </div>
                                                 </TableCell>
                                                 <TableCell data-label="Requests">{session.requestCount}</TableCell>
@@ -364,9 +364,9 @@ export function LlmProxyLogsPage(props: { initialExpandedSessionId?: string; ini
                                                             "flex-wrap": "wrap",
                                                         }}
                                                     >
-                                                        <Badge variant="outline">
+                                                        <AgentBadge agentId={session.profileId}>
                                                             {getProfileName(session.profileId)}
-                                                        </Badge>
+                                                        </AgentBadge>
                                                         <For each={session.userNames?.slice(0, 2) ?? []}>
                                                             {(userName) => <Badge variant="ghost">{userName}</Badge>}
                                                         </For>

@@ -1,13 +1,14 @@
-import { X } from "@/components/icons";
 import type { ComponentProps, JSX, ParentProps } from "solid-js";
 import { splitProps } from "solid-js";
+import { X } from "@/components/icons";
 import styles from "./Tag.module.css";
 
 type Props = ParentProps<{
     size?: "small" | "regular";
     variant?: "primary" | "muted";
     onDelete?: () => void;
-}> & Omit<ComponentProps<"span">, "class">;
+}> &
+    Omit<ComponentProps<"span">, "class">;
 
 const sizeClasses: Record<string, string> = {
     small: styles.small,

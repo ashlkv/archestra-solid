@@ -1,3 +1,4 @@
+import { Show } from "solid-js";
 import { Ellipsis, FileText, Info, Layers, Pencil, RefreshCcw, Trash2 } from "@/components/icons";
 import {
     DropdownMenu,
@@ -6,7 +7,6 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "../primitives/DropdownMenu";
-import { Show } from 'solid-js';
 
 type Props = {
     isLocal?: boolean;

@@ -16,7 +16,18 @@ type Props = {
 };
 
 export function Textarea(props: Props): JSX.Element {
-    const [local, rest] = splitProps(props, ["value", "placeholder", "disabled", "mono", "resize", "rows", "id", "onInput", "class", "ref"]);
+    const [local, rest] = splitProps(props, [
+        "value",
+        "placeholder",
+        "disabled",
+        "mono",
+        "resize",
+        "rows",
+        "id",
+        "onInput",
+        "class",
+        "ref",
+    ]);
     const monoClass = () => (local.mono ? styles.mono : "");
     const resizeClass = () => (local.resize === false ? styles["no-resize"] : "");
 

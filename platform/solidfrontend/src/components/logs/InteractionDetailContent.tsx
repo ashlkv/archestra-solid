@@ -2,6 +2,7 @@ import { type JSX, Show } from "solid-js";
 import { ChatViewer } from "@/components/logs/chat/ChatViewer";
 import { JsonSection } from "@/components/logs/JsonSection";
 import { SessionToolsTable } from "@/components/logs/SessionToolsTable";
+import { AgentBadge } from "@/components/primitives/AgentBadge";
 import { Badge } from "@/components/primitives/Badge";
 import { CostBadge } from "@/components/primitives/CostBadge";
 import { ProviderModelBadge } from "@/components/primitives/ProviderModelBadge";
@@ -160,7 +161,7 @@ export function InteractionHeaderBar(props: { interactionId: string }): JSX.Elem
                     "align-items": "center",
                 }}
             >
-                <Badge variant="outline">{getProfileName(interaction()!.profileId)}</Badge>
+                <AgentBadge agentId={interaction()!.profileId}>{getProfileName(interaction()!.profileId)}</AgentBadge>
                 <Show when={interaction()!.externalAgentId}>
                     <Badge variant="ghost">
                         {(interaction()! as any).externalAgentIdLabel ?? interaction()!.externalAgentId}
