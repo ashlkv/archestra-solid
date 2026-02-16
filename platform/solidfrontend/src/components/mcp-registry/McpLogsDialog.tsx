@@ -1,12 +1,12 @@
-import { createSignal, createEffect, onCleanup, Show, type JSX } from "solid-js";
-import { MCP_DEFAULT_LOG_LINES, type McpLogsMessage, type McpLogsErrorMessage } from "@shared";
+import { MCP_DEFAULT_LOG_LINES, type McpLogsErrorMessage, type McpLogsMessage } from "@shared";
+import { createEffect, createSignal, type JSX, onCleanup, Show } from "solid-js";
 import { ArrowDown, Terminal } from "@/components/icons";
-import { Dialog, DialogContent } from "../primitives/Dialog";
+import websocketService from "@/lib/websocket";
 import { Button } from "../primitives/Button";
 import { CopyButton } from "../primitives/CopyButton";
+import { Dialog, DialogContent } from "../primitives/Dialog";
 import { Select } from "../primitives/Select";
 import { showError } from "../primitives/Toast";
-import websocketService from "@/lib/websocket";
 import styles from "./McpLogsDialog.module.css";
 
 type Installation = {
@@ -191,16 +191,19 @@ export function McpLogsDialog(props: Props): JSX.Element {
     };
 
     return (
-        <Dialog open onOpenChange={(open) => { if (!open) props.onClose(); }}>
+        <Dialog
+            open
+            onOpenChange={(open) => {
+                if (!open) props.onClose();
+            }}
+        >
             <DialogContent title={`Logs: ${props.serverName}`} size="large">
                 <div class={styles.container}>
                     <div class={styles.header}>
                         <div class={styles["header-icon"]}>
                             <Terminal size={20} />
                         </div>
-                        <p class={styles.description}>
-                            View the recent logs from the MCP server deployment
-                        </p>
+                        <p class={styles.description}>View the recent logs from the MCP server deployment</p>
                     </div>
 
                     <Show when={!props.hideInstallationSelector && props.installs.length > 1}>
@@ -228,31 +231,19 @@ export function McpLogsDialog(props: Props): JSX.Element {
                         </div>
 
                         <div class={styles["logs-container"]}>
-                            <div
-                                ref={scrollAreaRef}
-                                class={styles["logs-scroll"]}
-                                onScroll={handleScroll}
-                            >
+                            <div ref={scrollAreaRef} class={styles["logs-scroll"]} onScroll={handleScroll}>
                                 <div class={styles["logs-content"]}>
                                     <Show when={streamError()}>
-                                        <div class={styles["logs-error"]}>
-                                            Error loading logs: {streamError()}
-                                        </div>
+                                        <div class={styles["logs-error"]}>Error loading logs: {streamError()}</div>
                                     </Show>
                                     <Show when={!streamError() && isWaitingForLogs()}>
-                                        <div class={styles["logs-streaming"]}>
-                                            {streamingText()}
-                                        </div>
+                                        <div class={styles["logs-streaming"]}>{streamingText()}</div>
                                     </Show>
                                     <Show when={!streamError() && !isWaitingForLogs() && streamedLogs()}>
-                                        <pre class={styles["logs-text"]}>
-                                            {streamedLogs()}
-                                        </pre>
+                                        <pre class={styles["logs-text"]}>{streamedLogs()}</pre>
                                     </Show>
                                     <Show when={!streamError() && !isWaitingForLogs() && !streamedLogs()}>
-                                        <div class={styles["logs-empty"]}>
-                                            No logs available
-                                        </div>
+                                        <div class={styles["logs-empty"]}>No logs available</div>
                                     </Show>
                                 </div>
                             </div>
@@ -281,10 +272,7 @@ export function McpLogsDialog(props: Props): JSX.Element {
                             <h3 class={styles["command-title"]}>Manual command</h3>
                             <div class={styles["command-container"]}>
                                 <code class={styles["command-text"]}>{command()}</code>
-                                <CopyButton
-                                    text={command()}
-                                    class={styles["command-copy"]}
-                                />
+                                <CopyButton text={command()} class={styles["command-copy"]} />
                             </div>
                         </div>
                     </Show>

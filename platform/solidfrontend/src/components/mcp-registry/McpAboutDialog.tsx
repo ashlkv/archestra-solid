@@ -1,24 +1,24 @@
-import { Show, For, type JSX } from "solid-js";
 import type { archestraCatalogTypes } from "@shared";
+import { For, type JSX, Show } from "solid-js";
 import {
-    Info,
-    Users,
-    Link,
-    Globe,
     BookOpen,
-    Github,
-    Terminal,
-    Code2,
-    FileText,
-    Settings,
     Calendar,
-    Star,
+    Code2,
     ExternalLink,
+    FileText,
+    Github,
+    Globe,
+    Info,
+    Link,
+    Settings,
+    Star,
+    Terminal,
+    Users,
 } from "@/components/icons";
-import { Dialog, DialogContent } from "../primitives/Dialog";
-import { Badge } from "../primitives/Badge";
-import { Spinner } from "../primitives/Spinner";
 import { useMcpServerDetails } from "@/lib/mcp-registry.query";
+import { Badge } from "../primitives/Badge";
+import { Dialog, DialogContent } from "../primitives/Dialog";
+import { Spinner } from "../primitives/Spinner";
 import styles from "./McpAboutDialog.module.css";
 
 type Props = {
@@ -48,7 +48,12 @@ export function McpAboutDialog(props: Props): JSX.Element {
     const { data: server, query } = useMcpServerDetails(props.serverName);
 
     return (
-        <Dialog open onOpenChange={(open) => { if (!open) props.onClose(); }}>
+        <Dialog
+            open
+            onOpenChange={(open) => {
+                if (!open) props.onClose();
+            }}
+        >
             <DialogContent title={server()?.display_name ?? server()?.name ?? "Server"} size="small">
                 <Show when={query.pending}>
                     <div class={styles.loading}>
@@ -109,7 +114,12 @@ export function McpAboutDialog(props: Props): JSX.Element {
                                     <Show when={server()!.author!.url}>
                                         <div class={styles.field}>
                                             <span class={styles["field-label"]}>URL:</span>
-                                            <a href={server()!.author!.url} target="_blank" rel="noopener noreferrer" class={styles.link}>
+                                            <a
+                                                href={server()!.author!.url}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                class={styles.link}
+                                            >
                                                 {server()!.author!.url}
                                                 <ExternalLink size={12} class={styles["link-icon"]} />
                                             </a>
@@ -119,30 +129,57 @@ export function McpAboutDialog(props: Props): JSX.Element {
                             </Section>
                         </Show>
 
-                        <Show when={server()?.homepage || server()?.documentation || server()?.support || server()?.github_info?.url}>
+                        <Show
+                            when={
+                                server()?.homepage ||
+                                server()?.documentation ||
+                                server()?.support ||
+                                server()?.github_info?.url
+                            }
+                        >
                             <Separator />
                             <Section title="Links" icon={<Link size={20} />}>
                                 <>
                                     <Show when={server()?.homepage}>
-                                        <a href={server()!.homepage} target="_blank" rel="noopener noreferrer" class={styles.link}>
+                                        <a
+                                            href={server()!.homepage}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            class={styles.link}
+                                        >
                                             <Globe size={16} class={styles["link-icon"]} />
                                             Homepage: {server()!.homepage}
                                         </a>
                                     </Show>
                                     <Show when={server()?.documentation}>
-                                        <a href={server()!.documentation} target="_blank" rel="noopener noreferrer" class={styles.link}>
+                                        <a
+                                            href={server()!.documentation}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            class={styles.link}
+                                        >
                                             <BookOpen size={16} class={styles["link-icon"]} />
                                             Documentation: {server()!.documentation}
                                         </a>
                                     </Show>
                                     <Show when={server()?.support}>
-                                        <a href={server()!.support} target="_blank" rel="noopener noreferrer" class={styles.link}>
+                                        <a
+                                            href={server()!.support}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            class={styles.link}
+                                        >
                                             <Info size={16} class={styles["link-icon"]} />
                                             Support: {server()!.support}
                                         </a>
                                     </Show>
                                     <Show when={server()?.github_info?.url}>
-                                        <a href={server()!.github_info!.url} target="_blank" rel="noopener noreferrer" class={styles.link}>
+                                        <a
+                                            href={server()!.github_info!.url}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            class={styles.link}
+                                        >
                                             <Github size={16} class={styles["link-icon"]} />
                                             GitHub: {server()!.github_info!.url}
                                         </a>
@@ -170,7 +207,11 @@ export function McpAboutDialog(props: Props): JSX.Element {
                                                 <code class={styles.code}>{server()!.server!.args!.join(" ")}</code>
                                             </div>
                                         </Show>
-                                        <Show when={server()!.server!.env && Object.keys(server()!.server!.env!).length > 0}>
+                                        <Show
+                                            when={
+                                                server()!.server!.env && Object.keys(server()!.server!.env!).length > 0
+                                            }
+                                        >
                                             <div>
                                                 <span class={styles["field-label"]}>Environment variables:</span>
                                                 <div class={styles["env-vars"]}>
@@ -188,14 +229,24 @@ export function McpAboutDialog(props: Props): JSX.Element {
                                     <Show when={server()!.server!.type === "remote"}>
                                         <div class={styles.field}>
                                             <span class={styles["field-label"]}>URL:</span>
-                                            <a href={server()!.server!.url} target="_blank" rel="noopener noreferrer" class={styles.link}>
+                                            <a
+                                                href={server()!.server!.url}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                class={styles.link}
+                                            >
                                                 {server()!.server!.url}
                                             </a>
                                         </div>
                                         <Show when={server()!.server!.docs_url}>
                                             <div class={styles.field}>
                                                 <span class={styles["field-label"]}>Docs URL:</span>
-                                                <a href={server()!.server!.docs_url} target="_blank" rel="noopener noreferrer" class={styles.link}>
+                                                <a
+                                                    href={server()!.server!.docs_url}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    class={styles.link}
+                                                >
                                                     {server()!.server!.docs_url}
                                                 </a>
                                             </div>
@@ -262,7 +313,9 @@ export function McpAboutDialog(props: Props): JSX.Element {
                                                 </div>
                                                 <div class={styles["config-description"]}>{config.description}</div>
                                                 <Show when={config.default !== undefined}>
-                                                    <div class={styles["config-default"]}>Default: {String(config.default)}</div>
+                                                    <div class={styles["config-default"]}>
+                                                        Default: {String(config.default)}
+                                                    </div>
                                                 </Show>
                                             </div>
                                         )}
@@ -276,14 +329,24 @@ export function McpAboutDialog(props: Props): JSX.Element {
                             <Section title="GitHub statistics" icon={<Github size={20} />}>
                                 <div class={styles["github-stats"]}>
                                     <div class={styles["github-stat"]}>
-                                        <Star size={16} class={styles["github-stat-icon"]} style={{ color: "#eab308" }} />
+                                        <Star
+                                            size={16}
+                                            class={styles["github-stat-icon"]}
+                                            style={{ color: "#eab308" }}
+                                        />
                                         <span class={styles["github-stat-label"]}>Stars:</span>
                                         <span class={styles["github-stat-value"]}>{server()!.github_info!.stars}</span>
                                     </div>
                                     <div class={styles["github-stat"]}>
-                                        <Users size={16} class={styles["github-stat-icon"]} style={{ color: "#3b82f6" }} />
+                                        <Users
+                                            size={16}
+                                            class={styles["github-stat-icon"]}
+                                            style={{ color: "#3b82f6" }}
+                                        />
                                         <span class={styles["github-stat-label"]}>Contributors:</span>
-                                        <span class={styles["github-stat-value"]}>{server()!.github_info!.contributors}</span>
+                                        <span class={styles["github-stat-value"]}>
+                                            {server()!.github_info!.contributors}
+                                        </span>
                                     </div>
                                     <div class={styles["github-stat"]}>
                                         <span class={styles["github-stat-label"]}>Issues:</span>
@@ -291,7 +354,9 @@ export function McpAboutDialog(props: Props): JSX.Element {
                                     </div>
                                     <div class={styles["github-stat"]}>
                                         <span class={styles["github-stat-label"]}>Releases:</span>
-                                        <span class={styles["github-stat-value"]}>{server()!.github_info!.releases ? "Yes" : "No"}</span>
+                                        <span class={styles["github-stat-value"]}>
+                                            {server()!.github_info!.releases ? "Yes" : "No"}
+                                        </span>
                                     </div>
                                 </div>
                             </Section>

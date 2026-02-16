@@ -1,9 +1,9 @@
-import { createSignal, createEffect, Show } from "solid-js";
-import { useTeams } from "@/lib/team.query";
+import { createEffect, createSignal, Show } from "solid-js";
 import { useMcpServers } from "@/lib/mcp-registry.query";
+import { useTeams } from "@/lib/team.query";
+import type { MCP, McpServer, Team } from "@/types";
 import { RadioGroup } from "../primitives/RadioGroup";
 import { Select } from "../primitives/Select";
-import type { MCP, McpServer, Team } from "@/types";
 import styles from "./SelectCredentialTypeAndTeams.module.css";
 
 type Props = {
@@ -25,9 +25,10 @@ export function SelectCredentialTypeAndTeams(props: Props) {
 
     const hasPersonalInstallation = () => installedServers().some((server) => !server.teamId);
 
-    const teamsWithInstallation = () => installedServers()
-        .filter((server): server is McpServer & { teamId: string } => Boolean(server.teamId))
-        .map((server) => server.teamId);
+    const teamsWithInstallation = () =>
+        installedServers()
+            .filter((server): server is McpServer & { teamId: string } => Boolean(server.teamId))
+            .map((server) => server.teamId);
 
     const availableTeams = () => {
         const allTeams = teams() ?? [];
@@ -42,9 +43,7 @@ export function SelectCredentialTypeAndTeams(props: Props) {
     const radioOptions = () => [
         {
             value: "personal",
-            label: isPersonalDisabled()
-                ? "Personal (already installed)"
-                : "Personal",
+            label: isPersonalDisabled() ? "Personal (already installed)" : "Personal",
             disabled: isPersonalDisabled(),
         },
         {
@@ -89,11 +88,7 @@ export function SelectCredentialTypeAndTeams(props: Props) {
         <div class={styles.root}>
             <div class={styles.section}>
                 <span class={styles.label}>Credential type</span>
-                <RadioGroup
-                    value={credentialType()}
-                    onChange={onCredentialTypeChange}
-                    options={radioOptions()}
-                />
+                <RadioGroup value={credentialType()} onChange={onCredentialTypeChange} options={radioOptions()} />
             </div>
 
             <Show when={credentialType() === "team"}>
@@ -110,9 +105,7 @@ export function SelectCredentialTypeAndTeams(props: Props) {
                         loading={teamsQuery.pending}
                     />
                     <Show when={availableTeams().length === 0 && !teamsQuery.pending}>
-                        <p class={styles.hint}>
-                            No teams available. Create a team first to share this server.
-                        </p>
+                        <p class={styles.hint}>No teams available. Create a team first to share this server.</p>
                     </Show>
                 </div>
             </Show>

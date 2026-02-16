@@ -1,13 +1,20 @@
-import { createSignal, type Accessor, type JSX } from "solid-js";
-import { Button } from "../primitives/Button";
-import { MultiSelect } from "../primitives/MultiSelect";
+import { type Accessor, createSignal, type JSX } from "solid-js";
+import { X } from "@/components/icons";
+import { AgentBadge } from "@/components/primitives/AgentBadge";
 import { useAssignTool } from "@/lib/agent.query";
 import { useUnassignTool } from "@/lib/tool.query";
-import styles from "./Assignments.module.css";
+import { Button } from "../primitives/Button";
+import { MultiSelect } from "../primitives/MultiSelect";
+import styles from "./AssignmentsPopover.module.css";
 
 type Agent = { id: string; name: string };
 
-export function AssignmentsPopover(props: { toolId: string; selectedIds: string[]; agents: Accessor<Agent[] | undefined>; onClose?: () => void }): JSX.Element {
+export function AssignmentsPopover(props: {
+    toolId: string;
+    selectedIds: string[];
+    agents: Accessor<Agent[] | undefined>;
+    onClose?: () => void;
+}): JSX.Element {
     const [localIds, setLocalIds] = createSignal(props.selectedIds);
     const { submit: assign, submission: assignSubmission } = useAssignTool(props.toolId);
     const { submit: unassign, submission: unassignSubmission } = useUnassignTool();
@@ -32,17 +39,29 @@ export function AssignmentsPopover(props: { toolId: string; selectedIds: string[
         }
     };
 
+    const renderTag = (option: { value: string; label: string }, onDelete: () => void) => (
+        <span class={styles.tag} onPointerDown={(e) => e.stopPropagation()}>
+            <AgentBadge agentId={option.value}>{option.label}</AgentBadge>
+            <button type="button" class={styles.tagDelete} onClick={onDelete} aria-label={`Remove ${option.label}`}>
+                <X size={14} />
+            </button>
+        </span>
+    );
+
     return (
-        <div class={styles.popoverContent}>
+        <div class={styles.content}>
             <MultiSelect
                 value={localIds()}
                 onChange={setLocalIds}
                 options={options()}
-                placeholder="Search profiles..."
+                placeholder="Select profile"
                 tagsLayout="vertical"
+                renderTag={renderTag}
             />
-            <div class={styles.popoverActions}>
-                <Button onClick={onSave} disabled={pending()}>Save</Button>
+            <div class={styles.actions}>
+                <Button onClick={onSave} disabled={pending()}>
+                    Save
+                </Button>
             </div>
         </div>
     );

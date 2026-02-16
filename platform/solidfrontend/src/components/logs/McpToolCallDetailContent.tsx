@@ -1,5 +1,6 @@
 import { type JSX, Show } from "solid-js";
 import { JsonSection } from "@/components/logs/JsonSection";
+import { AgentBadge } from "@/components/primitives/AgentBadge";
 import { Badge } from "@/components/primitives/Badge";
 import { Spinner } from "@/components/primitives/Spinner";
 import { useAgents } from "@/lib/agent.query";
@@ -61,7 +62,7 @@ export function McpToolCallDetailContent(props: { mcpToolCallId: string }): JSX.
                             >
                                 MCP Gateway
                             </div>
-                            <div>{getProfileName(toolCall()!.agentId)}</div>
+                            <AgentBadge agentId={toolCall()!.agentId}>{getProfileName(toolCall()!.agentId)}</AgentBadge>
                         </div>
                         <div>
                             <div

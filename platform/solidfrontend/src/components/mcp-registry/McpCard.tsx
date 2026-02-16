@@ -1,9 +1,10 @@
 import { Dynamic, For, Show } from "solid-js/web";
-import { FileText, Pencil } from "@/components/icons";
+import { FileText } from "@/components/icons";
 import type { MCP, McpServer } from "@/types";
 import { getIcon, isWellKnownIcon } from "../mcp-icons/icon-registry";
 import { Badge } from "../primitives/Badge";
 import { Button } from "../primitives/Button";
+import { PencilButton } from "../primitives/PencilButton";
 import styles from "./McpCard.module.css";
 import { McpCardMenu } from "./McpCardMenu";
 import { McpInstanceHoverCard } from "./McpInstanceHoverCard";
@@ -140,15 +141,13 @@ export function McpCard(props: Props) {
                                         <FileText size={14} />
                                     </Button>
                                 </Show>
-                                <Button
+                                <PencilButton
+                                    tooltip="Edit"
                                     variant="ghost"
                                     size="icon"
                                     onClick={() => props.onEdit?.()}
                                     class={styles["quick-action"]}
-                                    title="Edit"
-                                >
-                                    <Pencil size={14} />
-                                </Button>
+                                />
                             </Show>
                             <McpCardMenu
                                 isLocal={isLocal()}

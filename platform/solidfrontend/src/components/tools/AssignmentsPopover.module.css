@@ -1,0 +1,37 @@
+.content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    min-width: 16rem;
+}
+
+.actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.tagDelete {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.125rem;
+    height: 1.125rem;
+    border-radius: 50%;
+    border: none;
+    background: transparent;
+    color: inherit;
+    opacity: 0.5;
+    cursor: pointer;
+    padding: 0;
+    transition: opacity 0.1s;
+}
+
+.tagDelete:hover {
+    opacity: 1;
+}
