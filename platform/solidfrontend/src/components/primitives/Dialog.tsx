@@ -1,6 +1,6 @@
 import { Dialog as KobalteDialog } from "@kobalte/core/dialog";
-import { X } from "@/components/icons";
 import type { JSX, ParentProps } from "solid-js";
+import { X } from "@/components/icons";
 import styles from "./Dialog.module.css";
 
 export function Dialog(props: ParentProps<{ open?: boolean; onOpenChange?: (open: boolean) => void }>): JSX.Element {
@@ -12,10 +12,16 @@ export function Dialog(props: ParentProps<{ open?: boolean; onOpenChange?: (open
 }
 
 export function DialogTrigger(props: ParentProps): JSX.Element {
-    return <KobalteDialog.Trigger as="div" class={styles.trigger}>{props.children}</KobalteDialog.Trigger>;
+    return (
+        <KobalteDialog.Trigger as="div" class={styles.trigger}>
+            {props.children}
+        </KobalteDialog.Trigger>
+    );
 }
 
-export function DialogContent(props: ParentProps<{ title?: string; size?: "small" | "medium" | "large" }>): JSX.Element {
+export function DialogContent(
+    props: ParentProps<{ title?: string; size?: "small" | "medium" | "large" }>,
+): JSX.Element {
     const contentClass = () => {
         const classes = [styles.content];
         if (props.size === "small") {
@@ -39,9 +45,7 @@ export function DialogContent(props: ParentProps<{ title?: string; size?: "small
                             <X size={16} />
                         </KobalteDialog.CloseButton>
                     </div>
-                    <div class={styles.body}>
-                        {props.children}
-                    </div>
+                    <div class={styles.body}>{props.children}</div>
                 </KobalteDialog.Content>
             </div>
         </KobalteDialog.Portal>

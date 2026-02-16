@@ -32,9 +32,7 @@ export function RadioGroup(props: Props): JSX.Element {
                         <KobalteRadioGroup.ItemControl class={styles.control}>
                             <KobalteRadioGroup.ItemIndicator class={styles.indicator} />
                         </KobalteRadioGroup.ItemControl>
-                        <KobalteRadioGroup.ItemLabel class={styles.label}>
-                            {option.label}
-                        </KobalteRadioGroup.ItemLabel>
+                        <KobalteRadioGroup.ItemLabel class={styles.label}>{option.label}</KobalteRadioGroup.ItemLabel>
                     </KobalteRadioGroup.Item>
                 )}
             </For>

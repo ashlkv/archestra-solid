@@ -1,7 +1,7 @@
-import { type CallPolicy, type ResultPolicy } from '~/types';
+import type { CallPolicy, ResultPolicy } from "~/types";
 
-type CallPolicyAction = CallPolicy["action"]
-type ResultPolicyAction = ResultPolicy["action"]
+type CallPolicyAction = CallPolicy["action"];
+type ResultPolicyAction = ResultPolicy["action"];
 
 export const CALL_POLICY_ACTION_OPTIONS: {
     value: CallPolicyAction;

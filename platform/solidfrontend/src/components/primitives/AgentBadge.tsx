@@ -1,31 +1,20 @@
-import type { JSX } from "solid-js";
-import { Match, Switch } from "solid-js";
-import { MessageCircle } from "@/components/icons";
-import { IconClaudeCode } from "@/components/mcp-icons/IconClaudeCode";
+import type { JSX, ParentProps } from "solid-js";
 import { Badge } from "./Badge";
-import styles from "./AgentBadge.module.css";
 
-type SessionSource = "claude_code" | "header" | "openai_user" | string | null | undefined;
+const PALETTE_SIZE = 18;
 
-interface Props {
-    source: SessionSource;
+function colorIndex(agentId: string): number {
+    const lastChar = agentId.replace(/-/g, "").slice(-1);
+    const num = Number.parseInt(lastChar, 16);
+    return (Number.isNaN(num) ? 0 : num) % PALETTE_SIZE;
 }
 
-export function AgentBadge(props: Props): JSX.Element {
+export function AgentBadge(props: ParentProps<{ agentId: string }>): JSX.Element {
+    const cssVar = () => `var(--color-${colorIndex(props.agentId)})`;
+
     return (
-        <Switch>
-            <Match when={props.source === "header"}>
-                <Badge variant="muted">
-                    <MessageCircle style={{ width: "12px", height: "12px" }} class={styles.icon} />
-                    Chat
-                </Badge>
-            </Match>
-            <Match when={props.source === "claude_code"}>
-                <Badge variant="muted">
-                    <IconClaudeCode size={12} class={styles.icon} />
-                    Claude Code
-                </Badge>
-            </Match>
-        </Switch>
+        <Badge style={{ background: cssVar(), color: `color-mix(in srgb, ${cssVar()} 40%, black)` }}>
+            {props.children}
+        </Badge>
     );
 }

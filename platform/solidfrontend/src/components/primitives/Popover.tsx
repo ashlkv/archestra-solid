@@ -11,7 +11,11 @@ export function Popover(props: ParentProps<{ open?: boolean; onOpenChange?: (ope
 }
 
 export function PopoverTrigger(props: ParentProps): JSX.Element {
-    return <KobaltePopover.Trigger as="div" class={styles.trigger}>{props.children}</KobaltePopover.Trigger>;
+    return (
+        <KobaltePopover.Trigger as="div" class={styles.trigger}>
+            {props.children}
+        </KobaltePopover.Trigger>
+    );
 }
 
 export function PopoverContent(props: ParentProps): JSX.Element {

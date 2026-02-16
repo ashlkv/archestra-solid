@@ -1,5 +1,5 @@
-import { Loader2 } from "@/components/icons";
 import type { JSX } from "solid-js";
+import { Loader2 } from "@/components/icons";
 import styles from "./Spinner.module.css";
 
 export function Spinner(props: { size?: number }): JSX.Element {

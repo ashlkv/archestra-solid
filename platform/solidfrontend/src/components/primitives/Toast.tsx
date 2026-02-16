@@ -1,6 +1,6 @@
 import { Toast as KobalteToast, toaster } from "@kobalte/core/toast";
-import { X } from "@/components/icons";
 import { Portal } from "solid-js/web";
+import { X } from "@/components/icons";
 import styles from "./Toast.module.css";
 
 interface ToastData {

@@ -18,8 +18,12 @@ export function ArchestraCard() {
                     <div class={styles.header}>
                         <p class={styles.name}>Archestra built-in</p>
                         <div class={styles.badges}>
-                            <Badge caps variant="ghost">Local</Badge>
-                            <Badge caps variant="ghost">Native</Badge>
+                            <Badge caps variant="ghost">
+                                Local
+                            </Badge>
+                            <Badge caps variant="ghost">
+                                Native
+                            </Badge>
                         </div>
                     </div>
                     <p class={styles.description}>

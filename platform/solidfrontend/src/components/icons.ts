@@ -3,6 +3,7 @@
 // loads all ~1900 icons. Deep imports avoid this. Add new icons here as needed.
 export { default as ArrowDown } from "lucide-solid/icons/arrow-down";
 export { default as ArrowLeft } from "lucide-solid/icons/arrow-left";
+export { default as ArrowRight } from "lucide-solid/icons/arrow-right";
 export { default as Ban } from "lucide-solid/icons/ban";
 export { default as BookOpen } from "lucide-solid/icons/book-open";
 export { default as Bot } from "lucide-solid/icons/bot";
@@ -10,6 +11,7 @@ export { default as Bug } from "lucide-solid/icons/bug";
 export { default as Building2 } from "lucide-solid/icons/building-2";
 export { default as Cable } from "lucide-solid/icons/cable";
 export { default as Calendar, default as CalendarIcon } from "lucide-solid/icons/calendar";
+export { default as CaseSensitive } from "lucide-solid/icons/case-sensitive";
 export { default as Check } from "lucide-solid/icons/check";
 export { default as ChevronDown } from "lucide-solid/icons/chevron-down";
 export { default as ChevronLeft } from "lucide-solid/icons/chevron-left";

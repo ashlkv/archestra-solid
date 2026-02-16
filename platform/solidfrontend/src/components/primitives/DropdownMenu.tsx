@@ -18,9 +18,7 @@ export function DropdownMenuTrigger(props: ParentProps<{ class?: string }>) {
 export function DropdownMenuContent(props: ParentProps) {
     return (
         <KobalteDropdownMenu.Portal>
-            <KobalteDropdownMenu.Content class={styles.content}>
-                {props.children}
-            </KobalteDropdownMenu.Content>
+            <KobalteDropdownMenu.Content class={styles.content}>{props.children}</KobalteDropdownMenu.Content>
         </KobalteDropdownMenu.Portal>
     );
 }

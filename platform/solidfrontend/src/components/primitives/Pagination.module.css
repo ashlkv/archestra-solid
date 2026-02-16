@@ -1,0 +1,102 @@
+.pagination {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Remove list bullets from Kobalte's rendered list items */
+.pagination :global(ul),
+.pagination :global(li) {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.content {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.item {
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+    font-family: inherit;
+    font-size: var(--font-size-small);
+    font-weight: 500;
+    line-height: var(--line-height-small);
+    border-radius: var(--radius);
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--foreground);
+    cursor: pointer;
+    transition:
+        background-color 0.15s ease,
+        color 0.15s ease,
+        border-color 0.15s ease;
+    height: var(--input-height-xsmall);
+    min-width: var(--input-height-xsmall);
+    padding: 0 0.375rem;
+}
+
+.item:hover {
+    background: var(--muted-background);
+}
+
+.item:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+}
+
+.item[data-current] {
+    border-color: var(--border);
+    background: var(--background);
+}
+
+.item:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    color: var(--muted-foreground);
+}
+
+.item:disabled:hover {
+    background: transparent;
+}
+
+.nav-button {
+    composes: item;
+    gap: 0.25rem;
+    padding: 0 0.5rem;
+}
+
+.nav-button-label {
+    display: none;
+    color: var(--foreground);
+}
+
+@media (min-width: 640px) {
+    .nav-button-label {
+        display: inline;
+    }
+}
+
+.ellipsis {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: var(--input-height-xsmall);
+    min-width: var(--input-height-xsmall);
+    cursor: default;
+    color: var(--muted-foreground);
+}
+
+.ellipsis svg {
+    width: 1em;
+    height: 1em;
+}

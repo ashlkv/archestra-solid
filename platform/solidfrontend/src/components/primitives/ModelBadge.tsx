@@ -20,25 +20,39 @@ interface Props extends Omit<ComponentProps<"span">, "class"> {
     class?: string;
 }
 
-function formatModelName(model: string): string {
-    // Remove timestamp suffix (e.g., -20251001, -20250115)
-    const withoutTimestamp = model.replace(/-\d{8}$/, "");
-
-    // Replace hyphens with spaces
-    const withSpaces = withoutTimestamp.replace(/-/g, " ");
-
-    // Replace version numbers like "4 5" with "4.5"
-    const withVersionDots = withSpaces.replace(/(\d+)\s+(\d+)/g, "$1.$2");
-
-    return withVersionDots;
-}
-
 export function ModelBadge(props: Props): JSX.Element {
     const displayName = () => formatModelName(props.model);
+    const color = () => providerColor(props.model);
 
     return (
-        <Badge variant={props.variant ?? "muted"} class={props.class} title={props.model}>
+        <Badge
+            variant={props.variant ?? "muted"}
+            class={props.class}
+            title={props.model}
+            style={color() ? { background: color()?.bg, color: color()?.fg } : undefined}
+        >
             {displayName()}
         </Badge>
     );
+}
+
+function formatModelName(model: string): string {
+    const withoutTimestamp = model.replace(/-\d{8}$/, "");
+    const withSpaces = withoutTimestamp.replace(/-/g, " ");
+    return withSpaces.replace(/(\d+)\s+(\d+)/g, "$1.$2");
+}
+
+// --color-3 (anthropic), --color-8 (openai), --color-15 (gemini)
+const PROVIDER_COLORS: Record<string, { bg: string; fg: string }> = {
+    anthropic: { bg: "var(--color-3)", fg: "color-mix(in srgb, var(--color-3) 40%, black)" },
+    openai: { bg: "var(--color-8)", fg: "color-mix(in srgb, var(--color-8) 40%, black)" },
+    gemini: { bg: "var(--color-15)", fg: "color-mix(in srgb, var(--color-15) 40%, black)" },
+};
+
+function providerColor(model: string): { bg: string; fg: string } | null {
+    const m = model.toLowerCase();
+    if (m.includes("claude") || m.includes("anthropic")) return PROVIDER_COLORS.anthropic;
+    if (m.includes("gpt") || m.includes("o1") || m.includes("o3") || m.includes("o4")) return PROVIDER_COLORS.openai;
+    if (m.includes("gemini")) return PROVIDER_COLORS.gemini;
+    return null;
 }

@@ -1,4 +1,5 @@
 import { type Accessor, For, Show } from "solid-js";
+import { AgentBadge } from "@/components/primitives/AgentBadge";
 import { Count } from "../primitives/Count";
 import { Tab, TabList, Tabs } from "../primitives/Tabs";
 import styles from "./AgentAssignmentTabs.module.css";
@@ -36,10 +37,12 @@ export function AgentAssignmentTabs(props: {
                     <For each={props.agents()}>
                         {(agent) => (
                             <Tab value={agent.id}>
-                                <span>{agent.name}</span>
-                                <span class={styles.count}>
-                                    <Count count={assignedCount(agent.id)} total={totalTools()} />
-                                </span>
+                                <AgentBadge agentId={agent.id}>
+                                    {agent.name}
+                                    <span class={styles.count}>
+                                        <Count count={assignedCount(agent.id)} total={totalTools()} />
+                                    </span>
+                                </AgentBadge>
                             </Tab>
                         )}
                     </For>

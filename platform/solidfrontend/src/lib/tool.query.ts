@@ -1,7 +1,7 @@
-import { revalidate } from "@solidjs/router";
-import { createQuery, createSubmission, getAuthHeaders } from "@/lib/api";
 import { archestraApiSdk } from "@shared";
+import { revalidate } from "@solidjs/router";
 import { showError } from "@/components/primitives/Toast";
+import { createQuery, createSubmission, getAuthHeaders } from "@/lib/api";
 import type { Tool, ToolsQueryParams } from "@/types";
 
 export const useTools = createQuery({
@@ -30,7 +30,7 @@ export const useTools = createQuery({
                     tool.mcpServerName = match[1];
                 }
             }
-        })
+        });
         return { data: response.data?.data, error: response.error };
     },
 });

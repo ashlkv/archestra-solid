@@ -1,17 +1,17 @@
-import { createSignal, createEffect, For, Show, Match, Switch } from "solid-js";
+import { createEffect, createSignal, For, Match, Show, Switch } from "solid-js";
 import { ShieldCheck } from "@/components/icons";
 import type { MCP, UserConfigType } from "@/types";
-import { Dialog, DialogContent } from "../primitives/Dialog";
-import { Button } from "../primitives/Button";
-import { Badge } from "../primitives/Badge";
 import { Alert } from "../primitives/Alert";
-import { Input } from "../primitives/Input";
-import { Textarea } from "../primitives/Textarea";
+import { Badge } from "../primitives/Badge";
+import { Button } from "../primitives/Button";
 import { Checkbox } from "../primitives/Checkbox";
-import { Separator } from "../primitives/Separator";
+import { Dialog, DialogContent } from "../primitives/Dialog";
+import { Input } from "../primitives/Input";
 import { Markdown } from "../primitives/Markdown";
-import { SelectCredentialTypeAndTeams } from "./SelectCredentialTypeAndTeams";
+import { Separator } from "../primitives/Separator";
+import { Textarea } from "../primitives/Textarea";
 import styles from "./install-dialog.module.css";
+import { SelectCredentialTypeAndTeams } from "./SelectCredentialTypeAndTeams";
 
 type InstallResult = {
     teamId: string | undefined;
@@ -37,8 +37,7 @@ export function McpInstallDialog(props: Props) {
     const isRemote = () => props.catalogItem?.serverType === "remote";
 
     // Remote server config
-    const userConfig = () =>
-        (props.catalogItem?.userConfig as UserConfigType | undefined) ?? {};
+    const userConfig = () => (props.catalogItem?.userConfig as UserConfigType | undefined) ?? {};
     const configEntries = () => Object.entries(userConfig());
     const hasConfig = () => configEntries().length > 0;
     const hasOAuth = () => Boolean(props.catalogItem?.oauthConfig);
@@ -46,22 +45,15 @@ export function McpInstallDialog(props: Props) {
 
     // Local server env vars
     const promptedEnvVars = () =>
-        props.catalogItem?.localConfig?.environment?.filter(
-            (env) => env.promptOnInstallation === true,
-        ) ?? [];
+        props.catalogItem?.localConfig?.environment?.filter((env) => env.promptOnInstallation === true) ?? [];
 
     const secretEnvVars = () =>
-        promptedEnvVars().filter(
-            (env) => env.type === "secret" && !(env as { mounted?: boolean }).mounted,
-        );
+        promptedEnvVars().filter((env) => env.type === "secret" && !(env as { mounted?: boolean }).mounted);
 
     const secretFileVars = () =>
-        promptedEnvVars().filter(
-            (env) => env.type === "secret" && (env as { mounted?: boolean }).mounted === true,
-        );
+        promptedEnvVars().filter((env) => env.type === "secret" && (env as { mounted?: boolean }).mounted === true);
 
-    const nonSecretEnvVars = () =>
-        promptedEnvVars().filter((env) => env.type !== "secret");
+    const nonSecretEnvVars = () => promptedEnvVars().filter((env) => env.type !== "secret");
 
     // Reset form when catalog item changes
     createEffect(() => {
@@ -98,10 +90,12 @@ export function McpInstallDialog(props: Props) {
         });
 
         const allSecrets = [...secretEnvVars(), ...secretFileVars()];
-        const secretsValid = allSecrets.length === 0 || allSecrets.every((env) => {
-            if (!env.required) return true;
-            return Boolean(environmentValues()[env.key]?.trim());
-        });
+        const secretsValid =
+            allSecrets.length === 0 ||
+            allSecrets.every((env) => {
+                if (!env.required) return true;
+                return Boolean(environmentValues()[env.key]?.trim());
+            });
 
         return nonSecretValid && secretsValid;
     };
@@ -185,7 +179,12 @@ export function McpInstallDialog(props: Props) {
     };
 
     return (
-        <Dialog open onOpenChange={(open) => { if (!open) onClose(); }}>
+        <Dialog
+            open
+            onOpenChange={(open) => {
+                if (!open) onClose();
+            }}
+        >
             <DialogContent title={`Install ${props.catalogItem.name}`} size="medium">
                 <div class={styles.form} data-label="Install form">
                     {/* Title row with OAuth badge for remote servers */}
@@ -220,8 +219,8 @@ export function McpInstallDialog(props: Props) {
                     {/* OAuth alert for remote servers */}
                     <Show when={isRemote() && hasOAuth()}>
                         <Alert>
-                            This server requires OAuth authentication. You'll be redirected
-                            to complete the authentication flow after clicking install.
+                            This server requires OAuth authentication. You'll be redirected to complete the
+                            authentication flow after clicking install.
                         </Alert>
                     </Show>
 
@@ -253,7 +252,9 @@ export function McpInstallDialog(props: Props) {
                                             <div class={styles["field-row"]}>
                                                 <Checkbox
                                                     checked={environmentValues()[env.key] === "true"}
-                                                    onChange={(checked) => updateEnvVar(env.key, checked ? "true" : "false")}
+                                                    onChange={(checked) =>
+                                                        updateEnvVar(env.key, checked ? "true" : "false")
+                                                    }
                                                     disabled={props.installing}
                                                 />
                                                 <span class={styles.label}>
@@ -280,7 +281,11 @@ export function McpInstallDialog(props: Props) {
                                                 type={env.type === "number" ? "number" : "text"}
                                                 value={environmentValues()[env.key] ?? ""}
                                                 onInput={(value) => updateEnvVar(env.key, value)}
-                                                placeholder={env.default !== undefined ? String(env.default) : `Enter value for ${env.key}`}
+                                                placeholder={
+                                                    env.default !== undefined
+                                                        ? String(env.default)
+                                                        : `Enter value for ${env.key}`
+                                                }
                                                 mono
                                                 disabled={props.installing}
                                             />
@@ -367,7 +372,9 @@ export function McpInstallDialog(props: Props) {
                                             <div class={styles["field-row"]}>
                                                 <Checkbox
                                                     checked={configValues()[fieldName] === "true"}
-                                                    onChange={(checked) => updateConfig(fieldName, checked ? "true" : "false")}
+                                                    onChange={(checked) =>
+                                                        updateConfig(fieldName, checked ? "true" : "false")
+                                                    }
                                                 />
                                                 <span class={styles.label}>
                                                     {fieldConfig.title}
@@ -394,8 +401,8 @@ export function McpInstallDialog(props: Props) {
                                                     fieldConfig.sensitive
                                                         ? "password"
                                                         : fieldConfig.type === "number"
-                                                            ? "number"
-                                                            : "text"
+                                                          ? "number"
+                                                          : "text"
                                                 }
                                                 value={configValues()[fieldName] ?? ""}
                                                 onInput={(value) => updateConfig(fieldName, value)}

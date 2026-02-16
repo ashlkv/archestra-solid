@@ -17,3 +17,16 @@
 .checkbox-cell {
     width: 1rem;
 }
+
+.edit-cell {
+    width: 2rem;
+}
+
+.edit-button {
+    opacity: 0;
+    transition: opacity 150ms;
+}
+
+.row:hover .edit-button {
+    opacity: 1;
+}

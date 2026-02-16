@@ -1,20 +1,23 @@
-import { type Accessor, createSignal, type JSX, Show } from "solid-js";
-import { Badge } from "../primitives/Badge";
-import { Button } from "../primitives/Button";
+import { type Accessor, createSignal, For, type JSX, Show } from "solid-js";
+import { AgentBadge } from "@/components/primitives/AgentBadge";
+import { PencilButton } from "../primitives/PencilButton";
 import { Popover, PopoverContent, PopoverTrigger } from "../primitives/Popover";
 import { Tooltip } from "../primitives/Tooltip";
-import { AgentBadge } from "./AgentBadge";
+import { AgentMiniBadge } from "./AgentMiniBadge";
 import styles from "./Assignments.module.css";
 import { AssignmentsPopover } from "./AssignmentsPopover";
 
 type Agent = { id: string; name: string };
 type Assignment = { agent: Agent };
 
+const MAX_COMPACT_BADGES = 4;
+
 export function Assignments(props: {
     toolId: string;
     assignments: Assignment[];
     agents: Accessor<Agent[] | undefined>;
     readOnly?: boolean;
+    compact?: boolean;
     priorityAgentId?: string;
 }): JSX.Element {
     const [open, setOpen] = createSignal(false);
@@ -45,18 +48,28 @@ export function Assignments(props: {
         return count === 1 ? "1 other agent" : `${count} other agents`;
     };
 
+    const visibleCompactAssignments = () => sortedAssignments().slice(0, MAX_COMPACT_BADGES);
+    const compactOverflow = () => Math.max(0, sortedAssignments().length - MAX_COMPACT_BADGES);
+
     if (props.readOnly) {
         return (
-            <Show when={hasAssignments()} fallback={<span class={styles.disconnected}>Not connected</span>}>
-                <Tooltip content="Auto-discovered tool, bound to this agent">
-                    <span class={styles.content}>
-                        <Badge variant="muted">{first()!.name}</Badge>
-                        <Show when={remaining() > 0}>
-                            <span class={styles.count}>+{remaining()}</span>
-                        </Show>
-                    </span>
-                </Tooltip>
-            </Show>
+            <>
+                <Show when={first()}>
+                    {(agent) => (
+                        <Tooltip content="Auto-discovered tool, bound to this agent">
+                            <span class={styles.content}>
+                                <AgentBadge agentId={agent().id}>{agent().name}</AgentBadge>
+                                <Show when={remaining() > 0}>
+                                    <span class={styles.count}>+{remaining()}</span>
+                                </Show>
+                            </span>
+                        </Tooltip>
+                    )}
+                </Show>
+                <Show when={!hasAssignments()}>
+                    <span class={styles.disconnected}>Not connected</span>
+                </Show>
+            </>
         );
     }
 
@@ -64,32 +77,18 @@ export function Assignments(props: {
         <Popover open={open()} onOpenChange={setOpen}>
             <PopoverTrigger>
                 <div class={styles.trigger}>
-                    <Show
-                        when={isAssignmentMode()}
-                        fallback={
-                            <Show
-                                when={hasAssignments()}
-                                fallback={
-                                    <>
-                                        <span class={`${styles.content} ${styles.disconnected}`}>Not connected</span>
-                                        <Button size="small" class={styles.connect}>
-                                            Connect
-                                        </Button>
-                                    </>
-                                }
-                            >
-                                <span class={styles.content}>
-                                    <Badge variant="muted">{first()!.name}</Badge>
-                                    <Show when={remaining() > 0}>
-                                        <span class={styles.count}>+{remaining()}</span>
-                                    </Show>
-                                </span>
-                                <Button size="small" class={styles.edit}>
-                                    Edit
-                                </Button>
-                            </Show>
-                        }
-                    >
+                    <Show when={props.compact && !isAssignmentMode()}>
+                        <CompactContent
+                            hasAssignments={hasAssignments()}
+                            visible={visibleCompactAssignments()}
+                            overflow={compactOverflow()}
+                            onEdit={() => setOpen(true)}
+                        />
+                    </Show>
+                    <Show when={!props.compact && !isAssignmentMode()}>
+                        <DefaultContent hasAssignments={hasAssignments()} first={first()} remaining={remaining()} />
+                    </Show>
+                    <Show when={isAssignmentMode()}>
                         <span class={styles.content}>
                             <Show when={!hasAssignments()}>
                                 <span class={styles.muted}>Not assigned to any agent</span>
@@ -118,5 +117,63 @@ export function Assignments(props: {
                 />
             </PopoverContent>
         </Popover>
+    );
+}
+
+function CompactContent(props: {
+    hasAssignments: boolean;
+    visible: Assignment[];
+    overflow: number;
+    onEdit: () => void;
+}): JSX.Element {
+    return (
+        <>
+            <Show when={!props.hasAssignments}>
+                <span class={`${styles.content} ${styles.disconnected}`}>Not connected</span>
+                <PencilButton tooltip="Edit assignments" variant="ghost" size="icon-small" class={styles.edit} />
+            </Show>
+            <Show when={props.hasAssignments}>
+                <span class={styles.content}>
+                    <For each={props.visible}>
+                        {(assignment) => (
+                            <AgentMiniBadge agentId={assignment.agent.id} agentName={assignment.agent.name} />
+                        )}
+                    </For>
+                    <Show when={props.overflow > 0}>
+                        <span class={styles.count}>+{props.overflow}</span>
+                    </Show>
+                </span>
+                <PencilButton tooltip="Edit assignments" variant="ghost" size="icon-small" class={styles.edit} />
+            </Show>
+        </>
+    );
+}
+
+function DefaultContent(props: { hasAssignments: boolean; first: Agent | undefined; remaining: number }): JSX.Element {
+    return (
+        <>
+            <Show when={!props.hasAssignments}>
+                <span class={`${styles.content} ${styles.disconnected}`}>Not connected</span>
+                <PencilButton tooltip="Edit assignments" variant="ghost" size="icon-small" class={styles.edit} />
+            </Show>
+            <Show when={props.first}>
+                {(agent) => (
+                    <>
+                        <span class={styles.content}>
+                            <AgentBadge agentId={agent().id}>{agent().name}</AgentBadge>
+                            <Show when={props.remaining > 0}>
+                                <span class={styles.count}>+{props.remaining}</span>
+                            </Show>
+                        </span>
+                        <PencilButton
+                            tooltip="Edit assignments"
+                            variant="ghost"
+                            size="icon-small"
+                            class={styles.edit}
+                        />
+                    </>
+                )}
+            </Show>
+        </>
     );
 }

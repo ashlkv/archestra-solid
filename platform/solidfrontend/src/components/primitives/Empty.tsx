@@ -1,4 +1,4 @@
-import { splitProps, type JSX, type ParentProps } from "solid-js";
+import { type JSX, type ParentProps, splitProps } from "solid-js";
 import styles from "./Empty.module.css";
 
 type Props = ParentProps<JSX.HTMLAttributes<HTMLDivElement>>;

@@ -10,9 +10,7 @@ export function FixedLayout(props: Props): JSX.Element {
     return (
         <div class={styles.layout}>
             <Sidebar />
-            <main class={`${styles.main} ${props.class ?? ""}`}>
-                {props.children}
-            </main>
+            <main class={`${styles.main} ${props.class ?? ""}`}>{props.children}</main>
         </div>
     );
 }

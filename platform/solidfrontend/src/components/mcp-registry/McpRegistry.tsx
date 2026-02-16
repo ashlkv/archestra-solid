@@ -76,12 +76,13 @@ export function McpRegistry(props: {
     const toolTableColumns = createMemo(() =>
         selectedAgentId()
             ? (["select", "name", "assignments"] as ("select" | "name" | "assignments")[])
-            : (["select", "name", "assignments", "call-policy", "result-policy"] as (
+            : (["select", "name", "assignments", "call-policy", "result-policy", "edit"] as (
                   | "select"
                   | "name"
                   | "assignments"
                   | "call-policy"
                   | "result-policy"
+                  | "edit"
               )[]),
     );
 
@@ -269,11 +270,7 @@ export function McpRegistry(props: {
                                     <EmptyDescription>
                                         This server is not installed yet. Install it to discover available tools.
                                     </EmptyDescription>
-                                    <Button
-                                        variant="muted"
-                                        size="large"
-                                        onClick={() => setInstallItem(selectedMcp()!)}
-                                    >
+                                    <Button variant="muted" size="large" onClick={() => setInstallItem(selectedMcp()!)}>
                                         Install server
                                     </Button>
                                 </Empty>

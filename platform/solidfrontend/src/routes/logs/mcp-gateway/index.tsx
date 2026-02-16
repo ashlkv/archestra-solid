@@ -2,15 +2,16 @@ import { A, useNavigate, useSearchParams } from "@solidjs/router";
 import { For, type JSX, Show } from "solid-js";
 import { ChevronDown, ChevronUp, X } from "@/components/icons";
 import { DateTimeRangePicker } from "@/components/logs/DateTimeRangePicker";
-import { DebouncedInput } from "@/components/logs/DebouncedInput";
 import { McpToolCallDrawer } from "@/components/logs/McpToolCallDrawer";
 import { Pagination } from "@/components/logs/Pagination";
 import { SearchableSelect } from "@/components/logs/SearchableSelect";
 import { TruncatedText } from "@/components/logs/TruncatedText";
+import { AgentBadge } from "@/components/primitives/AgentBadge";
 import { Badge } from "@/components/primitives/Badge";
 import { Button } from "@/components/primitives/Button";
 import { Empty, EmptyDescription, EmptyTitle } from "@/components/primitives/Empty";
 import { PageHeader } from "@/components/primitives/PageHeader";
+import { SearchInput } from "@/components/primitives/SearchInput";
 import { Spinner } from "@/components/primitives/Spinner";
 import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "@/components/primitives/Table";
 import { Tab, TabList, Tabs } from "@/components/primitives/Tabs";
@@ -133,7 +134,7 @@ export default function McpGatewayLogsPage(): JSX.Element {
                     "margin-top": "1rem",
                 }}
             >
-                <DebouncedInput
+                <SearchInput
                     value={search()}
                     onChange={(value) => setSearchParams({ search: value || undefined, page: "0" })}
                     placeholder="Search tool calls..."
@@ -249,14 +250,16 @@ export default function McpGatewayLogsPage(): JSX.Element {
                                     style={{ cursor: "pointer" }}
                                 >
                                     <TableCell>
-                                        <span style={{ "font-size": "var(--font-size-small)" }}>
-                                            {formatDate(toolCall.createdAt)}
-                                        </span>
+                                        <AgentBadge agentId={toolCall.agentId}>
+                                            {getProfileName(toolCall.agentId)}
+                                        </AgentBadge>
                                     </TableCell>
                                     <TableCell>
                                         <Badge variant={methodBadgeVariant(toolCall.method)}>{toolCall.method}</Badge>
                                     </TableCell>
-                                    <TableCell>{getProfileName(toolCall.agentId)}</TableCell>
+                                    <TableCell>
+                                        <Badge variant="muted">{getProfileName(toolCall.agentId)}</Badge>
+                                    </TableCell>
                                     <TableCell>
                                         <Show when={toolCall.mcpServerName}>
                                             <Badge variant="muted">{toolCall.mcpServerName}</Badge>

@@ -1,6 +1,5 @@
 import { createSignal, For, type JSX } from "solid-js";
-import { Pencil } from "@/components/icons";
-import { Button } from "@/components/primitives/Button";
+import { PencilButton } from "@/components/primitives/PencilButton";
 import { Table, TableBody, TableCell, TableRow } from "@/components/primitives/Table";
 import { EditPolicyDialog } from "@/components/tools/EditPolicyDialog";
 import { OriginBadge } from "@/components/tools/OriginBadge";
@@ -25,15 +24,13 @@ export function SessionToolsTable(props: { toolNames: string[] }): JSX.Element {
                                     <OriginBadge toolName={name} />
                                 </TableCell>
                                 <TableCell class={`${styles.cell} ${styles["edit-cell"]}`}>
-                                    <Button
+                                    <PencilButton
+                                        tooltip="Edit policy"
                                         size="icon-small"
                                         variant="ghost"
                                         class={styles["edit-button"]}
                                         onClick={() => setEditingTool(name)}
-                                        title=""
-                                    >
-                                        <Pencil size={12} />
-                                    </Button>
+                                    />
                                 </TableCell>
                             </TableRow>
                         )}

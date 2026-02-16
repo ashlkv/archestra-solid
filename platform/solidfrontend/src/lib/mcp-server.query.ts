@@ -1,7 +1,7 @@
-import { revalidate } from "@solidjs/router";
-import { createSubmission, getAuthHeaders } from "@/lib/api";
 import { archestraApiSdk, type archestraApiTypes } from "@shared";
-import { showToast, showError } from "@/components/primitives/Toast";
+import { revalidate } from "@solidjs/router";
+import { showError, showToast } from "@/components/primitives/Toast";
+import { createSubmission, getAuthHeaders } from "@/lib/api";
 
 type InstallMcpServerPayload = archestraApiTypes.InstallMcpServerData["body"];
 

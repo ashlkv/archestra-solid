@@ -1,11 +1,13 @@
 import { type Accessor, createEffect, createSignal, For, on, Show } from "solid-js";
 import type { CallPolicy, ResultPolicy, ToolWithAssignments } from "@/types";
 import { Alert } from "../primitives/Alert";
+import { Button } from "../primitives/Button";
 import { Checkbox } from "../primitives/Checkbox";
 import { Empty, EmptyDescription } from "../primitives/Empty";
 import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "../primitives/Table";
 import { Assignments } from "./Assignments";
 import { CallPolicyToggle } from "./CallPolicyToggle";
+import { EditPolicyDialog } from "./EditPolicyDialog";
 import { GroupPolicyBar } from "./GroupPolicyBar";
 import { OriginBadge } from "./OriginBadge";
 import { ResultPolicySelect } from "./ResultPolicySelect";
@@ -16,7 +18,7 @@ type Agent = { id: string; name: string };
 type CallPolicyAction = CallPolicy["action"];
 type ResultPolicyAction = ResultPolicy["action"];
 
-type Column = "select" | "name" | "origin" | "assignments" | "call-policy" | "result-policy";
+type Column = "select" | "name" | "origin" | "assignments" | "call-policy" | "result-policy" | "edit";
 
 export function ToolTable(props: {
     tools: Accessor<ToolWithAssignments[]>;
@@ -155,6 +157,9 @@ export function ToolTable(props: {
                             <Show when={showColumn("result-policy")}>
                                 <TableHeaderCell>Results are</TableHeaderCell>
                             </Show>
+                            <Show when={showColumn("edit")}>
+                                <TableHeaderCell class={styles["edit-cell"]} />
+                            </Show>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -195,6 +200,8 @@ function ToolRow(props: {
     onToggle: (checked: boolean) => void;
     selectedAgentId?: string;
 }) {
+    const [editOpen, setEditOpen] = createSignal(false);
+
     const isAutoDiscovered = () =>
         !props.tool.catalogId && !props.tool.mcpServerName && !props.tool.name.startsWith("archestra__");
     const showColumn = (column: Column) => {
@@ -237,6 +244,7 @@ function ToolRow(props: {
                         assignments={props.tool.assignments}
                         agents={props.agents}
                         readOnly={isAutoDiscovered()}
+                        compact={!props.selectedAgentId}
                         priorityAgentId={props.selectedAgentId}
                     />
                 </TableCell>
@@ -247,6 +255,7 @@ function ToolRow(props: {
                         toolId={props.tool.id}
                         policyId={props.callPolicy?.id}
                         value={props.callPolicy?.action}
+                        size="xsmall"
                     />
                 </TableCell>
             </Show>
@@ -256,7 +265,16 @@ function ToolRow(props: {
                         toolId={props.tool.id}
                         policyId={props.resultPolicy?.id}
                         value={props.resultPolicy?.action}
+                        size="xsmall"
                     />
+                </TableCell>
+            </Show>
+            <Show when={showColumn("edit")}>
+                <TableCell class={styles["edit-cell"]}>
+                    <Button size="small" class={styles["edit-button"]} onClick={() => setEditOpen(true)}>
+                        Edit policy
+                    </Button>
+                    <EditPolicyDialog toolName={props.tool.name} open={editOpen()} onOpenChange={setEditOpen} />
                 </TableCell>
             </Show>
         </TableRow>
