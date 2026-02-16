@@ -7,7 +7,6 @@ import { Empty, EmptyDescription } from "../primitives/Empty";
 import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "../primitives/Table";
 import { Assignments } from "./Assignments";
 import { CallPolicyToggle } from "./CallPolicyToggle";
-import { EditPolicyDialog } from "./EditPolicyDialog";
 import { GroupPolicyBar } from "./GroupPolicyBar";
 import { OriginBadge } from "./OriginBadge";
 import { ResultPolicySelect } from "./ResultPolicySelect";
@@ -31,6 +30,7 @@ export function ToolTable(props: {
     initialSelectedIds?: Accessor<Set<string> | undefined>;
     onSelectionChange?: (selectedIds: Set<string>) => void;
     selectedAgentId?: string;
+    onToolClick?: (toolId: string) => void;
 }) {
     const [selectedIds, setSelectedIds] = createSignal<Set<string>>(new Set());
 
@@ -174,6 +174,7 @@ export function ToolTable(props: {
                                     selected={selectedIds().has(tool.id)}
                                     onToggle={(checked) => toggleOne(tool.id, checked)}
                                     selectedAgentId={props.selectedAgentId}
+                                    onToolClick={props.onToolClick}
                                 />
                             )}
                         </For>
@@ -199,9 +200,8 @@ function ToolRow(props: {
     selected: boolean;
     onToggle: (checked: boolean) => void;
     selectedAgentId?: string;
+    onToolClick?: (toolId: string) => void;
 }) {
-    const [editOpen, setEditOpen] = createSignal(false);
-
     const isAutoDiscovered = () =>
         !props.tool.catalogId && !props.tool.mcpServerName && !props.tool.name.startsWith("archestra__");
     const showColumn = (column: Column) => {
@@ -271,10 +271,13 @@ function ToolRow(props: {
             </Show>
             <Show when={showColumn("edit")}>
                 <TableCell class={styles["edit-cell"]}>
-                    <Button size="small" class={styles["edit-button"]} onClick={() => setEditOpen(true)}>
+                    <Button
+                        size="small"
+                        class={styles["edit-button"]}
+                        onClick={() => props.onToolClick?.(props.tool.id)}
+                    >
                         Edit policy
                     </Button>
-                    <EditPolicyDialog toolName={props.tool.name} open={editOpen()} onOpenChange={setEditOpen} />
                 </TableCell>
             </Show>
         </TableRow>

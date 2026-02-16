@@ -27,6 +27,8 @@ export { default as Copy } from "lucide-solid/icons/copy";
 export { default as DollarSign } from "lucide-solid/icons/dollar-sign";
 export { default as Ellipsis } from "lucide-solid/icons/ellipsis";
 export { default as ExternalLink } from "lucide-solid/icons/external-link";
+export { default as Eye } from "lucide-solid/icons/eye";
+export { default as EyeOff } from "lucide-solid/icons/eye-off";
 export { default as FileText } from "lucide-solid/icons/file-text";
 export { default as FoldVertical } from "lucide-solid/icons/fold-vertical";
 export { default as GitCompareArrows } from "lucide-solid/icons/git-compare-arrows";
