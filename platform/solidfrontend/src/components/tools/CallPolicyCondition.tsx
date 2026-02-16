@@ -4,11 +4,11 @@ import { CaseSensitive, Info, X } from "@/components/icons";
 import { useOperators, useUniqueExternalAgentIds } from "@/lib/policy.query";
 import type { PolicyCondition } from "@/lib/policy.utils";
 import { useTeams } from "@/lib/team.query";
-import { Button } from "../primitives/Button";
-import { Input } from "../primitives/Input";
-import { Select } from "../primitives/Select";
-import { Tooltip } from "../primitives/Tooltip";
-import styles from "./PolicyCondition.module.css";
+import { Button } from "../../primitives/Button";
+import { Input } from "../../primitives/Input";
+import { Select } from "../../primitives/Select";
+import { Tooltip } from "../../primitives/Tooltip";
+import styles from "./CallPolicyCondition.module.css";
 
 type ConditionKeyOptions = {
     argumentNames: string[];

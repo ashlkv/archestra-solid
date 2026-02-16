@@ -26,6 +26,8 @@ export function DrawerContent(
         description?: string;
         size?: "small" | "medium" | "large" | "xlarge" | "full";
         headerContent?: JSX.Element;
+        noPadding?: boolean;
+        titleClass?: string;
     }>,
 ): JSX.Element {
     const contentClass = () => {
@@ -45,7 +47,7 @@ export function DrawerContent(
                 <KobalteDialog.Content class={contentClass()}>
                     <div class={styles.header}>
                         <div class={styles.headerRow}>
-                            <KobalteDialog.Title class={styles.title}>
+                            <KobalteDialog.Title class={`${styles.title} ${props.titleClass ?? ""}`}>
                                 <Show when={props.title}>
                                     <PageHeader title={props.title!} description={props.description} />
                                 </Show>
@@ -56,7 +58,7 @@ export function DrawerContent(
                         </div>
                         <Show when={props.headerContent}>{props.headerContent}</Show>
                     </div>
-                    <div class={styles.body}>{props.children}</div>
+                    <div class={props.noPadding ? styles.bodyNoPadding : styles.body}>{props.children}</div>
                 </KobalteDialog.Content>
             </div>
         </KobalteDialog.Portal>

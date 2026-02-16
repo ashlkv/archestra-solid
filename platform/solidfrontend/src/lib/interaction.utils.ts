@@ -12,7 +12,7 @@ import OpenAiChatCompletionInteraction from "./llm-providers/openai";
 import VllmChatCompletionInteraction from "./llm-providers/vllm";
 import ZhipuaiChatCompletionInteraction from "./llm-providers/zhipuai";
 
-export const DEFAULT_TABLE_LIMIT = 10;
+export const DEFAULT_TABLE_LIMIT = 20;
 export const DEFAULT_SORT_BY = "createdAt" as const;
 export const DEFAULT_SORT_DIRECTION = "desc" as const;
 
