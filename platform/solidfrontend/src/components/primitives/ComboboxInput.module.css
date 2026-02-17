@@ -1,0 +1,133 @@
+.combobox {
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    display: block;
+}
+
+.combobox.small {
+    font-size: var(--small-font-size);
+    line-height: var(--small-line-height);
+}
+
+.trigger {
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    background: var(--background);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-size: inherit;
+    font-family: inherit;
+    height: var(--relative-input-height);
+    gap: 0.5em;
+    padding: 0 0.75em;
+}
+
+.trigger:hover {
+    background: var(--muted-background);
+}
+
+.trigger:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+}
+
+.trigger[data-disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.trigger-value {
+    flex: 1;
+    text-align: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.placeholder {
+    flex: 1;
+    color: var(--muted-foreground);
+    text-align: left;
+}
+
+.trigger-icon {
+    display: flex;
+    align-items: center;
+    color: var(--muted-foreground);
+    flex-shrink: 0;
+}
+
+.content {
+    min-width: var(--kb-popper-anchor-width);
+    max-width: var(--kb-popper-anchor-width);
+    background: var(--background);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-md);
+    z-index: 50;
+    overflow: hidden;
+    font-size: inherit;
+    font-family: inherit;
+}
+
+.search-input {
+    box-sizing: border-box;
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid var(--border);
+    outline: none;
+    padding: 0.5em 0.75em;
+    background: transparent;
+    color: var(--foreground);
+    font-size: inherit;
+    font-family: inherit;
+    line-height: inherit;
+}
+
+.search-input::placeholder {
+    color: var(--muted-foreground);
+}
+
+.content ul {
+    padding: 0;
+    margin: 0;
+}
+
+.item {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    height: var(--relative-input-height);
+    padding: 0.5em 0.75em;
+    cursor: pointer;
+    outline: none;
+    white-space: nowrap;
+    font-size: inherit;
+    font-family: inherit;
+}
+
+.item[data-highlighted] {
+    background: var(--muted-background);
+}
+
+.item[data-selected] {
+    background: var(--primary);
+    color: oklch(from var(--primary) clamp(0, (0.5 - l) * 100, 1) 0 0);
+}
+
+.label {
+    flex: 1;
+}
+
+.indicator {
+    width: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

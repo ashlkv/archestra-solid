@@ -6,10 +6,10 @@ import { Checkbox } from "../primitives/Checkbox";
 import { Empty, EmptyDescription } from "../primitives/Empty";
 import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "../primitives/Table";
 import { Assignments } from "./Assignments";
-import { CallPolicyToggle } from "./CallPolicyToggle";
-import { GroupPolicyBar } from "./GroupPolicyBar";
+import { CallPolicyToggle } from "./policy/CallPolicyToggle";
+import { GroupPolicyBar } from "./policy/GroupPolicyBar";
 import { OriginBadge } from "./OriginBadge";
-import { ResultPolicySelect } from "./ResultPolicySelect";
+import { ResultPolicySelect } from "./policy/ResultPolicySelect";
 import { ToolName } from "./ToolName";
 import styles from "./ToolTable.module.css";
 

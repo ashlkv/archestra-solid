@@ -2,11 +2,11 @@
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    font-size: var(--font-size-xsmall);
+    font-size: var(--small-font-size);
 }
 
 .signature {
-    font-family: var(--font-mono);
+    font-family: var(--monospace-font);
     display: flex;
     flex-wrap: wrap;
     gap: 0.125rem;
@@ -58,7 +58,7 @@
 }
 
 .param-name {
-    font-family: var(--font-mono);
+    font-family: var(--monospace-font);
     color: var(--foreground);
     text-align: right;
 }

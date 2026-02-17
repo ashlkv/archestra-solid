@@ -1,0 +1,21 @@
+.row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: color-mix(in srgb, var(--background) 10%, var(--inverted-background));
+    padding: 0.5rem 0.75rem;
+    margin: -0.5rem 0;
+}
+
+.single {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--muted-foreground);
+}
+
+.truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

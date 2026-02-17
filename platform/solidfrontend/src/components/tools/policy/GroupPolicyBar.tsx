@@ -1,9 +1,9 @@
 import type { Accessor } from "solid-js";
 import { useBulkSaveCallPolicy, useBulkSaveResultPolicy } from "@/lib/policy.query";
 import type { CallPolicy, ResultPolicy } from "@/types";
-import { Select } from "../primitives/Select";
+import { Select } from "../../primitives/Select";
 import styles from "./GroupPolicyBar.module.css";
-import { CALL_POLICY_ACTION_OPTIONS, RESULT_POLICY_ACTION_OPTIONS_LONG } from "./tool.utils";
+import { CALL_POLICY_ACTION_OPTIONS, RESULT_POLICY_ACTION_OPTIONS_LONG } from "../tool.utils";
 
 type CallPolicyAction = CallPolicy["action"];
 type ResultPolicyAction = ResultPolicy["action"];

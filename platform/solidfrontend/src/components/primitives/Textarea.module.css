@@ -28,7 +28,7 @@
 }
 
 .mono {
-    font-family: var(--font-mono, monospace);
+    font-family: var(--monospace-font, monospace);
 }
 
 .no-resize {

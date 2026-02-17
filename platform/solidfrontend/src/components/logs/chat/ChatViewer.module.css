@@ -26,7 +26,7 @@
 .message-role {
     font-weight: 500;
     text-transform: capitalize;
-    font-size: var(--font-size-xsmall);
+    font-size: var(--small-font-size);
     color: color-mix(in srgb, var(--foreground) 60%, transparent);
 }
 
@@ -44,7 +44,7 @@
     border-radius: 12px;
     background: color-mix(in srgb, var(--foreground) 4%, transparent);
     border-bottom-left-radius: 4px;
-    font-size: var(--font-size-small);
+    font-size: var(--small-font-size);
     color: var(--muted-foreground);
     font-style: italic;
 }
@@ -56,7 +56,7 @@
 }
 
 .timestamp {
-    font-size: var(--font-size-xxsmall);
+    font-size: var(--xsmall-font-size);
     color: var(--muted-foreground);
     opacity: 0.7;
     margin-top: 0.125rem;
@@ -88,7 +88,7 @@
     align-items: center;
     justify-content: center;
     gap: 0.375rem;
-    font-size: var(--font-size-xsmall);
+    font-size: var(--small-font-size);
     color: var(--muted-foreground);
     background: color-mix(in srgb, var(--foreground) 4%, transparent);
     border: 1px solid var(--border);

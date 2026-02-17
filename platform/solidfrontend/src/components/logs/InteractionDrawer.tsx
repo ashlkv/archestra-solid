@@ -2,7 +2,7 @@ import { createSignal, type JSX, Show } from "solid-js";
 import { Code2, MessageCircle } from "@/components/icons";
 import { InteractionDetailContent, InteractionHeaderBar } from "@/components/logs/InteractionDetailContent";
 import { Drawer, DrawerContent } from "@/components/primitives/Drawer";
-import { ToggleGroup, ToggleItem } from "@/components/primitives/ToggleGroup";
+import { ToggleGroup, ToggleButton } from "@/components/primitives/ToggleGroup";
 
 export function InteractionDrawer(props: {
     interactionId: string | null;
@@ -26,22 +26,22 @@ export function InteractionDrawer(props: {
                     <InteractionHeaderBar interactionId={props.interactionId!} />
                 </div>
                 <ToggleGroup size="xsmall">
-                    <ToggleItem
+                    <ToggleButton
                         selected={view() === "chat"}
                         tooltip="Chat view"
                         label="Chat"
                         onClick={() => setView("chat")}
                     >
                         <MessageCircle style={{ width: "14px", height: "14px" }} />
-                    </ToggleItem>
-                    <ToggleItem
+                    </ToggleButton>
+                    <ToggleButton
                         selected={view() === "raw"}
                         tooltip="Raw data"
                         label="Raw"
                         onClick={() => setView("raw")}
                     >
                         <Code2 style={{ width: "14px", height: "14px" }} />
-                    </ToggleItem>
+                    </ToggleButton>
                 </ToggleGroup>
             </div>
         ) as JSX.Element;

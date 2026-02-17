@@ -1,16 +1,14 @@
 import type { ComponentProps, JSX, ParentProps } from "solid-js";
 import { Show, splitProps } from "solid-js";
-import { Button } from "./Button";
+import { Button, IconSize, TextButtonSize } from "./Button";
 import { Spinner } from "./Spinner";
 import styles from "./ToggleGroup.module.css";
-import { Tooltip } from "./Tooltip";
+import { clsx } from 'clsx';
 
-type ToggleSize = "inherit" | "small" | "xsmall";
-
-export function ToggleGroup(props: ParentProps<{ size?: ToggleSize }>): JSX.Element {
+export function ToggleGroup(props: ParentProps<{ size?: TextButtonSize }>): JSX.Element {
     const sizeClass = () => {
+        if (props.size === "medium") return styles.medium;
         if (props.size === "small") return styles.small;
-        if (props.size === "xsmall") return styles.xsmall;
         return "";
     };
 
@@ -23,28 +21,27 @@ type ToggleItemProps = {
     tooltip: string;
     label?: string;
     children: JSX.Element;
+    size: TextButtonSize & IconSize;
 } & Omit<ComponentProps<typeof Button>, "variant" | "size" | "class" | "children">;
 
-export function ToggleItem(props: ToggleItemProps): JSX.Element {
+export function ToggleButton(props: ToggleItemProps): JSX.Element {
     const [local, rest] = splitProps(props, ["selected", "loading", "tooltip", "label", "children"]);
     const hasLabel = () => !!local.label;
 
     return (
-        <Tooltip content={local.tooltip}>
-            <Button
-                variant="ghost"
-                size="icon"
-                class={hasLabel() ? styles.buttonWithLabel : styles.button}
-                data-selected={local.selected || undefined}
-                {...rest}
-            >
-                <Show when={local.loading} fallback={local.children}>
-                    <Spinner size={14} />
-                </Show>
-                <Show when={local.label}>
-                    <span>{local.label}</span>
-                </Show>
-            </Button>
-        </Tooltip>
+        <Button
+            variant="ghost"
+            class={clsx(styles.button, hasLabel() ? '' : styles.icon)}
+            tooltip={local.tooltip}
+            data-selected={local.selected || undefined}
+            {...rest}
+        >
+            <Show when={local.loading} fallback={local.children}>
+                <Spinner size={14} />
+            </Show>
+            <Show when={local.label}>
+                <span>{local.label}</span>
+            </Show>
+        </Button>
     );
 }

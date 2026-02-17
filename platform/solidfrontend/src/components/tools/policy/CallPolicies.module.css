@@ -1,0 +1,42 @@
+.policies {
+    box-sizing: border-box;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding: 1rem 1rem 1rem 3rem;
+    font-size: var(--small-font-size);
+    line-height: var(--small-line-height);
+    background: var(--inverted-background);
+    color: color-mix(in srgb, var(--background) 70%, transparent);
+}
+.icon {
+    position: absolute;
+    top: 1rem;
+    left: 0.7rem;
+    color: oklch(0.82 0.17 85);
+}
+.policies .default,
+.policies .custom {
+    position: relative;
+}
+.policies .default:after,
+.policies .custom:after {
+    content: "";
+    height: 1px;
+    background: color-mix(in srgb, var(--background) 20%, transparent);
+    position: absolute;
+    bottom: -1rem;
+    width: 100%;
+}
+.policies > *:last-child:after {
+    display: none;
+}
+.default {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+.add {
+    align-self: flex-start;
+}

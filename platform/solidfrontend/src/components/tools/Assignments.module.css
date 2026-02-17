@@ -3,7 +3,7 @@
     display: inline-flex;
     align-items: center;
     gap: 0.375rem;
-    font-size: var(--font-size-xsmall);
+    font-size: var(--small-font-size);
 }
 
 .content {
@@ -20,7 +20,7 @@
 
 .count {
     color: var(--muted-foreground);
-    font-size: var(--font-size-xsmall);
+    font-size: var(--small-font-size);
 }
 
 .muted {

@@ -1,0 +1,33 @@
+.row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--muted-background);
+    padding: 0.5rem 0.75rem;
+    margin: -0.5rem 0;
+}
+
+.key {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    flex: 1;
+}
+
+.single {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--muted-foreground);
+}
+
+.truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.invalidPath {
+    font-size: var(--small-font-size);
+    color: var(--destructive);
+}

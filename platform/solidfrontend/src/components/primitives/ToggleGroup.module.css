@@ -3,73 +3,52 @@
     display: inline-flex;
     gap: 1px;
     padding: 2px;
-    height: var(--input-height);
+    height: var(--relative-input-height);
     background: var(--muted-background);
     border-radius: var(--radius);
 }
 
-.container.small {
+.container.medium {
     height: 2rem;
     font-size: 0.875rem;
 }
 
-.container.xsmall {
+.container.small {
     height: 1.625rem;
     font-size: 0.75rem;
 }
 
 .button {
-    height: calc(var(--input-height) - 4px);
-    width: calc(var(--input-height) - 4px);
+    height: calc(var(--relative-input-height) - 4px);
+    width: auto;
     background: var(--muted-background);
     color: color-mix(in oklch, var(--foreground) 40%, transparent);
 }
 
-.buttonWithLabel {
-    height: calc(var(--input-height) - 4px);
-    width: auto;
-    padding: 0 0.5rem;
-    gap: 0.35rem;
-    background: var(--muted-background);
-    color: color-mix(in oklch, var(--foreground) 40%, transparent);
+.icon {
+    width: calc(var(--relative-input-height) - 4px);
 }
 
 .container.small .button {
-    height: calc(2rem - 4px);
-    width: calc(2rem - 4px);
+    height: calc(var(--small-input-height) - 4px);
 }
 
-.container.small .buttonWithLabel {
-    height: calc(2rem - 4px);
-    width: auto;
+.container.small .icon {
+    width: calc(var(--small-input-height) - 4px);
 }
 
-.container.xsmall .button {
-    height: calc(1.625rem - 4px);
-    width: calc(1.625rem - 4px);
-}
-
-.container.xsmall .buttonWithLabel {
-    height: calc(1.625rem - 4px);
-    width: auto;
-}
-
-.button:hover,
-.buttonWithLabel:hover {
+.button:hover {
     background: var(--background);
     color: var(--foreground);
 }
 
-.button[data-selected],
-.buttonWithLabel[data-selected] {
+.button[data-selected] {
     background: var(--background);
     color: var(--foreground);
-    border: 1px solid var(--border);
-    box-shadow: var(--shadow-xs);
+    box-shadow: var(--shadow-xs), 0 0 0px 1px var(--border);
 }
 
-.button[data-selected]:hover,
-.buttonWithLabel[data-selected]:hover {
+.button[data-selected]:hover {
     background: var(--background);
     opacity: 1;
 }

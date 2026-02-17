@@ -2,18 +2,18 @@ import { createEffect, createSignal, For, type JSX } from "solid-js";
 import { Ban, Check, Handshake } from "@/components/icons";
 import { useSaveCallPolicy } from "@/lib/policy.query";
 import type { CallPolicy } from "@/types";
-import { showError } from "../primitives/Toast";
-import { ToggleGroup, ToggleItem } from "../primitives/ToggleGroup";
-import { CALL_POLICY_ACTION_OPTIONS } from "./tool.utils";
+import { showError } from "../../primitives/Toast";
+import { ToggleGroup, ToggleButton } from "../../primitives/ToggleGroup";
+import { CALL_POLICY_ACTION_OPTIONS } from "../tool.utils";
 
 type PolicyAction = CallPolicy["action"];
 
 const MIN_LOADER_DURATION = 400;
 
 const ICONS: Record<PolicyAction, () => JSX.Element> = {
-    allow_when_context_is_untrusted: () => <Check size={14} />,
-    block_when_context_is_untrusted: () => <Handshake size={14} />,
-    block_always: () => <Ban size={14} />,
+    allow_when_context_is_untrusted: () => <Check size={13} />,
+    block_when_context_is_untrusted: () => <Handshake size={13} />,
+    block_always: () => <Ban size={13} />,
 };
 
 export function CallPolicyToggle(props: {
@@ -21,7 +21,7 @@ export function CallPolicyToggle(props: {
     policyId: string | undefined;
     value: PolicyAction | undefined;
     disabled?: boolean;
-    size?: "small" | "xsmall";
+    size?: "medium" | "small";
 }): JSX.Element {
     const [selected, setSelected] = createSignal(props.value);
     const [pendingAction, setPendingAction] = createSignal<PolicyAction | null>(null);
@@ -55,20 +55,22 @@ export function CallPolicyToggle(props: {
     };
 
     const isDisabled = () => props.disabled || submission.pending;
+    const buttonSize = () => props.size === 'small' ? 'icon-small' : 'icon';
 
     return (
         <ToggleGroup size={props.size}>
             <For each={CALL_POLICY_ACTION_OPTIONS}>
                 {(option) => (
-                    <ToggleItem
+                    <ToggleButton
                         tooltip={option.tooltip}
                         selected={selected() === option.value}
                         loading={pendingAction() === option.value}
                         disabled={isDisabled()}
                         onClick={onClick(option.value)}
+                        size={buttonSize()}
                     >
                         {ICONS[option.value]()}
-                    </ToggleItem>
+                    </ToggleButton>
                 )}
             </For>
         </ToggleGroup>

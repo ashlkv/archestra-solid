@@ -16,7 +16,7 @@
 
 .section-subtitle {
     color: var(--muted-foreground);
-    font-size: var(--font-size-xsmall);
+    font-size: var(--small-font-size);
     font-weight: bold;
 }
 
@@ -42,7 +42,7 @@
 
 .description {
     /* Markdown component handles base styles */
-    font-size: var(--font-size-xxsmall);
+    font-size: var(--xsmall-font-size);
 }
 
 .instructions {
@@ -112,7 +112,7 @@
 
 .service-account-hint {
     color: var(--muted-foreground);
-    font-size: var(--font-size-xxsmall);
+    font-size: var(--xsmall-font-size);
     line-height: 1.4;
 }
 
@@ -120,6 +120,6 @@
     background: var(--muted-background);
     padding: 0.125rem 0.25rem;
     border-radius: var(--radius-small, 3px);
-    font-family: var(--font-mono, monospace);
-    font-size: var(--font-size-xxsmall);
+    font-family: var(--monospace-font, monospace);
+    font-size: var(--xsmall-font-size);
 }

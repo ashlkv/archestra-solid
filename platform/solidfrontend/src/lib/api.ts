@@ -51,7 +51,7 @@ export function createQuery<Data, Filter = void>({
 
     return (params: Filter | (() => Filter)): QueryResult<Data> => {
         const resolveParams = typeof params === "function" ? (params as () => Filter) : () => params;
-        const result = createAsync(() => serverQuery(resolveParams()));
+        const result = createAsync(() => serverQuery(resolveParams()), { name: queryKey });
         return {
             /** To preserve reactivity, data is a signal (a function) */
             data: () => result()?.data,
