@@ -70,7 +70,7 @@ export function DateTimeRangePicker(props: {
                             <div>
                                 <label
                                     style={{
-                                        "font-size": "var(--font-size-small)",
+                                        "font-size": "var(--small-font-size)",
                                         "font-weight": "bold",
                                         display: "block",
                                         "margin-bottom": "0.25rem",
@@ -89,14 +89,14 @@ export function DateTimeRangePicker(props: {
                                         "border-radius": "var(--radius)",
                                         background: "var(--background)",
                                         color: "var(--foreground)",
-                                        "font-size": "var(--font-size-small)",
+                                        "font-size": "var(--small-font-size)",
                                     }}
                                 />
                             </div>
                             <div>
                                 <label
                                     style={{
-                                        "font-size": "var(--font-size-small)",
+                                        "font-size": "var(--small-font-size)",
                                         "font-weight": "bold",
                                         display: "block",
                                         "margin-bottom": "0.25rem",
@@ -115,7 +115,7 @@ export function DateTimeRangePicker(props: {
                                         "border-radius": "var(--radius)",
                                         background: "var(--background)",
                                         color: "var(--foreground)",
-                                        "font-size": "var(--font-size-small)",
+                                        "font-size": "var(--small-font-size)",
                                     }}
                                 />
                             </div>
@@ -124,7 +124,7 @@ export function DateTimeRangePicker(props: {
                             <div>
                                 <label
                                     style={{
-                                        "font-size": "var(--font-size-small)",
+                                        "font-size": "var(--small-font-size)",
                                         "font-weight": "bold",
                                         display: "block",
                                         "margin-bottom": "0.25rem",
@@ -143,14 +143,14 @@ export function DateTimeRangePicker(props: {
                                         "border-radius": "var(--radius)",
                                         background: "var(--background)",
                                         color: "var(--foreground)",
-                                        "font-size": "var(--font-size-small)",
+                                        "font-size": "var(--small-font-size)",
                                     }}
                                 />
                             </div>
                             <div>
                                 <label
                                     style={{
-                                        "font-size": "var(--font-size-small)",
+                                        "font-size": "var(--small-font-size)",
                                         "font-weight": "bold",
                                         display: "block",
                                         "margin-bottom": "0.25rem",
@@ -169,7 +169,7 @@ export function DateTimeRangePicker(props: {
                                         "border-radius": "var(--radius)",
                                         background: "var(--background)",
                                         color: "var(--foreground)",
-                                        "font-size": "var(--font-size-small)",
+                                        "font-size": "var(--small-font-size)",
                                     }}
                                 />
                             </div>

@@ -115,7 +115,7 @@ export function SessionExpandedRow(props: Props): JSX.Element {
                                     />
                                 </TableCell>
                                 <TableCell>
-                                    <span style={{ "font-size": "var(--font-size-small)" }}>
+                                    <span style={{ "font-size": "var(--small-font-size)" }}>
                                         {formatDate(interaction.createdAt)}
                                     </span>
                                 </TableCell>

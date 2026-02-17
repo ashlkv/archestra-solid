@@ -201,6 +201,7 @@ export function McpEnvironmentEditor(props: Props) {
                                 <Button
                                     variant="ghost"
                                     size="icon"
+                                    tooltip="Delete"
                                     onClick={() => removeAt(item.globalIndex)}
                                     disabled={props.disabled}
                                 >
@@ -289,6 +290,7 @@ export function McpEnvironmentEditor(props: Props) {
                                 <Button
                                     variant="ghost"
                                     size="icon"
+                                    tooltip="Delete"
                                     onClick={() => removeAt(item.globalIndex)}
                                     disabled={props.disabled}
                                 >

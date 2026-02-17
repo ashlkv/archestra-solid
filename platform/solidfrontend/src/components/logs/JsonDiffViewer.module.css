@@ -6,14 +6,14 @@
 }
 
 .label {
-    font-size: var(--font-size-xsmall);
+    font-size: var(--small-font-size);
     font-weight: 600;
     color: var(--muted-foreground);
     padding: 0.25rem 0;
 }
 
 .noDiff {
-    font-size: var(--font-size-small);
+    font-size: var(--small-font-size);
     color: var(--muted-foreground);
     padding: 1rem;
     text-align: center;
@@ -31,8 +31,8 @@
     height: auto;
     max-height: 600px;
     overflow: auto;
-    font-family: var(--font-mono);
-    font-size: var(--font-size-xsmall);
+    font-family: var(--monospace-font);
+    font-size: var(--small-font-size);
 }
 
 .mergeView :global(.cm-editor) {
@@ -43,7 +43,7 @@
     background: var(--muted-background);
     border-right: 1px solid var(--border);
     color: var(--muted-foreground);
-    font-size: var(--font-size-xxsmall);
+    font-size: var(--xsmall-font-size);
 }
 
 .mergeView :global(.cm-activeLineGutter),
@@ -102,7 +102,7 @@
     border-top: 1px solid var(--border);
     border-bottom: 1px solid var(--border);
     color: var(--muted-foreground);
-    font-size: var(--font-size-xsmall);
+    font-size: var(--small-font-size);
     padding: 0.25rem 0.5rem;
     cursor: pointer;
 }

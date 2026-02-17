@@ -1,5 +1,5 @@
 .root {
-    font-size: var(--font-size-xsmall);
+    font-size: var(--small-font-size);
     width: 100%;
     max-width: 100%;
     overflow: hidden;

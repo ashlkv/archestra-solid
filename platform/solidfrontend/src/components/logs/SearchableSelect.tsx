@@ -53,7 +53,7 @@ export function SearchableSelect(props: {
                                 style={{
                                     padding: "1rem",
                                     "text-align": "center",
-                                    "font-size": "var(--font-size-small)",
+                                    "font-size": "var(--small-font-size)",
                                     color: "var(--muted-foreground)",
                                 }}
                             >
@@ -73,7 +73,7 @@ export function SearchableSelect(props: {
                                         border: "none",
                                         background: props.value === item.value ? "var(--background)" : "transparent",
                                         color: "var(--foreground)",
-                                        "font-size": "var(--font-size-small)",
+                                        "font-size": "var(--small-font-size)",
                                         "border-radius": "var(--radius)",
                                         cursor: "pointer",
                                         "text-align": "left",

@@ -1,5 +1,5 @@
 .name {
-    font-family: var(--font-mono);
+    font-family: var(--monospace-font);
     display: block;
     max-width: 12rem;
     overflow: hidden;
