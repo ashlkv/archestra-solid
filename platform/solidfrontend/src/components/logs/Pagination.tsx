@@ -21,7 +21,7 @@ export function Pagination(props: {
                 padding: "0.75rem 0",
             }}
         >
-            <span style={{ "font-size": "var(--font-size-small)", color: "var(--muted-foreground)" }}>
+            <span style={{ "font-size": "var(--small-font-size)", color: "var(--muted-foreground)" }}>
                 {totalPages() <= 1
                     ? `Showing all ${props.total} results`
                     : `Showing ${from()} to ${to()} of ${props.total} results`}

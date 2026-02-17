@@ -6,20 +6,17 @@ import { AgentBadge } from "@/components/primitives/AgentBadge";
 import { Badge } from "@/components/primitives/Badge";
 import { Button } from "@/components/primitives/Button";
 import { Tab, TabContent, TabList, Tabs } from "@/components/primitives/Tabs";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/primitives/Collapsible";
 import { fetchUserTokenValue } from "@/lib/user-token.query";
 import { Drawer, DrawerContent } from "@/components/primitives/Drawer";
 import { Markdown } from "@/components/primitives/Markdown";
 import { Spinner } from "@/components/primitives/Spinner";
 import { TimestampBadge } from "@/components/primitives/TimestampBadge";
 import { useMcpServers } from "@/lib/mcp-registry.query";
-import { useToolCallPolicies, useResultPolicies, useSaveCallPolicy, useSaveResultPolicy } from "@/lib/policy.query";
-import { getCallPolicyActionFromPolicies, getResultPolicyActionFromPolicies } from "@/lib/policy.utils";
-import type { CallPolicy, McpServer, ResultPolicyAction, ToolWithAssignments } from "@/types";
+import type { McpServer, ResultPolicyAction, ToolWithAssignments } from "@/types";
 import { useTools } from "@/lib/tool.query";
-import { CallPolicyToggle } from "./CallPolicyToggle";
+import { CallPolicies } from "./policy/CallPolicies";
+import { ResultPolicies } from "./policy/ResultPolicies";
 import { OriginBadge } from "./OriginBadge";
-import { ResultPolicySelect } from "./ResultPolicySelect";
 import styles from "./ToolDrawer.module.css";
 
 export function ToolDrawer(props: {
@@ -31,17 +28,30 @@ export function ToolDrawer(props: {
 
     const tool = () => tools()?.find((t) => t.id === props.toolId);
 
-    const toolSignature = () => {
+    const toolSignatureElement = () => {
         const t = tool();
-        if (!t) return undefined;
+        if (!t) return <h1>Tool</h1> as JSX.Element;
         const params = t.parameters as
             | { properties?: Record<string, { type?: string }>; required?: string[] }
             | undefined;
         const entries = Object.entries(params?.properties ?? {});
         const name = shortName(t.name) ?? t.name;
-        if (entries.length === 0) return `${name}()`;
-        const args = entries.map(([n, s]) => `${n}: ${s?.type ?? "unknown"}`).join(", ");
-        return `${name}(${args})`;
+        return (
+            <h1>
+                {name}(
+                <For each={entries}>
+                    {([paramName, schema], index) => (
+                        <>
+                            {paramName}
+                            {": "}
+                            <span class={styles["signature-type"]}>{schema?.type ?? "unknown"}</span>
+                            {index() < entries.length - 1 ? ", " : ""}
+                        </>
+                    )}
+                </For>
+                )
+            </h1>
+        ) as JSX.Element;
     };
 
     const headerContent = () => {
@@ -49,11 +59,10 @@ export function ToolDrawer(props: {
         if (!t) return undefined;
         return <ToolDrawerHeaderMeta tool={t} /> as JSX.Element;
     };
-
     return (
         <Drawer open={props.open} onOpenChange={props.onOpenChange}>
             <DrawerContent
-                title={toolSignature() ?? "Tool"}
+                titleElement={toolSignatureElement()}
                 size="full"
                 headerContent={headerContent()}
                 noPadding
@@ -76,20 +85,6 @@ export function ToolDrawer(props: {
 }
 
 function ToolDrawerHeaderMeta(props: { tool: ToolWithAssignments }): JSX.Element {
-    const { data: callPolicies } = useToolCallPolicies();
-    const { data: resultPolicies } = useResultPolicies();
-    const [showCallForm, setShowCallForm] = createSignal(false);
-    const [showResultForm, setShowResultForm] = createSignal(false);
-
-    const defaultCallPolicy = () =>
-        (callPolicies() ?? []).find((policy) => policy.toolId === props.tool.id && policy.conditions.length === 0);
-
-    const defaultResultPolicy = () =>
-        (resultPolicies() ?? []).find((policy) => policy.toolId === props.tool.id && policy.conditions.length === 0);
-
-    const currentCallAction = () => getCallPolicyActionFromPolicies(props.tool.id, callPolicies());
-    const currentResultAction = () => getResultPolicyActionFromPolicies(props.tool.id, resultPolicies());
-
     return (
         <div class={styles.headerMeta}>
             <div class={styles.headerTimestamps}>
@@ -106,40 +101,6 @@ function ToolDrawerHeaderMeta(props: { tool: ToolWithAssignments }): JSX.Element
                     View in MCP gateway logs
                 </A>
             </div>
-            <div class={styles["header-policy-row"]}>
-                <span class={styles["header-policy-label"]}>Call policy</span>
-                <CallPolicyToggle
-                    toolId={props.tool.id}
-                    policyId={defaultCallPolicy()?.id}
-                    value={currentCallAction()}
-                    size="small"
-                />
-                <Show when={!showCallForm()}>
-                    <Button size="small" onClick={() => setShowCallForm(true)}>
-                        Add custom policy
-                    </Button>
-                </Show>
-                <Show when={showCallForm()}>
-                    {/*  TODO Use ToolCallPolicies here  */}
-                </Show>
-            </div>
-            <div class={styles["header-policy-row"]}>
-                <span class={styles["header-policy-label"]}>Result policy</span>
-                <ResultPolicySelect
-                    toolId={props.tool.id}
-                    policyId={defaultResultPolicy()?.id}
-                    value={currentResultAction()}
-                    size="small"
-                />
-                <Show when={!showResultForm()}>
-                    <Button size="small" onClick={() => setShowResultForm(true)}>
-                        Add custom policy
-                    </Button>
-                </Show>
-                <Show when={showResultForm()}>
-                {/*  TODO Use ToolResultPolicies here  */}
-                </Show>
-            </div>
         </div>
     );
 }
@@ -149,6 +110,7 @@ function ToolDrawerHeaderMeta(props: { tool: ToolWithAssignments }): JSX.Element
 function ToolDrawerBody(props: { tool: ToolWithAssignments }): JSX.Element {
     const [selectedAgentId, setSelectedAgentId] = createSignal<string | undefined>(
         props.tool.assignments?.[0]?.agent?.id ?? undefined,
+        { name: "selectedAgentId" },
     );
 
     const params = () => {
@@ -167,7 +129,13 @@ function ToolDrawerBody(props: { tool: ToolWithAssignments }): JSX.Element {
         `/logs/mcp-gateway?search=${encodeURIComponent(shortName(props.tool.name) ?? props.tool.name)}`;
 
     return (
-        <div class={styles.splitContainer}>
+<>
+    <div class={styles.policies}>
+
+        <CallPolicies tool={props.tool} />
+        <ResultPolicies tool={props.tool} />
+    </div>
+        <div class={styles.split}>
             {/* Left column – 50% */}
             <div class={styles.leftColumn}>
                 <div class={styles.leftContent}>
@@ -230,14 +198,15 @@ function ToolDrawerBody(props: { tool: ToolWithAssignments }): JSX.Element {
                 </div>
             </div>
         </div>
+</>
     );
 }
 
 function CurlExample(props: { tool: ToolWithAssignments; profileId: string | undefined }): JSX.Element {
     const profileId = () => props.profileId ?? "<profile-id>";
-    const [tokenExposed, setTokenExposed] = createSignal(false);
-    const [tokenValue, setTokenValue] = createSignal<string | undefined>(undefined);
-    const [loadingToken, setLoadingToken] = createSignal(false);
+    const [tokenExposed, setTokenExposed] = createSignal(false, { name: "tokenExposed" });
+    const [tokenValue, setTokenValue] = createSignal<string | undefined>(undefined, { name: "tokenValue" });
+    const [loadingToken, setLoadingToken] = createSignal(false, { name: "loadingToken" });
 
     const displayToken = () => tokenExposed() && tokenValue() ? tokenValue()! : "<token>";
 
@@ -484,15 +453,19 @@ function AgentTabs(props: {
 }
 
 function ResultPolicyHelp(): JSX.Element {
+    const [helpOpen, setHelpOpen] = createSignal(false, { name: "helpOpen" });
+
     return (
         <div class={styles.helpContent}>
             <p>
                 Tool results impact agent decisions and actions. Result policies let you mark tool results as "trusted"
                 or "untrusted" to prevent agents from acting on untrusted data.
             </p>
-            <Collapsible>
-                <CollapsibleTrigger>📖 Attribute path syntax cheat sheet</CollapsibleTrigger>
-                <CollapsibleContent>
+            <Button onClick={() => setHelpOpen(true)}>
+                Attribute path syntax help
+            </Button>
+            <Drawer open={helpOpen()} onOpenChange={setHelpOpen}>
+                <DrawerContent title="Attribute path syntax" size="large">
                     <div class={styles["help-body"]}>
                         <p class={styles["help-intro"]}>
                             Attribute paths use{" "}
@@ -545,8 +518,8 @@ function ResultPolicyHelp(): JSX.Element {
                             </p>
                         </div>
                     </div>
-                </CollapsibleContent>
-            </Collapsible>
+                </DrawerContent>
+            </Drawer>
         </div>
     );
 }

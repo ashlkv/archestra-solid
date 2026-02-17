@@ -240,7 +240,7 @@ function TextPart(props: { text: string; variant: "user" | "agent" | "system" })
                         <TriangleAlert style={{ width: "16px", height: "16px" }} />
                         Tool invocation denied by policy
                     </div>
-                    <div style={{ "font-size": "var(--font-size-small)", "margin-top": "0.5rem" }}>{props.text}</div>
+                    <div style={{ "font-size": "var(--small-font-size)", "margin-top": "0.5rem" }}>{props.text}</div>
                 </div>
             </Show>
             <Show when={!policyDenied()}>
@@ -343,25 +343,25 @@ function DualLlmPartView(props: { part: DualLlmPart }): JSX.Element {
                 }}
             >
                 <ShieldCheck style={{ width: "16px", height: "16px", color: "var(--info)" }} />
-                <span style={{ "font-weight": "bold", "font-size": "var(--font-size-small)" }}>Dual LLM analysis</span>
+                <span style={{ "font-weight": "bold", "font-size": "var(--small-font-size)" }}>Dual LLM analysis</span>
             </div>
             <div style={{ padding: "0.75rem" }}>
                 <div
                     style={{
-                        "font-size": "var(--font-size-xsmall)",
+                        "font-size": "var(--small-font-size)",
                         color: "var(--muted-foreground)",
                         "margin-bottom": "0.25rem",
                     }}
                 >
                     Safe result
                 </div>
-                <div style={{ "font-size": "var(--font-size-small)", "margin-bottom": "1rem" }}>
+                <div style={{ "font-size": "var(--small-font-size)", "margin-bottom": "1rem" }}>
                     <Markdown>{props.part.safeResult}</Markdown>
                 </div>
                 <Show when={props.part.conversations.length > 1}>
                     <div
                         style={{
-                            "font-size": "var(--font-size-xsmall)",
+                            "font-size": "var(--small-font-size)",
                             color: "var(--muted-foreground)",
                             "margin-bottom": "0.25rem",
                         }}
@@ -376,7 +376,7 @@ function DualLlmPartView(props: { part: DualLlmPart }): JSX.Element {
                                     background: conv.role === "user" ? "var(--background)" : "transparent",
                                     "border-radius": "var(--radius)",
                                     "margin-bottom": "0.25rem",
-                                    "font-size": "var(--font-size-small)",
+                                    "font-size": "var(--small-font-size)",
                                 }}
                             >
                                 <span style={{ "font-weight": "bold" }}>{conv.role === "user" ? "Q: " : "A: "}</span>
@@ -412,11 +412,11 @@ function BlockedToolPartView(props: { part: BlockedToolPart }): JSX.Element {
                 />
                 <div>
                     <div style={{ "font-weight": "bold", color: "var(--destructive)" }}>{props.part.reason}</div>
-                    <div style={{ "font-size": "var(--font-size-xsmall)", "margin-top": "0.5rem" }}>
+                    <div style={{ "font-size": "var(--small-font-size)", "margin-top": "0.5rem" }}>
                         <span style={{ "font-weight": "bold" }}>Tool: </span>
                         <code
                             style={{
-                                "font-family": "var(--font-mono)",
+                                "font-family": "var(--monospace-font)",
                                 background: "var(--muted-background)",
                                 padding: "0.125rem 0.375rem",
                                 "border-radius": "var(--radius)",
@@ -426,9 +426,9 @@ function BlockedToolPartView(props: { part: BlockedToolPart }): JSX.Element {
                         </code>
                     </div>
                     <Show when={props.part.toolArguments}>
-                        <div style={{ "font-size": "var(--font-size-xsmall)", "margin-top": "0.25rem" }}>
+                        <div style={{ "font-size": "var(--small-font-size)", "margin-top": "0.25rem" }}>
                             <span style={{ "font-weight": "bold" }}>Arguments: </span>
-                            <code style={{ "font-family": "var(--font-mono)", "word-break": "break-all" }}>
+                            <code style={{ "font-family": "var(--monospace-font)", "word-break": "break-all" }}>
                                 {props.part.toolArguments}
                             </code>
                         </div>

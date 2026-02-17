@@ -11,11 +11,11 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    font-size: var(--font-size-small);
+    font-size: var(--small-font-size);
 }
 
 .meta {
-    line-height: var(--line-height-small);
+    line-height: var(--small-line-height);
     color: var(--muted-foreground);
     margin: 0;
 }
@@ -24,7 +24,7 @@
     display: flex;
     align-items: center;
     gap: 0.375rem;
-    line-height: var(--line-height-small);
+    line-height: var(--small-line-height);
     color: var(--muted-foreground);
 }
 

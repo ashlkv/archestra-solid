@@ -55,7 +55,7 @@ export function McpToolCallDetailContent(props: { mcpToolCallId: string }): JSX.
                         <div>
                             <div
                                 style={{
-                                    "font-size": "var(--font-size-xsmall)",
+                                    "font-size": "var(--small-font-size)",
                                     color: "var(--muted-foreground)",
                                     "margin-bottom": "0.25rem",
                                 }}
@@ -67,7 +67,7 @@ export function McpToolCallDetailContent(props: { mcpToolCallId: string }): JSX.
                         <div>
                             <div
                                 style={{
-                                    "font-size": "var(--font-size-xsmall)",
+                                    "font-size": "var(--small-font-size)",
                                     color: "var(--muted-foreground)",
                                     "margin-bottom": "0.25rem",
                                 }}
@@ -79,7 +79,7 @@ export function McpToolCallDetailContent(props: { mcpToolCallId: string }): JSX.
                         <div>
                             <div
                                 style={{
-                                    "font-size": "var(--font-size-xsmall)",
+                                    "font-size": "var(--small-font-size)",
                                     color: "var(--muted-foreground)",
                                     "margin-bottom": "0.25rem",
                                 }}
@@ -96,7 +96,7 @@ export function McpToolCallDetailContent(props: { mcpToolCallId: string }): JSX.
                         <div>
                             <div
                                 style={{
-                                    "font-size": "var(--font-size-xsmall)",
+                                    "font-size": "var(--small-font-size)",
                                     color: "var(--muted-foreground)",
                                     "margin-bottom": "0.25rem",
                                 }}
@@ -112,7 +112,7 @@ export function McpToolCallDetailContent(props: { mcpToolCallId: string }): JSX.
                         <div>
                             <div
                                 style={{
-                                    "font-size": "var(--font-size-xsmall)",
+                                    "font-size": "var(--small-font-size)",
                                     color: "var(--muted-foreground)",
                                     "margin-bottom": "0.25rem",
                                 }}
@@ -124,14 +124,14 @@ export function McpToolCallDetailContent(props: { mcpToolCallId: string }): JSX.
                         <div>
                             <div
                                 style={{
-                                    "font-size": "var(--font-size-xsmall)",
+                                    "font-size": "var(--small-font-size)",
                                     color: "var(--muted-foreground)",
                                     "margin-bottom": "0.25rem",
                                 }}
                             >
                                 Timestamp
                             </div>
-                            <div style={{ "font-size": "var(--font-size-small)" }}>
+                            <div style={{ "font-size": "var(--small-font-size)" }}>
                                 {formatDate(toolCall()!.createdAt)}
                             </div>
                         </div>

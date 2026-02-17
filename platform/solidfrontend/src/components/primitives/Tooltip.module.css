@@ -1,7 +1,7 @@
 .content {
     padding: 0.25rem 0.5rem;
-    font-size: var(--font-size-xsmall);
-    line-height: var(--line-height-xsmall);
+    font-size: var(--small-font-size);
+    line-height: var(--xsmall-line-height);
     color: white;
     background: color-mix(in oklch, var(--foreground) 60%, var(--background));
     border-radius: var(--radius);

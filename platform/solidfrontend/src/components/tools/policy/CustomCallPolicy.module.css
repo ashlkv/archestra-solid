@@ -1,0 +1,33 @@
+.policy {
+    display: flex;
+    gap: 0.5rem;
+    flex-direction: column;
+}
+
+.policy.simple {
+    flex-direction: row;
+}
+.policy.simple .then {
+    width: auto;
+    text-align: start;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.if {
+    width: 2rem;
+    font-family: var(--monospace-font);
+}
+
+.then {
+    display: flex;
+    width: 4rem;
+    justify-content: flex-end;
+    align-items: center;
+    font-family: var(--monospace-font);
+}

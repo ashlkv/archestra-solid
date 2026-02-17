@@ -23,6 +23,7 @@ export function DrawerTrigger(props: ParentProps): JSX.Element {
 export function DrawerContent(
     props: ParentProps<{
         title?: string;
+        titleElement?: JSX.Element;
         description?: string;
         size?: "small" | "medium" | "large" | "xlarge" | "full";
         headerContent?: JSX.Element;
@@ -48,12 +49,17 @@ export function DrawerContent(
                     <div class={styles.header}>
                         <div class={styles.headerRow}>
                             <KobalteDialog.Title class={`${styles.title} ${props.titleClass ?? ""}`}>
-                                <Show when={props.title}>
+                                <Show when={props.titleElement}>
+                                    <div class={styles["title-element"]}>
+                                        {props.titleElement}
+                                    </div>
+                                </Show>
+                                <Show when={!props.titleElement && props.title}>
                                     <PageHeader title={props.title!} description={props.description} />
                                 </Show>
                             </KobalteDialog.Title>
                             <KobalteDialog.CloseButton class={styles.close}>
-                                <X size={16} />
+                                <X size={20} />
                             </KobalteDialog.CloseButton>
                         </div>
                         <Show when={props.headerContent}>{props.headerContent}</Show>

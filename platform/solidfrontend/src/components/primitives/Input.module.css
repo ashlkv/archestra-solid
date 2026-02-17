@@ -1,9 +1,8 @@
 .input {
     box-sizing: border-box;
     display: flex;
-    width: 100%;
-    height: var(--input-height);
-    padding: 0.5rem 0.75rem;
+    height: var(--relative-input-height);
+    padding: 0.5em 0.75em;
     background: var(--background);
     color: var(--foreground);
     border: 1px solid var(--border);
@@ -31,6 +30,13 @@
     -moz-appearance: textfield;
 }
 
+.small {
+    height: var(--small-input-height);
+    padding: 0.25rem 0.5rem;
+    font-size: var(--small-font-size);
+    line-height: var(--small-line-height);
+}
+
 .mono {
-    font-family: var(--font-mono, monospace);
+    font-family: var(--monospace-font, monospace);
 }

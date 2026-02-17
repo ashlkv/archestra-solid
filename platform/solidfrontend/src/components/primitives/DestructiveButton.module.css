@@ -1,0 +1,9 @@
+.destructive-button {
+    color: var(--muted-foreground);
+}
+
+.destructive-button.destructive-button:hover {
+    background: color-mix(in srgb, var(--destructive) 15%, transparent);
+    color: var(--destructive);
+    opacity: 1;
+}

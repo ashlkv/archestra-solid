@@ -1,7 +1,7 @@
 .card {
     display: grid;
     grid-template-columns: 1fr auto;
-    border-radius: var(--radius-medium);
+    border-radius: var(--medium-radius);
     cursor: pointer;
     text-align: left;
     background: var(--foreground);
@@ -100,7 +100,7 @@
 }
 
 .system-label {
-    font-size: var(--font-size-xsmall);
+    font-size: var(--small-font-size);
     font-weight: bold;
     text-transform: uppercase;
     letter-spacing: 0.05em;

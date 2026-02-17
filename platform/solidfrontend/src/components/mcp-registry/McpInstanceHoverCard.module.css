@@ -1,6 +1,6 @@
 .content {
     min-width: 16rem;
-    font-size: var(--font-size-xsmall);
+    font-size: var(--small-font-size);
 }
 
 .instances {

@@ -1,9 +1,9 @@
 body {
     background-color: var(--background);
     color: var(--foreground);
-    font-family: var(--font-sans);
+    font-family: var(--sans-serif-font);
     letter-spacing: var(--letter-spacing);
-    font-size: var(--font-size-small);
+    font-size: var(--font-size);
     line-height: var(--line-height);
     font-weight: var(--font-weight);
     margin: 0;
@@ -14,6 +14,7 @@ body {
     --foreground: oklch(0.145 0 0);
     --muted-background: oklch(0.97 0 0);
     --muted-foreground: oklch(0.556 0 0);
+    --inverted-background: #1a1d23; /* dark cool gray for dark backgrounds looks better than plain black */
     --primary: oklch(0.145 0 0);
     --secondary: oklch(0.54 0.18 288.03);
 
@@ -47,57 +48,45 @@ body {
     --ring: oklch(0.708 0 0);
 
     /* Typography */
-    --font-sans: Manrope, sans-serif;
-    --font-heading: "Nunito", serif;
-    --font-serif: "Source Serif 4", serif;
-    --font-mono: monospace;
+    --sans-serif-font: Manrope, sans-serif;
+    --serif-font: "Source Serif 4", serif;
+    --monospace-font: monospace;
     --letter-spacing: 0em;
-    --tracking-normal: 0em;
     --font-weight: 400;
 
     /* Font sizes */
-    --font-size-xxsmall: 0.667rem;
-    --font-size-xsmall: 0.75rem;
-    --font-size-small: 0.875rem;
-    --font-size-medium: 1rem;
-    --font-size-large: 1.125rem;
-    --font-size-xlarge: 1.25rem;
-    --font-size-xxlarge: 1.5rem;
-    --font-size-xxxlarge: 1.875rem;
+    --xsmall-font-size: 0.667rem;
+    --small-font-size: 0.75rem;
+    --medium-font-size: 0.875rem;
+    --large-font-size: 1rem;
 
-    --font-size: var(--font-size-small);
+    --font-size: var(--medium-font-size);
 
     /* Line heights */
-    --line-height-xxsmall: 1rem;
-    --line-height-xsmall: 1.1rem;
-    --line-height-small: 1.25rem;
-    --line-height-medium: 1.5rem;
-    --line-height-large: 1.75rem;
-    --line-height-xlarge: 1.75rem;
-    --line-height-xxlarge: 2rem;
-    --line-height-xxxlarge: 2.25rem;
+    --xsmall-line-height: 1rem;
+    --small-line-height: 1.25rem;
+    --medium-line-height: 1.35rem;
+    --large-line-height: 1.5rem;
 
-    --line-height: var(--line-height-small);
+    --line-height: var(--medium-line-height-ratio);
 
     /* Line height ratios (line-height / font-size) */
-    --line-height-ratio-xsmall: calc(var(--line-height-xsmall) / var(--font-size-xsmall));
-    --line-height-ratio-small: calc(var(--line-height-small) / var(--font-size-small));
-    --line-height-ratio-medium: calc(var(--line-height-medium) / var(--font-size-medium));
-    --line-height-ratio-large: calc(var(--line-height-large) / var(--font-size-large));
-    --line-height-ratio-xlarge: calc(var(--line-height-xlarge) / var(--font-size-xlarge));
-    --line-height-ratio-xxlarge: calc(var(--line-height-xxlarge) / var(--font-size-xxlarge));
-    --line-height-ratio-xxxlarge: calc(var(--line-height-xxxlarge) / var(--font-size-xxxlarge));
+    --xsmall-line-height-ratio: calc(var(--xsmall-line-height) / var(--small-font-size));
+    --small-line-height-ratio: calc(var(--small-line-height) / var(--small-font-size));
+    --medium-line-height-ratio: calc(var(--medium-line-height) / var(--medium-font-size));
+    --large-line-height-ratio: calc(var(--large-line-height) / var(--large-font-size));
 
     /* Spacing & Radius */
     --spacing: 0.25rem;
     --radius: 0.375rem;
+    --large-input-height: 3rem;
     --input-height: 2rem;
-    --input-height-xsmall: 1.5rem;
-    --input-height-xxsmall: 1.25rem;
+    --small-input-height: 1.75rem;
+    --relative-input-height: 2.35em;
     --cell-height: 2.5rem;
 
-    --radius-medium: 0.6rem;
-    --radius-large: 1rem;
+    --medium-radius: 0.6rem;
+    --large-radius: 1rem;
 
     /* Shadows */
     --shadow-2xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);

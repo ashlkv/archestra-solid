@@ -8,6 +8,7 @@ type Props = {
     placeholder?: string;
     disabled?: boolean;
     mono?: boolean;
+    size?: "inherit" | "medium" | "small";
     id?: string;
     min?: number;
     max?: number;
@@ -25,6 +26,7 @@ export function Input(props: Props): JSX.Element {
         "placeholder",
         "disabled",
         "mono",
+        "size",
         "id",
         "min",
         "max",
@@ -32,6 +34,7 @@ export function Input(props: Props): JSX.Element {
         "class",
     ]);
     const monoClass = () => (local.mono ? styles.mono : "");
+    const sizeClass = () => (local.size === "small" ? styles.small : "");
 
     return (
         <input
@@ -43,7 +46,7 @@ export function Input(props: Props): JSX.Element {
             min={local.min}
             max={local.max}
             onInput={(event) => local.onInput?.(event.currentTarget.value)}
-            class={`${styles.input} ${monoClass()} ${local.class ?? ""}`}
+            class={`${styles.input} ${sizeClass()} ${monoClass()} ${local.class ?? ""}`}
             {...rest}
         />
     );

@@ -1,9 +1,9 @@
 import { createEffect, createSignal, type JSX } from "solid-js";
 import { useSaveResultPolicy } from "@/lib/policy.query";
 import type { ResultPolicyAction } from "@/types";
-import { Select } from "../primitives/Select";
-import { showError } from "../primitives/Toast";
-import { RESULT_POLICY_ACTION_OPTIONS } from "./tool.utils";
+import { Select } from "../../primitives/Select";
+import { showError } from "../../primitives/Toast";
+import { RESULT_POLICY_ACTION_OPTIONS } from "../tool.utils";
 
 const MIN_LOADER_DURATION = 400;
 

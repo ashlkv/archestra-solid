@@ -25,7 +25,7 @@ export default defineConfig({
     vite: {
         plugins: [
             // Enables Solid DevTools browser extension with proper signal/memo names
-            devtools({ autoname: true }),
+            devtools({ autoname: true, locator: { targetIDE: "webstorm", componentLocation: true, jsxLocation: true } }),
         ],
         resolve: {
             alias: {

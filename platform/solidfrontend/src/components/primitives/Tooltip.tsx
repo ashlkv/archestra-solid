@@ -8,7 +8,7 @@ interface TooltipProps extends ParentProps {
 
 export function Tooltip(props: TooltipProps): JSX.Element {
     return (
-        <KobalteTooltip openDelay={400} closeDelay={0}>
+        <KobalteTooltip openDelay={400} closeDelay={0} placement="top" gutter={4}>
             <KobalteTooltip.Trigger as="span">{props.children}</KobalteTooltip.Trigger>
             <KobalteTooltip.Portal>
                 <KobalteTooltip.Content class={styles.content}>{props.content}</KobalteTooltip.Content>

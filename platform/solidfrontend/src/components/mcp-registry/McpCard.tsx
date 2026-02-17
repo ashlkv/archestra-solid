@@ -134,9 +134,9 @@ export function McpCard(props: Props) {
                                     <Button
                                         variant="ghost"
                                         size="icon"
+                                        tooltip="Logs"
                                         onClick={() => props.onLogs?.()}
                                         class={styles["quick-action"]}
-                                        title="Logs"
                                     >
                                         <FileText size={14} />
                                     </Button>

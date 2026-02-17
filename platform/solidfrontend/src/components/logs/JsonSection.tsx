@@ -3,7 +3,6 @@ import { ChevronDown, ChevronRight, GitCompareArrows } from "@/components/icons"
 import { Button } from "@/components/primitives/Button";
 import { CopyButton } from "@/components/primitives/CopyButton";
 import { HelpTrigger } from "@/components/primitives/HelpTrigger";
-import { Tooltip } from "@/components/primitives/Tooltip";
 import { JsonDiffViewer } from "./JsonDiffViewer";
 import { JsonHighlight } from "./JsonHighlight";
 
@@ -60,7 +59,7 @@ export function JsonSection(props: {
                             background: "transparent",
                             color: "var(--foreground)",
                             "font-weight": "bold",
-                            "font-size": "var(--font-size-small)",
+                            "font-size": "var(--small-font-size)",
                             cursor: "pointer",
                             "text-align": "left",
                             padding: "0",
@@ -87,7 +86,7 @@ export function JsonSection(props: {
                             flex: "1",
                             "min-width": "0",
                             "font-weight": "bold",
-                            "font-size": "var(--font-size-small)",
+                            "font-size": "var(--small-font-size)",
                             color: "var(--foreground)",
                         }}
                     >
@@ -99,18 +98,17 @@ export function JsonSection(props: {
                 </Show>
                 <div style={{ display: "flex", "align-items": "center", gap: "0.25rem", "flex-shrink": "0" }}>
                     <Show when={props.diffOriginal !== undefined}>
-                        <Tooltip content={showDiff() ? "Hide diff" : "Show diff against original"}>
-                            <Button
-                                variant="ghost"
-                                size="icon"
-                                onClick={() => setShowDiff(!showDiff())}
-                                style={{
-                                    color: showDiff() ? "var(--secondary)" : undefined,
-                                }}
-                            >
-                                <GitCompareArrows size={14} />
-                            </Button>
-                        </Tooltip>
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            tooltip={showDiff() ? "Hide diff" : "Show diff against original"}
+                            onClick={() => setShowDiff(!showDiff())}
+                            style={{
+                                color: showDiff() ? "var(--secondary)" : undefined,
+                            }}
+                        >
+                            <GitCompareArrows size={14} />
+                        </Button>
                     </Show>
                     <CopyButton text={jsonString()} />
                 </div>

@@ -4,7 +4,7 @@
     height: 1.375rem;
     line-height: 1.375rem;
     box-sizing: border-box;
-    font-size: var(--font-size-xsmall);
+    font-size: var(--small-font-size);
     border-radius: 1rem;
     overflow: hidden;
     white-space: nowrap;

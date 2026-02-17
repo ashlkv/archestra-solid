@@ -15,7 +15,7 @@
 
 .warning {
     color: var(--muted-foreground);
-    font-size: var(--font-size-xsmall);
+    font-size: var(--small-font-size);
 }
 
 .warning strong {

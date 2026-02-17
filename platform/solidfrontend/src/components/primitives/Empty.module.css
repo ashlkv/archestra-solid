@@ -26,7 +26,7 @@
 
 .description {
     color: var(--muted-foreground);
-    font-size: var(--font-size-medium);
+    font-size: var(--medium-font-size);
     max-width: 24rem;
 }
 

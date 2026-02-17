@@ -28,9 +28,9 @@
     justify-content: center;
     white-space: nowrap;
     font-family: inherit;
-    font-size: var(--font-size-small);
+    font-size: var(--small-font-size);
     font-weight: 500;
-    line-height: var(--line-height-small);
+    line-height: var(--small-line-height);
     border-radius: var(--radius);
     border: 1px solid transparent;
     background: transparent;
@@ -40,8 +40,8 @@
         background-color 0.15s ease,
         color 0.15s ease,
         border-color 0.15s ease;
-    height: var(--input-height-xsmall);
-    min-width: var(--input-height-xsmall);
+    height: var(--small-input-height);
+    min-width: var(--small-input-height);
     padding: 0 0.375rem;
 }
 
@@ -90,8 +90,8 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    height: var(--input-height-xsmall);
-    min-width: var(--input-height-xsmall);
+    height: var(--small-input-height);
+    min-width: var(--small-input-height);
     cursor: default;
     color: var(--muted-foreground);
 }

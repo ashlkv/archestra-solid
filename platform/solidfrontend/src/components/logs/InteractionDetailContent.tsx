@@ -109,7 +109,7 @@ export function InteractionDetailContent(props: { interactionId: string; view: "
     );
 }
 
-const helpTextStyle = { "font-size": "var(--font-size-xsmall)", "line-height": "var(--line-height-small)" };
+const helpTextStyle = { "font-size": "var(--small-font-size)", "line-height": "var(--small-line-height)" };
 
 const HELP_ORIGINAL_REQUEST = (
     <p style={helpTextStyle}>

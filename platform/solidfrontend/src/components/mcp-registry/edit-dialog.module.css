@@ -20,7 +20,7 @@
 
 .hint {
     color: var(--muted-foreground);
-    font-size: var(--font-size-xxsmall);
+    font-size: var(--xsmall-font-size);
     line-height: 1.4;
 }
 
@@ -28,7 +28,7 @@
     background: var(--muted-background);
     padding: 0.75rem 1rem;
     border-radius: var(--radius);
-    font-size: var(--font-size-xsmall);
+    font-size: var(--small-font-size);
     color: var(--muted-foreground);
 }
 

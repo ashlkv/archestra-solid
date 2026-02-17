@@ -85,7 +85,7 @@ Whenever you are asked to port UI, port it from `../frontend`. It also has Tanst
   ```
 
 **SSR**:
-- Keep it simple - don't add SSR tricks like `onMount` guards, `clientOnly`, or `isServer` checks for basic pages
+- Do not use `clientOnly` - render everything on the server
 - If there's a hydration issue, fix the root cause instead of adding workarounds
 - Route components should just render their content directly
 

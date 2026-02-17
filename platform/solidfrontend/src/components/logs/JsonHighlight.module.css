@@ -5,8 +5,8 @@
 .jsonHighlight :global(.cm-editor) {
     background: var(--muted-background);
     max-height: 400px;
-    font-family: var(--font-mono);
-    font-size: var(--font-size-xsmall);
+    font-family: var(--monospace-font);
+    font-size: var(--small-font-size);
 }
 
 .jsonHighlight :global(.cm-scroller) {
@@ -17,7 +17,7 @@
     background: var(--muted-background);
     border-right: 1px solid var(--border);
     color: var(--muted-foreground);
-    font-size: var(--font-size-xxsmall);
+    font-size: var(--xsmall-font-size);
 }
 
 .jsonHighlight :global(.cm-activeLineGutter),

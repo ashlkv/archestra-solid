@@ -23,7 +23,7 @@
 
 .empty {
     color: var(--muted-foreground);
-    font-size: var(--font-size-xsmall);
+    font-size: var(--small-font-size);
     margin: 0;
 }
 
@@ -33,7 +33,7 @@
     grid-template-columns: 1.5fr 1fr 0.6fr 0.6fr 1.5fr 1.5fr auto;
     gap: 0.5rem;
     align-items: center;
-    font-size: var(--font-size-xsmall);
+    font-size: var(--small-font-size);
     font-weight: bold;
     color: var(--muted-foreground);
 }
@@ -51,7 +51,7 @@
     grid-template-columns: 1.5fr 0.6fr 0.6fr 2fr 1.5fr auto;
     gap: 0.5rem;
     align-items: center;
-    font-size: var(--font-size-xsmall);
+    font-size: var(--small-font-size);
     font-weight: bold;
     color: var(--muted-foreground);
 }
@@ -78,6 +78,6 @@
 
 .prompted-text {
     color: var(--muted-foreground);
-    font-size: var(--font-size-xsmall);
+    font-size: var(--small-font-size);
     font-style: italic;
 }
