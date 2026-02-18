@@ -2,6 +2,7 @@
  * API utilities for SolidStart.
  */
 import { action, createAsync, json, query, revalidate, useAction, useSubmission } from "@solidjs/router";
+import { createMemo } from "solid-js";
 import { getRequestEvent } from "solid-js/web";
 
 export type QueryResult<DataType> =
@@ -52,25 +53,23 @@ export function createQuery<Data, Filter = void>({
     return (params: Filter | (() => Filter)): QueryResult<Data> => {
         const resolveParams = typeof params === "function" ? (params as () => Filter) : () => params;
         const result = createAsync(() => serverQuery(resolveParams()), { name: queryKey });
+        // createMemo makes query state visible in Solid Inspector (appears under Memos).
+        // Unlike createSignal+createEffect, memos are pull-based — they don't push reactive
+        // updates, so they can't cause the inspector thrashing that the signal approach did.
+        const data = createMemo(() => result()?.data as Data | undefined, undefined, { name: queryKey });
+        const pending = createMemo(() => result() === undefined, true, { name: `${queryKey}:pending` });
+        const error = createMemo(() => {
+            const message = result()?.error;
+            return message ? new Error(message) : undefined;
+        }, undefined, { name: `${queryKey}:error` });
         return {
-            /** To preserve reactivity, data is a signal (a function) */
-            data: () => result()?.data,
-            /**
-             * Unlike flat object returned by tanstack query {mutation, isPending, isError},
-             * we have to return query flags in their own separate object to preserve the getters and the reactivity.
-             */
+            data,
             query: {
-                /**
-                 * Normally to preserve reactivity everything returned from query functions is a signal (a function)
-                 * but query properties for convenience use getters so that it's possible to query.pending like in docs
-                 * https://docs.solidjs.com/solid-start/guides/data-mutation
-                 */
                 get error() {
-                    const message = result()?.error;
-                    return message ? new Error(message) : undefined;
+                    return error();
                 },
                 get pending() {
-                    return result() === undefined;
+                    return pending();
                 },
             },
             refetch: () => revalidate(queryKey),
