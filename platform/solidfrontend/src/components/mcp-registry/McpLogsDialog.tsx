@@ -22,7 +22,7 @@ type Props = {
 };
 
 function useStreamingAnimation(isActive: () => boolean): () => string {
-    const [dotCount, setDotCount] = createSignal(0);
+    const [dotCount, setDotCount] = createSignal(0, { name: "dotCount" });
 
     createEffect(() => {
         if (!isActive()) {
@@ -45,12 +45,12 @@ function useStreamingAnimation(isActive: () => boolean): () => string {
 }
 
 export function McpLogsDialog(props: Props): JSX.Element {
-    const [streamedLogs, setStreamedLogs] = createSignal("");
-    const [streamError, setStreamError] = createSignal<string | undefined>(undefined);
-    const [command, setCommand] = createSignal("");
-    const [autoScroll, setAutoScroll] = createSignal(true);
-    const [isStreaming, setIsStreaming] = createSignal(false);
-    const [serverId, setServerId] = createSignal<string | undefined>(undefined);
+    const [streamedLogs, setStreamedLogs] = createSignal("", { name: "streamedLogs" });
+    const [streamError, setStreamError] = createSignal<string | undefined>(undefined, { name: "streamError" });
+    const [command, setCommand] = createSignal("", { name: "command" });
+    const [autoScroll, setAutoScroll] = createSignal(true, { name: "autoScroll" });
+    const [isStreaming, setIsStreaming] = createSignal(false, { name: "isStreaming" });
+    const [serverId, setServerId] = createSignal<string | undefined>(undefined, { name: "serverId" });
 
     // Set initial serverId when installs become available
     createEffect(() => {

@@ -9,7 +9,7 @@ export function InteractionDrawer(props: {
     open: boolean;
     onOpenChange: (open: boolean) => void;
 }): JSX.Element {
-    const [view, setView] = createSignal<"chat" | "raw">("chat");
+    const [view, setView] = createSignal<"chat" | "raw">("chat", { name: "view" });
 
     const headerContent = () => {
         if (!props.interactionId) return undefined;

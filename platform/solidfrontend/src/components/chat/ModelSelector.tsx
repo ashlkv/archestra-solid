@@ -49,10 +49,10 @@ export function ModelSelector(props: {
 }): JSX.Element {
     const { data: models, query } = useChatModels(undefined as undefined);
     const { submission: syncSubmission, submit: syncModels } = useSyncChatModels();
-    const [open, setOpen] = createSignal(false);
-    const [searchQuery, setSearchQuery] = createSignal("");
-    const [modalityFilters, setModalityFilters] = createSignal<Set<FilterableModality>>(new Set<FilterableModality>());
-    const [toolCallingFilter, setToolCallingFilter] = createSignal(false);
+    const [open, setOpen] = createSignal(false, { name: "open" });
+    const [searchQuery, setSearchQuery] = createSignal("", { name: "searchQuery" });
+    const [modalityFilters, setModalityFilters] = createSignal<Set<FilterableModality>>(new Set<FilterableModality>(), { name: "modalityFilters" });
+    const [toolCallingFilter, setToolCallingFilter] = createSignal(false, { name: "toolCallingFilter" });
 
     const onOpenChange = (isOpen: boolean) => {
         setOpen(isOpen);
@@ -341,7 +341,7 @@ function FilterToggle(props: {
 }
 
 function CopyModelIdButton(props: { modelId: string }): JSX.Element {
-    const [copied, setCopied] = createSignal(false);
+    const [copied, setCopied] = createSignal(false, { name: "copied" });
 
     const onClick = async (event: MouseEvent) => {
         event.stopPropagation();

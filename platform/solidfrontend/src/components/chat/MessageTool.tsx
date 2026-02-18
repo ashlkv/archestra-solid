@@ -21,7 +21,7 @@ export type AnyToolPart = {
 };
 
 export function MessageTool(props: { part: AnyToolPart }): JSX.Element {
-    const [open, setOpen] = createSignal(false);
+    const [open, setOpen] = createSignal(false, { name: "open" });
 
     const fullToolName = () => {
         // DynamicToolUIPart has .toolName; ToolUIPart encodes it in type as "tool-<name>"

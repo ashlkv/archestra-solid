@@ -155,7 +155,7 @@ function ToolOutputSection(props: {
     toolId?: string;
     resultPolicy?: { id: string; action: string };
 }): JSX.Element {
-    const [isExpanded, setIsExpanded] = createSignal(false);
+    const [isExpanded, setIsExpanded] = createSignal(false, { name: "isExpanded" });
     const MAX_LINES = 50;
 
     const parsedOutput = (): unknown => {

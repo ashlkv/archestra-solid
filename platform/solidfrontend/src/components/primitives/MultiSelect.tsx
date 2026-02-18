@@ -18,7 +18,7 @@ export function MultiSelect(props: {
     tagsLayout?: "horizontal" | "vertical";
     renderTag?: (option: Option, onDelete: () => void) => JSX.Element;
 }): JSX.Element {
-    const [inputValue, setInputValue] = createSignal("");
+    const [inputValue, setInputValue] = createSignal("", { name: "inputValue" });
 
     const selectedOptions = () => props.options.filter((o) => props.value.includes(o.value));
 

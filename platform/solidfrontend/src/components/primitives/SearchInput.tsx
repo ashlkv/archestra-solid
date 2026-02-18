@@ -12,7 +12,7 @@ type SearchInputProps = {
 };
 
 export function SearchInput(props: SearchInputProps): JSX.Element {
-    const [localValue, setLocalValue] = createSignal(props.value);
+    const [localValue, setLocalValue] = createSignal(props.value, { name: "localValue" });
     let timeoutId: ReturnType<typeof setTimeout> | undefined;
 
     const onInput = (value: string) => {

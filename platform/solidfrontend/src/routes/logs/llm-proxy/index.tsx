@@ -81,6 +81,7 @@ export function LlmProxyLogsPage(props: { initialExpandedSessionId?: string; ini
 
     const [expandedSessions, setExpandedSessions] = createSignal<Set<string>>(
         props.initialExpandedSessionId ? new Set([props.initialExpandedSessionId]) : new Set(),
+        { name: "expandedSessions" },
     );
 
     const toggleSession = (sessionId: string) => {

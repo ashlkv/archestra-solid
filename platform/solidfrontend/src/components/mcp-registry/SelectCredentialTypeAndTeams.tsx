@@ -16,7 +16,7 @@ type Props = {
 export function SelectCredentialTypeAndTeams(props: Props) {
     const { data: teams, query: teamsQuery } = useTeams();
     const { data: mcpServers } = useMcpServers();
-    const [credentialType, setCredentialType] = createSignal<"personal" | "team">("personal");
+    const [credentialType, setCredentialType] = createSignal<"personal" | "team">("personal", { name: "credentialType" });
 
     const installedServers = () => {
         if (!props.catalogId) return [];

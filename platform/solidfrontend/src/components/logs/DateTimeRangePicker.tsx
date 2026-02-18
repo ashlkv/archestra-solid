@@ -9,11 +9,11 @@ export function DateTimeRangePicker(props: {
     onApply: (startDate: string, endDate: string) => void;
     onClear: () => void;
 }): JSX.Element {
-    const [isOpen, setIsOpen] = createSignal(false);
-    const [fromDate, setFromDate] = createSignal("");
-    const [fromTime, setFromTime] = createSignal("00:00");
-    const [toDate, setToDate] = createSignal("");
-    const [toTime, setToTime] = createSignal("23:59");
+    const [isOpen, setIsOpen] = createSignal(false, { name: "isOpen" });
+    const [fromDate, setFromDate] = createSignal("", { name: "fromDate" });
+    const [fromTime, setFromTime] = createSignal("00:00", { name: "fromTime" });
+    const [toDate, setToDate] = createSignal("", { name: "toDate" });
+    const [toTime, setToTime] = createSignal("23:59", { name: "toTime" });
 
     const displayText = () => {
         if (!props.startDate || !props.endDate) return undefined;

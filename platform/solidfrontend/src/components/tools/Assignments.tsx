@@ -20,7 +20,7 @@ export function Assignments(props: {
     compact?: boolean;
     priorityAgentId?: string;
 }): JSX.Element {
-    const [open, setOpen] = createSignal(false);
+    const [open, setOpen] = createSignal(false, { name: "open" });
 
     const sortedAssignments = () => {
         if (!props.priorityAgentId) return props.assignments;

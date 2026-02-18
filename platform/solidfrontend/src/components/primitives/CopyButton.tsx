@@ -11,7 +11,7 @@ type Props = {
 };
 
 export function CopyButton(props: Props): JSX.Element {
-    const [copied, setCopied] = createSignal(false);
+    const [copied, setCopied] = createSignal(false, { name: "copied" });
 
     const handleCopy = async () => {
         try {

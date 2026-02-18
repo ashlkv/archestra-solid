@@ -15,7 +15,7 @@ export function AssignmentsPopover(props: {
     agents: Accessor<Agent[] | undefined>;
     onClose?: () => void;
 }): JSX.Element {
-    const [localIds, setLocalIds] = createSignal(props.selectedIds);
+    const [localIds, setLocalIds] = createSignal(props.selectedIds, { name: "localIds" });
     const { submit: assign, submission: assignSubmission } = useAssignTool(props.toolId);
     const { submit: unassign, submission: unassignSubmission } = useUnassignTool();
 

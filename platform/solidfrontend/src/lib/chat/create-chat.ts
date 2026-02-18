@@ -162,9 +162,9 @@ export interface CreateChatOptions {
  * imperative methods for sending messages and stopping streams.
  */
 export function createChat(options: CreateChatOptions): ChatSession {
-    const [messages, setMessages] = createSignal<UIMessage[]>(options.initialMessages ?? []);
-    const [status, setStatus] = createSignal<ChatStatus>("ready");
-    const [error, setError] = createSignal<Error | undefined>(undefined);
+    const [messages, setMessages] = createSignal<UIMessage[]>(options.initialMessages ?? [], { name: "messages" });
+    const [status, setStatus] = createSignal<ChatStatus>("ready", { name: "status" });
+    const [error, setError] = createSignal<Error | undefined>(undefined, { name: "error" });
 
     const chat = new SolidChat({
         id: options.conversationId,
