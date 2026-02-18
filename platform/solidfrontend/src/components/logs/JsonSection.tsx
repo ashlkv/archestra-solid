@@ -18,8 +18,8 @@ export function JsonSection(props: {
     help?: JSX.Element;
 }): JSX.Element {
     const expandable = () => props.expandable !== false;
-    const [isOpen, setIsOpen] = createSignal(expandable() ? (props.defaultOpen ?? false) : true);
-    const [showDiff, setShowDiff] = createSignal(false);
+    const [isOpen, setIsOpen] = createSignal(expandable() ? (props.defaultOpen ?? false) : true, { name: "isOpen" });
+    const [showDiff, setShowDiff] = createSignal(false, { name: "showDiff" });
 
     const jsonString = () => {
         try {

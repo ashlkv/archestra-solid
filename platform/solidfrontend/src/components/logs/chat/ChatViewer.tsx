@@ -9,7 +9,7 @@ import styles from "./ChatViewer.module.css";
 import { ToolCall, type ToolState } from "./ToolCall";
 
 export function ChatViewer(props: { messages: PartialUIMessage[]; timestamp?: string }): JSX.Element {
-    const [expanded, setExpanded] = createSignal(false);
+    const [expanded, setExpanded] = createSignal(false, { name: "expanded" });
 
     const splitIndex = () => findLastExchangeStart(props.messages);
     const previousMessages = () => props.messages.slice(0, splitIndex());

@@ -19,12 +19,12 @@ export default function ChatPage(): JSX.Element {
     const [searchParams, setSearchParams] = useSearchParams();
 
     const conversationId = () => searchParams.conversation as string | undefined;
-    const [agentId, setAgentId] = createSignal<string | undefined>(undefined);
-    const [selectedModel, setSelectedModel] = createSignal<string>("");
-    const [selectedApiKeyId, setSelectedApiKeyId] = createSignal<string | undefined>(undefined);
-    const [chatSession, setChatSession] = createSignal<ChatSession | undefined>(undefined);
-    const [pendingPrompt, setPendingPrompt] = createSignal<string | undefined>(undefined);
-    const [creating, setCreating] = createSignal(false);
+    const [agentId, setAgentId] = createSignal<string | undefined>(undefined, { name: "agentId" });
+    const [selectedModel, setSelectedModel] = createSignal<string>("", { name: "selectedModel" });
+    const [selectedApiKeyId, setSelectedApiKeyId] = createSignal<string | undefined>(undefined, { name: "selectedApiKeyId" });
+    const [chatSession, setChatSession] = createSignal<ChatSession | undefined>(undefined, { name: "chatSession" });
+    const [pendingPrompt, setPendingPrompt] = createSignal<string | undefined>(undefined, { name: "pendingPrompt" });
+    const [creating, setCreating] = createSignal(false, { name: "creating" });
 
     const { data: agents } = useAgents(undefined as undefined);
     const { data: chatModels } = useChatModels(undefined as undefined);

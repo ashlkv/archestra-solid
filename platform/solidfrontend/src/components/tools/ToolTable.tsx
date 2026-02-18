@@ -32,7 +32,7 @@ export function ToolTable(props: {
     selectedAgentId?: string;
     onToolClick?: (toolId: string) => void;
 }) {
-    const [selectedIds, setSelectedIds] = createSignal<Set<string>>(new Set());
+    const [selectedIds, setSelectedIds] = createSignal<Set<string>>(new Set(), { name: "selectedIds" });
 
     // Sync selection from parent when in agent mode (initialSelectedIds returns a Set).
     // In master mode, initialSelectedIds returns undefined — a stable primitive that won't
