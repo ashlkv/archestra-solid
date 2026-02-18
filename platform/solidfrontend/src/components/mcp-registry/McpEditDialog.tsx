@@ -35,17 +35,17 @@ export function McpEditDialog(props: Props): JSX.Element {
     const { submit, submission } = useUpdateMcp();
 
     // Form state
-    const [name, setName] = createSignal("");
-    const [serverUrl, setServerUrl] = createSignal("");
-    const [authMethod, setAuthMethod] = createSignal<"none" | "bearer" | "raw_token">("none");
-    const [command, setCommand] = createSignal("");
-    const [dockerImage, setDockerImage] = createSignal("");
-    const [args, setArgs] = createSignal("");
-    const [serviceAccount, setServiceAccount] = createSignal("");
-    const [environment, setEnvironment] = createSignal<EnvironmentVariable[]>([]);
-    const [transportType, setTransportType] = createSignal<"stdio" | "streamable-http">("stdio");
-    const [httpPort, setHttpPort] = createSignal("");
-    const [httpPath, setHttpPath] = createSignal("/mcp");
+    const [name, setName] = createSignal("", { name: "name" });
+    const [serverUrl, setServerUrl] = createSignal("", { name: "serverUrl" });
+    const [authMethod, setAuthMethod] = createSignal<"none" | "bearer" | "raw_token">("none", { name: "authMethod" });
+    const [command, setCommand] = createSignal("", { name: "command" });
+    const [dockerImage, setDockerImage] = createSignal("", { name: "dockerImage" });
+    const [args, setArgs] = createSignal("", { name: "args" });
+    const [serviceAccount, setServiceAccount] = createSignal("", { name: "serviceAccount" });
+    const [environment, setEnvironment] = createSignal<EnvironmentVariable[]>([], { name: "environment" });
+    const [transportType, setTransportType] = createSignal<"stdio" | "streamable-http">("stdio", { name: "transportType" });
+    const [httpPort, setHttpPort] = createSignal("", { name: "httpPort" });
+    const [httpPath, setHttpPath] = createSignal("/mcp", { name: "httpPath" });
 
     const isLocal = () => props.item.serverType === "local";
     const isRemote = () => props.item.serverType === "remote";

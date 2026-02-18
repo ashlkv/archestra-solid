@@ -56,12 +56,12 @@ export function McpRegistry(props: {
         setSearchParams({ selected: id });
     };
 
-    const [installItem, setInstallItem] = createSignal<MCP | undefined>(undefined);
-    const [deleteItem, setDeleteItem] = createSignal<MCP | undefined>(undefined);
-    const [logsItem, setLogsItem] = createSignal<MCP | undefined>(undefined);
-    const [aboutServerName, setAboutServerName] = createSignal<string | undefined>(undefined);
-    const [manageInstancesItem, setManageInstancesItem] = createSignal<MCP | undefined>(undefined);
-    const [editItem, setEditItem] = createSignal<MCP | undefined>(undefined);
+    const [installItem, setInstallItem] = createSignal<MCP | undefined>(undefined, { name: "installItem" });
+    const [deleteItem, setDeleteItem] = createSignal<MCP | undefined>(undefined, { name: "deleteItem" });
+    const [logsItem, setLogsItem] = createSignal<MCP | undefined>(undefined, { name: "logsItem" });
+    const [aboutServerName, setAboutServerName] = createSignal<string | undefined>(undefined, { name: "aboutServerName" });
+    const [manageInstancesItem, setManageInstancesItem] = createSignal<MCP | undefined>(undefined, { name: "manageInstancesItem" });
+    const [editItem, setEditItem] = createSignal<MCP | undefined>(undefined, { name: "editItem" });
 
     const selectedMcp = () => props.catalog?.find((item) => item.id === selectedId());
 
@@ -70,7 +70,7 @@ export function McpRegistry(props: {
     const { data: callPolicies } = useToolCallPolicies();
     const { data: resultPolicies } = useResultPolicies();
 
-    const [selectedAgentId, setSelectedAgentId] = createSignal<string | undefined>(undefined);
+    const [selectedAgentId, setSelectedAgentId] = createSignal<string | undefined>(undefined, { name: "selectedAgentId" });
     const assignTool = useAssignTool();
     const unassignTool = useUnassignTool();
 

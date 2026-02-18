@@ -14,8 +14,8 @@ export function ResultPolicySelect(props: {
     disabled?: boolean;
     size?: "inherit" | "small" | "xsmall";
 }): JSX.Element {
-    const [selected, setSelected] = createSignal(props.value);
-    const [loading, setLoading] = createSignal(false);
+    const [selected, setSelected] = createSignal(props.value, { name: "selected" });
+    const [loading, setLoading] = createSignal(false, { name: "loading" });
     const { submission, submit } = useSaveResultPolicy(props.policyId ?? "");
 
     createEffect(() => {

@@ -23,8 +23,8 @@ export function CallPolicyToggle(props: {
     disabled?: boolean;
     size?: "medium" | "small";
 }): JSX.Element {
-    const [selected, setSelected] = createSignal(props.value);
-    const [pendingAction, setPendingAction] = createSignal<PolicyAction | null>(null);
+    const [selected, setSelected] = createSignal(props.value, { name: "selected" });
+    const [pendingAction, setPendingAction] = createSignal<PolicyAction | null>(null, { name: "pendingAction" });
     const { submission, submit } = useSaveCallPolicy(props.policyId ?? "");
 
     createEffect(() => {

@@ -15,7 +15,7 @@ export default function ToolsPage(props: { initialToolId?: string }) {
     const { data: resultPolicies } = useResultPolicies();
     const { data: agents } = useAgents();
 
-    const [selectedAgentId, setSelectedAgentId] = createSignal<string | undefined>(undefined);
+    const [selectedAgentId, setSelectedAgentId] = createSignal<string | undefined>(undefined, { name: "selectedAgentId" });
 
     const assignTool = useAssignTool();
     const unassignTool = useUnassignTool();

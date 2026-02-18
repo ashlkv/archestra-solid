@@ -30,8 +30,8 @@ export function ChatToolsDisplay(props: { agentId: string; conversationId?: stri
     const { data: enabledToolsData } = useConversationEnabledTools(() => props.conversationId ?? "");
     const { submit: updateEnabledTools } = useUpdateConversationEnabledTools();
 
-    const [pendingActions, setPendingActions] = createSignal<PendingToolAction[]>([]);
-    const [addToolsOpen, setAddToolsOpen] = createSignal(false);
+    const [pendingActions, setPendingActions] = createSignal<PendingToolAction[]>([], { name: "pendingActions" });
+    const [addToolsOpen, setAddToolsOpen] = createSignal(false, { name: "addToolsOpen" });
 
     const isLoading = () => profileQuery.pending || globalQuery.pending;
 
@@ -208,7 +208,7 @@ function ServerPill(props: {
     onEnableAll: (toolIds: string[]) => void;
     onDisableAll: (toolIds: string[]) => void;
 }): JSX.Element {
-    const [open, setOpen] = createSignal(false);
+    const [open, setOpen] = createSignal(false, { name: "open" });
 
     const enabledTools = () => props.tools.filter((t) => props.enabledSet.has(t.id));
     const disabledTools = () => props.tools.filter((t) => !props.enabledSet.has(t.id));

@@ -28,10 +28,10 @@ type Props = {
 };
 
 export function McpInstallDialog(props: Props) {
-    const [selectedTeamId, setSelectedTeamId] = createSignal<string | undefined>(undefined);
-    const [serviceAccount, setServiceAccount] = createSignal<string | undefined>(undefined);
-    const [environmentValues, setEnvironmentValues] = createSignal<Record<string, string>>({});
-    const [configValues, setConfigValues] = createSignal<Record<string, string>>({});
+    const [selectedTeamId, setSelectedTeamId] = createSignal<string | undefined>(undefined, { name: "selectedTeamId" });
+    const [serviceAccount, setServiceAccount] = createSignal<string | undefined>(undefined, { name: "serviceAccount" });
+    const [environmentValues, setEnvironmentValues] = createSignal<Record<string, string>>({}, { name: "environmentValues" });
+    const [configValues, setConfigValues] = createSignal<Record<string, string>>({}, { name: "configValues" });
 
     const isLocal = () => props.catalogItem?.serverType === "local";
     const isRemote = () => props.catalogItem?.serverType === "remote";

@@ -19,8 +19,8 @@ export function ApiKeySelector(props: {
     disabled?: boolean;
 }): JSX.Element {
     const { data: availableKeys, query } = useAvailableChatApiKeys(undefined as undefined);
-    const [open, setOpen] = createSignal(false);
-    const [searchQuery, setSearchQuery] = createSignal("");
+    const [open, setOpen] = createSignal(false, { name: "open" });
+    const [searchQuery, setSearchQuery] = createSignal("", { name: "searchQuery" });
 
     const keys = () => availableKeys() ?? [];
 

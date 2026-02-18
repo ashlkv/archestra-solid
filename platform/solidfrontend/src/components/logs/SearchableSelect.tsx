@@ -11,7 +11,7 @@ export function SearchableSelect(props: {
     searchPlaceholder?: string;
     items: Array<{ value: string; label: string }>;
 }): JSX.Element {
-    const [searchQuery, setSearchQuery] = createSignal("");
+    const [searchQuery, setSearchQuery] = createSignal("", { name: "searchQuery" });
 
     const filteredItems = () => {
         const query = searchQuery().toLowerCase();
