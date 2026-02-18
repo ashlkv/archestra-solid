@@ -73,7 +73,7 @@ const navigationItems: MenuItem[] = [
     },
 ];
 
-const enabledRoutes = ["/chat", "/mcp-catalog", "/tools", "/logs"];
+const enabledRoutes = ["/mcp-catalog", "/tools", "/logs"];
 
 function isEnabled(item: MenuItem): boolean {
     const prefix = item.matchPrefix ?? item.url;
