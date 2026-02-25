@@ -308,6 +308,7 @@ export function LlmProxyLogsPage(props: { initialExpandedSessionId?: string; ini
                                                         <TruncatedText
                                                             message={getSessionTitle(session)}
                                                             maxLength={80}
+                                                            showTooltip={false}
                                                         />
                                                         <SessionSourceBadge source={session.sessionSource} />
                                                     </div>

@@ -270,7 +270,11 @@ export default function McpGatewayLogsPage(): JSX.Element {
                                     </TableCell>
                                     <TableCell>{toolCall.toolCall?.name ?? "-"}</TableCell>
                                     <TableCell>
-                                        <TruncatedText message={getArguments(toolCall)} maxLength={60} />
+                                        <TruncatedText
+                                            message={getArguments(toolCall)}
+                                            maxLength={60}
+                                            showTooltip={false}
+                                        />
                                     </TableCell>
                                     <TableCell>
                                         <Badge

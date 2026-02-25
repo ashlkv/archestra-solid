@@ -88,6 +88,7 @@ export function SessionExpandedRow(props: Props): JSX.Element {
                                         <TruncatedText
                                             message={dynamicInteraction?.getLastUserMessage()}
                                             maxLength={80}
+                                            showTooltip={false}
                                         />
                                     </div>
                                 </TableCell>
