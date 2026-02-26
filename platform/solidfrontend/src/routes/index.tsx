@@ -1,9 +1,5 @@
-import { A } from "@solidjs/router";
+import { Navigate } from "@solidjs/router";
 
 export default function Home() {
-    return (
-        <main>
-            <A href="mcp-catalog/registry">MCP Registry</A>
-        </main>
-    );
+    return <Navigate href="/logs/llm-proxy" />;
 }

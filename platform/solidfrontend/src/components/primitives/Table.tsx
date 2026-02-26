@@ -1,44 +1,38 @@
-import type { JSX, ParentProps } from "solid-js";
+import { type JSX, splitProps } from "solid-js";
 import styles from "./Table.module.css";
 
-interface TableProps extends ParentProps {
-    class?: string;
+export function Table(props: JSX.IntrinsicElements["table"]): JSX.Element {
+    return <table {...props} class={`${styles.table} ${props.class ?? ""}`} />;
 }
 
-export function Table(props: TableProps): JSX.Element {
-    return <table class={`${styles.table} ${props.class ?? ""}`}>{props.children}</table>;
+export function TableHead(props: JSX.IntrinsicElements["thead"]): JSX.Element {
+    return <thead {...props} class={`${styles.head} ${props.class ?? ""}`} />;
 }
 
-export function TableHead(props: ParentProps): JSX.Element {
-    return <thead class={styles.head}>{props.children}</thead>;
+export function TableBody(props: JSX.IntrinsicElements["tbody"]): JSX.Element {
+    return <tbody {...props} class={`${styles.body} ${props.class ?? ""}`} />;
 }
 
-export function TableBody(props: ParentProps): JSX.Element {
-    return <tbody class={styles.body}>{props.children}</tbody>;
+type TableRowProps = JSX.IntrinsicElements["tr"] & { current?: boolean };
+
+export function TableRow(props: TableRowProps): JSX.Element {
+    const [local, rest] = splitProps(props, ["current", "class"]);
+    const classes = () =>
+        [styles.row, local.current && styles.rowCurrent, rest.onClick && styles.rowClickable, local.class]
+            .filter(Boolean)
+            .join(" ");
+    return <tr {...rest} class={classes()} />;
 }
 
-export function TableRow(props: ParentProps & { class?: string }): JSX.Element {
-    return <tr class={`${styles.row} ${props.class ?? ""}`}>{props.children}</tr>;
+export function TableHeaderCell(props: JSX.IntrinsicElements["th"]): JSX.Element {
+    return <th {...props} class={`${styles.headerCell} ${props.class ?? ""}`} />;
 }
 
-interface CellProps extends ParentProps {
-    "data-label"?: string;
-    class?: string;
-    style?: JSX.CSSProperties;
-}
-
-export function TableHeaderCell(props: CellProps): JSX.Element {
+export function TableCell(props: JSX.IntrinsicElements["td"]): JSX.Element {
+    const [local, rest] = splitProps(props, ["children", "class"]);
     return (
-        <th class={`${styles.headerCell} ${props.class ?? ""}`} data-label={props["data-label"]} style={props.style}>
-            {props.children}
-        </th>
-    );
-}
-
-export function TableCell(props: CellProps): JSX.Element {
-    return (
-        <td class={`${styles.cell} ${props.class ?? ""}`} data-label={props["data-label"]} style={props.style}>
-            {props.children}
+        <td {...rest} class={`${styles.cell} ${local.class ?? ""}`}>
+            <div class={styles.cellContent}>{local.children}</div>
         </td>
     );
 }
