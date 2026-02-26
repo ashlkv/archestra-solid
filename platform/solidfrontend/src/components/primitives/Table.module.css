@@ -17,6 +17,14 @@
 .row {
 }
 
+.rowClickable {
+    cursor: pointer;
+}
+
+.rowCurrent {
+    background: color-mix(in srgb, var(--foreground) 10%, transparent);
+}
+
 .headerCell {
     font-weight: 600;
 }
@@ -29,4 +37,10 @@
     border-bottom: 1px solid var(--border);
     text-align: start;
     white-space: nowrap;
+}
+
+.cellContent {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
 }

@@ -1,40 +1,41 @@
 {
-    "name": "solidfrontend",
-    "type": "module",
-    "scripts": {
-        "dev": "PORT=3001 vinxi dev",
-        "build": "vinxi build",
-        "start": "vinxi start",
-        "version": "vinxi version",
-        "type-check": "tsc --noEmit"
-    },
-    "dependencies": {
-        "@codemirror/lang-json": "^6.0.2",
-        "@codemirror/language": "^6.12.1",
-        "@codemirror/merge": "^6.11.2",
-        "@codemirror/state": "^6.5.4",
-        "@codemirror/view": "^6.39.14",
-        "@kobalte/core": "^0.13.11",
-        "@lezer/highlight": "^1.2.3",
-        "@shared": "workspace:*",
-        "@solidjs/meta": "^0.29.4",
-        "@solidjs/router": "^0.15.0",
-        "@solidjs/start": "^1.1.0",
-        "ai": "^6.0.37",
-        "clsx": "^2.1.1",
-        "codemirror": "^6.0.2",
-        "dompurify": "^3.3.1",
-        "lucide-solid": "^0.563.0",
-        "marked": "^17.0.2",
-        "solid-js": "^1.9.5",
-        "vinxi": "^0.5.7",
-        "ws": "^8.19.0"
-    },
-    "engines": {
-        "node": ">=22"
-    },
-    "devDependencies": {
-        "@types/ws": "^8.18.1",
-        "solid-devtools": "^0.34.5"
-    }
+  "name": "solidfrontend",
+  "type": "module",
+  "scripts": {
+    "dev": "PORT=3001 vinxi dev",
+    "build": "vinxi build",
+    "start": "vinxi start",
+    "version": "vinxi version",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@codemirror/lang-json": "^6.0.2",
+    "@codemirror/language": "^6.12.1",
+    "@codemirror/merge": "^6.11.2",
+    "@codemirror/state": "^6.5.4",
+    "@codemirror/view": "^6.39.14",
+    "@kobalte/core": "^0.13.11",
+    "@lezer/highlight": "^1.2.3",
+    "@shared": "workspace:*",
+    "@solidjs/meta": "^0.29.4",
+    "@solidjs/router": "^0.15.0",
+    "@solidjs/start": "^1.1.0",
+    "ai": "^6.0.37",
+    "clsx": "^2.1.1",
+    "codemirror": "^6.0.2",
+    "dompurify": "^3.3.1",
+    "lucide-solid": "^0.563.0",
+    "marked": "^17.0.2",
+    "solid-js": "^1.9.5",
+    "vinxi": "^0.5.7",
+    "ws": "^8.19.0",
+    "solid-transition-group": "^0.2.3"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "devDependencies": {
+    "@types/ws": "^8.18.1",
+    "solid-devtools": "^0.34.5"
+  }
 }
