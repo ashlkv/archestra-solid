@@ -1156,7 +1156,9 @@ export const anthropicAdapterFactory: LLMProvider<
     // Check if this is a Bearer token (OAuth) or regular API key
     const isAuthToken = apiKey?.startsWith("Bearer:") ?? false;
     const token = isAuthToken && apiKey ? apiKey.slice(7) : undefined;
-    const regularApiKey = isAuthToken ? undefined : apiKey;
+    // Use null (not undefined) to prevent the SDK from falling back to
+    // process.env.ANTHROPIC_API_KEY when an OAuth authToken is provided
+    const regularApiKey = isAuthToken ? null : apiKey;
 
     return new AnthropicProvider({
       apiKey: regularApiKey,
