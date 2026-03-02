@@ -1,5 +1,6 @@
+import type { EditorView } from "@codemirror/view";
 import { createSignal, type JSX, Show } from "solid-js";
-import { ChevronDown, ChevronRight, GitCompareArrows } from "@/components/icons";
+import { ChevronDown, ChevronRight, FoldVertical, GitCompareArrows, UnfoldVertical } from "@/components/icons";
 import { Button } from "@/components/primitives/Button";
 import { CopyButton } from "@/components/primitives/CopyButton";
 import { HelpTrigger } from "@/components/primitives/HelpTrigger";
@@ -20,6 +21,7 @@ export function JsonSection(props: {
     const expandable = () => props.expandable !== false;
     const [isOpen, setIsOpen] = createSignal(expandable() ? (props.defaultOpen ?? false) : true, { name: "isOpen" });
     const [showDiff, setShowDiff] = createSignal(false, { name: "showDiff" });
+    let editorView: EditorView | undefined;
 
     const jsonString = () => {
         try {
@@ -97,6 +99,30 @@ export function JsonSection(props: {
                     </span>
                 </Show>
                 <div style={{ display: "flex", "align-items": "center", gap: "0.25rem", "flex-shrink": "0" }}>
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        tooltip="Expand all"
+                        onClick={async () => {
+                            if (!editorView) return;
+                            const { unfoldAll } = await import("@codemirror/language");
+                            unfoldAll(editorView);
+                        }}
+                    >
+                        <UnfoldVertical size={14} />
+                    </Button>
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        tooltip="Collapse all"
+                        onClick={async () => {
+                            if (!editorView) return;
+                            const { foldAll } = await import("@codemirror/language");
+                            foldAll(editorView);
+                        }}
+                    >
+                        <FoldVertical size={14} />
+                    </Button>
                     <Show when={props.diffOriginal !== undefined}>
                         <Button
                             variant="ghost"
@@ -116,7 +142,7 @@ export function JsonSection(props: {
             <Show when={contentVisible()}>
                 <Show
                     when={showDiff() && props.diffOriginal !== undefined}
-                    fallback={<JsonHighlight code={jsonString()} />}
+                    fallback={<JsonHighlight code={jsonString()} onEditorView={(view) => (editorView = view)} />}
                 >
                     <JsonDiffViewer original={props.diffOriginal} modified={props.data} />
                 </Show>

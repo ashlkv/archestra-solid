@@ -4,7 +4,11 @@ import { type JSX, onCleanup } from "solid-js";
 import { readonlyJsonExtensions } from "./codemirror-extensions";
 import styles from "./JsonHighlight.module.css";
 
-export function JsonHighlight(props: { code: string; lineNumbers?: boolean }): JSX.Element {
+export function JsonHighlight(props: {
+    code: string;
+    lineNumbers?: boolean;
+    onEditorView?: (view: EditorView) => void;
+}): JSX.Element {
     let editorView: EditorView | undefined;
 
     const createEditor = (el: HTMLDivElement) => {
@@ -15,6 +19,7 @@ export function JsonHighlight(props: { code: string; lineNumbers?: boolean }): J
             }),
             parent: el,
         });
+        props.onEditorView?.(editorView);
     };
 
     onCleanup(() => {

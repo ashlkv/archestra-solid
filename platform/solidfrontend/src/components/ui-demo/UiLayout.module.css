@@ -1,0 +1,53 @@
+.layout {
+    display: flex;
+    height: 100%;
+}
+
+.sidebar {
+    width: 15rem;
+    flex-shrink: 0;
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow-y: auto;
+}
+
+.header {
+    padding: 1rem;
+    font-weight: bold;
+}
+
+.nav {
+    display: flex;
+    flex-direction: column;
+    padding: 0 0.5rem;
+    gap: 2px;
+}
+
+.link {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 0.75rem;
+    height: var(--cell-height);
+    border-radius: 6px;
+    transition: background-color 0.15s ease;
+    text-decoration: none;
+    color: inherit;
+    box-sizing: border-box;
+}
+
+.link:hover {
+    background: color-mix(in srgb, var(--foreground) 8%, transparent);
+}
+
+.link-active {
+    background: color-mix(in srgb, var(--foreground) 10%, transparent);
+    font-weight: 500;
+}
+
+.content {
+    flex: 1;
+    height: 100%;
+    overflow-y: auto;
+}

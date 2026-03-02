@@ -6,6 +6,7 @@ import styles from "./CopyButton.module.css";
 type Props = {
     text: string;
     label?: string;
+    size?: "icon" | "icon-small" | "icon-xsmall";
     class?: string;
     disabled?: boolean;
 };
@@ -39,17 +40,17 @@ export function CopyButton(props: Props): JSX.Element {
     return (
         <Button
             variant="ghost"
-            size={props.label ? "small" : "icon"}
+            size={props.label ? "small" : (props.size ?? "icon")}
             class={`${styles.button} ${props.class ?? ""}`}
             tooltip={copied() ? "Copied!" : "Copy to clipboard"}
             onClick={handleCopy}
             disabled={props.disabled}
         >
             <Show when={copied()}>
-                <Check size={14} class={styles.check} />
+                <Check size={props.size === "icon-xsmall" ? 10 : 14} class={styles.check} />
             </Show>
             <Show when={!copied()}>
-                <Copy size={14} />
+                <Copy size={props.size === "icon-xsmall" ? 10 : 14} />
             </Show>
             <Show when={props.label}>
                 <span class={styles.label}>{copied() ? "Copied!" : props.label}</span>
