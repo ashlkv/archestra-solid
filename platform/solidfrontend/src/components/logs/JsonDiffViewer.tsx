@@ -1,4 +1,5 @@
 import { json } from "@codemirror/lang-json";
+import { foldGutter } from "@codemirror/language";
 import { MergeView } from "@codemirror/merge";
 import { EditorState } from "@codemirror/state";
 import { EditorView, lineNumbers } from "@codemirror/view";
@@ -36,8 +37,14 @@ export function JsonDiffViewer(props: { original: unknown; modified: unknown }):
             EditorView.editable.of(false),
             EditorView.lineWrapping,
             lineNumbers(),
+            foldGutter(),
             EditorView.theme({
                 "&": { backgroundColor: "var(--muted-background)" },
+                ".cm-foldGutter .cm-gutterElement": {
+                    fontSize: "14px",
+                    width: "18px",
+                    textAlign: "center",
+                },
             }),
         ];
 

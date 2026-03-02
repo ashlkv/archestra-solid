@@ -6,7 +6,7 @@ import { Tooltip } from "./Tooltip";
 
 type Variant = "default" | "ghost" | "outline" | "info" | "success" | "warning" | "destructive";
 
-export type IconSize = "icon" | "icon-medium" | "icon-small";
+export type IconSize = "icon" | "icon-medium" | "icon-small" | "icon-xsmall";
 export type TextButtonSize = "inherit" | "medium" | "large" | "small" | "xsmall";
 
 type BaseProps = ParentProps<{
@@ -15,7 +15,8 @@ type BaseProps = ParentProps<{
     disabled?: boolean;
     onClick?: (e: MouseEvent) => void;
     class?: string;
-}> & Omit<ComponentProps<"button">, "type" | "disabled" | "onClick" | "class">;
+}> &
+    Omit<ComponentProps<"button">, "type" | "disabled" | "onClick" | "class">;
 
 type IconProps = BaseProps & { size: IconSize; tooltip: string };
 type NonIconProps = BaseProps & { size?: TextButtonSize; tooltip?: string };
@@ -30,6 +31,7 @@ const sizeClasses: Record<string, string> = {
     icon: styles.icon,
     ["icon-medium"]: styles["icon-medium"],
     ["icon-small"]: styles["icon-small"],
+    ["icon-xsmall"]: styles["icon-xsmall"],
 };
 
 const variantClasses: Record<string, string> = {
@@ -42,7 +44,16 @@ const variantClasses: Record<string, string> = {
 };
 
 export function Button(props: Props): JSX.Element {
-    const [local, rest] = splitProps(props, ["type", "variant", "size", "disabled", "onClick", "class", "children", "tooltip"]);
+    const [local, rest] = splitProps(props, [
+        "type",
+        "variant",
+        "size",
+        "disabled",
+        "onClick",
+        "class",
+        "children",
+        "tooltip",
+    ]);
     const variantClass = () => (local.variant ? (variantClasses[local.variant] ?? "") : "");
     const sizeClass = () => (local.size ? (sizeClasses[local.size] ?? "") : "");
 
@@ -63,9 +74,7 @@ export function Button(props: Props): JSX.Element {
             <Show when={local.tooltip}>
                 <Tooltip content={local.tooltip!}>{button}</Tooltip>
             </Show>
-            <Show when={!local.tooltip}>
-                {button}
-            </Show>
+            <Show when={!local.tooltip}>{button}</Show>
         </>
     );
 }

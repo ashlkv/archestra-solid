@@ -1,5 +1,5 @@
 import { json } from "@codemirror/lang-json";
-import { HighlightStyle, syntaxHighlighting } from "@codemirror/language";
+import { HighlightStyle, foldGutter, syntaxHighlighting } from "@codemirror/language";
 import { EditorState, type Extension } from "@codemirror/state";
 import { EditorView, lineNumbers } from "@codemirror/view";
 import { tags } from "@lezer/highlight";
@@ -21,8 +21,14 @@ export function readonlyJsonExtensions(options?: { lineNumbers?: boolean }): Ext
         EditorView.editable.of(false),
         EditorView.lineWrapping,
         ...(options?.lineNumbers !== false ? [lineNumbers()] : []),
+        foldGutter(),
         EditorView.theme({
             "&": { backgroundColor: "var(--muted-background)" },
+            ".cm-foldGutter .cm-gutterElement": {
+                fontSize: "14px",
+                width: "18px",
+                textAlign: "center",
+            },
         }),
     ];
 }

@@ -1,0 +1,95 @@
+.container {
+    font-family: var(--monospace-font);
+    font-size: var(--small-font-size);
+    background: var(--muted-background);
+    border-radius: var(--radius);
+    max-height: 400px;
+    overflow: auto;
+    padding: 0.75rem;
+    line-height: 1.5;
+}
+
+.node {
+    position: relative;
+}
+
+.node-highlighted {
+    background: color-mix(in srgb, var(--foreground) 6%, transparent);
+    border-radius: var(--radius);
+    padding: 0.25rem 0.375rem;
+    margin: -0.25rem -0.375rem;
+}
+
+.toggle {
+    display: inline;
+    border: none;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+}
+
+.toggle:hover {
+    opacity: 0.7;
+}
+
+.chevron {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    vertical-align: middle;
+    transition: transform 0.15s ease;
+    margin-right: 2px;
+    color: var(--muted-foreground);
+}
+
+.chevron-expanded {
+    transform: rotate(90deg);
+}
+
+.children {
+    padding-left: 1.25rem;
+}
+
+.property-name {
+    color: oklch(0.5 0.18 18);
+}
+
+.string {
+    color: oklch(0.55 0.15 145);
+}
+
+.number {
+    color: oklch(0.55 0.18 250);
+}
+
+.boolean {
+    color: oklch(0.55 0.2 310);
+}
+
+.null {
+    color: oklch(0.55 0.1 30);
+}
+
+.string-expanded {
+    white-space: pre-wrap;
+    word-break: break-all;
+}
+
+.punctuation {
+    color: oklch(0.55 0 0);
+}
+
+.preview {
+    color: var(--muted-foreground);
+    font-style: italic;
+}
+
+.copy-wrapper {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 1;
+}
