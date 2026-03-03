@@ -1,5 +1,5 @@
 import { type JSX, Show } from "solid-js";
-import { JsonSection } from "@/components/logs/JsonSection";
+import { JsonSection } from "@/components/common/JsonSection";
 import { AgentBadge } from "@/components/primitives/AgentBadge";
 import { Badge } from "@/components/primitives/Badge";
 import { Spinner } from "@/components/primitives/Spinner";

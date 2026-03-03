@@ -1,6 +1,6 @@
 import { type JSX, Show } from "solid-js";
 import { ChatViewer } from "@/components/logs/chat/ChatViewer";
-import { JsonSection } from "@/components/logs/JsonSection";
+import { JsonSection } from "@/components/common/JsonSection";
 import { SessionToolsTable } from "@/components/logs/SessionToolsTable";
 import { AgentBadge } from "@/components/primitives/AgentBadge";
 import { Badge } from "@/components/primitives/Badge";

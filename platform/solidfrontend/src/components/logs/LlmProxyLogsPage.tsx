@@ -1,7 +1,7 @@
 import { useSearchParams } from "@solidjs/router";
 import { createSignal, type JSX, Show } from "solid-js";
 import { InteractionDrawer } from "@/components/logs/InteractionDrawer";
-import { Pagination } from "@/components/logs/Pagination";
+import { Pagination } from "@/components/common/Pagination";
 import { SessionsFilters } from "@/components/logs/SessionsFilters";
 import { SessionsTable } from "@/components/logs/SessionsTable";
 import { Empty, EmptyDescription, EmptyTitle } from "@/components/primitives/Empty";

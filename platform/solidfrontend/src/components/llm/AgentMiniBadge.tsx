@@ -1,5 +1,5 @@
 import type { JSX } from "solid-js";
-import { Tooltip } from "../primitives/Tooltip";
+import { Tooltip } from "@/components/primitives/Tooltip";
 import styles from "./AgentMiniBadge.module.css";
 
 const PALETTE_SIZE = 18;
