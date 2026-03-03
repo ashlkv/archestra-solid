@@ -1,6 +1,6 @@
 import { createEffect, For, type JSX, onMount, Show, Suspense } from "solid-js";
-import { Savings } from "@/components/logs/Savings";
-import { TruncatedText } from "@/components/logs/TruncatedText";
+import { Savings } from "@/components/llm/Savings";
+import { TruncatedText } from "@/components/common/TruncatedText";
 import { Badge } from "@/components/primitives/Badge";
 import { ProviderModelBadge } from "@/components/primitives/ProviderModelBadge";
 import { Table, TableBody, TableCell, TableRow } from "@/components/primitives/Table";

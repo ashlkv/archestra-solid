@@ -1,8 +1,8 @@
 import { useLocation } from "@solidjs/router";
 import { createEffect, createSignal, For, type JSX, Show } from "solid-js";
-import { Savings } from "@/components/logs/Savings";
+import { Savings } from "@/components/llm/Savings";
 import { LogRow, SessionExpandedRow } from "@/components/logs/SessionExpandedRow";
-import { TruncatedText } from "@/components/logs/TruncatedText";
+import { TruncatedText } from "@/components/common/TruncatedText";
 import { AgentBadge } from "@/components/primitives/AgentBadge";
 import { Badge } from "@/components/primitives/Badge";
 import { ExpandCollapseButton } from "@/components/primitives/ExpandCollapseButton";

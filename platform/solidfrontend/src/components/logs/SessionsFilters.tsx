@@ -5,7 +5,7 @@ import { Button } from "@/components/primitives/Button";
 import { SearchInput } from "@/components/primitives/SearchInput";
 
 // import { DateTimeRangePicker } from "@/components/logs/DateTimeRangePicker";
-// import { SearchableSelect } from "@/components/logs/SearchableSelect";
+// import { SearchableSelect } from "@/components/primitives/SearchableSelect";
 // import type { Agent } from "@/types";
 
 interface SessionsFiltersProps {

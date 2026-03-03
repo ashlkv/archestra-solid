@@ -25,6 +25,18 @@
     gap: 2px;
 }
 
+.section-label {
+    padding: 0.5rem 0.75rem;
+    color: var(--muted-foreground);
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.section-label:not(:first-child) {
+    margin-top: 0.75rem;
+}
+
 .link {
     display: flex;
     align-items: center;

@@ -2,7 +2,7 @@ import { useNavigate } from "@solidjs/router";
 import { For, type JSX } from "solid-js";
 import { PencilButton } from "@/components/primitives/PencilButton";
 import { Table, TableBody, TableCell, TableRow } from "@/components/primitives/Table";
-import { OriginBadge } from "@/components/tools/OriginBadge";
+import { OriginBadge } from "@/components/llm/OriginBadge";
 import { ToolName } from "@/components/tools/ToolName";
 import { useTools } from "@/lib/tool.query";
 import styles from "./SessionToolsTable.module.css";

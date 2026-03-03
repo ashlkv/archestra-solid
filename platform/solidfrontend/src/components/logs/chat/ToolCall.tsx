@@ -1,12 +1,12 @@
 import { createSignal, For, type JSX, Show } from "solid-js";
 import { ChevronDown, CircleCheck, CircleX, Clock } from "@/components/icons";
-import { JsonHighlight } from "@/components/logs/JsonHighlight";
+import { JsonHighlight } from "@/components/common/JsonHighlight";
 import { Button } from "@/components/primitives/Button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/primitives/Collapsible";
 import { CopyButton } from "@/components/primitives/CopyButton";
 import { Markdown } from "@/components/primitives/Markdown";
 import { CallPolicyToggle } from "@/components/tools/policy/CallPolicyToggle";
-import { OriginBadge } from "@/components/tools/OriginBadge";
+import { OriginBadge } from "@/components/llm/OriginBadge";
 import { ResultPolicySelect } from "@/components/tools/policy/ResultPolicySelect";
 import { ToolName } from "@/components/tools/ToolName";
 import { useResultPolicies, useToolCallPolicies } from "@/lib/policy.query";

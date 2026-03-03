@@ -1,5 +1,5 @@
 import { createSignal, type JSX } from "solid-js";
-import { JsonTreeViewer } from "@/components/logs/JsonTreeViewer";
+import { JsonTreeViewer } from "@/components/common/JsonTreeViewer";
 import { Button } from "@/components/primitives/Button";
 import { UiLayout } from "@/components/ui-demo/UiLayout";
 import llmRequestExample from "./llm-request-example.json";
