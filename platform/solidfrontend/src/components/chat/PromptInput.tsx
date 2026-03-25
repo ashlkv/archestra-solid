@@ -66,7 +66,7 @@ export function PromptInput(props: {
                     <Show when={!isActive()}>
                         <Button
                             variant="default"
-                            size="small"
+                            size="icon"
                             onClick={submitMessage}
                             disabled={props.disabled}
                             data-label="Send"

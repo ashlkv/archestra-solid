@@ -104,11 +104,8 @@ export function ApiKeySelector(props: {
         props.onKeyChange(keyId);
     };
 
-    // Don't render if loading or no keys
-    if (query.pending) return <></>;
-    if (!query.pending && keys().length === 0) return <></>;
-
     return (
+        <Show when={!query.pending && keys().length > 0}>
         <Popover open={open()} onOpenChange={setOpen}>
             <PopoverTrigger>
                 <button class={styles.trigger} disabled={props.disabled} data-label="API key selector trigger">
@@ -153,6 +150,7 @@ export function ApiKeySelector(props: {
                 </div>
             </PopoverContent>
         </Popover>
+        </Show>
     );
 }
 

@@ -3,7 +3,7 @@ import { AgentBadge } from "@/components/primitives/AgentBadge";
 import { PencilButton } from "../primitives/PencilButton";
 import { Popover, PopoverContent, PopoverTrigger } from "../primitives/Popover";
 import { Tooltip } from "../primitives/Tooltip";
-import { AgentMiniBadge } from "./AgentMiniBadge";
+import { AgentMiniBadge } from "../llm/AgentMiniBadge";
 import styles from "./Assignments.module.css";
 import { AssignmentsPopover } from "./AssignmentsPopover";
 

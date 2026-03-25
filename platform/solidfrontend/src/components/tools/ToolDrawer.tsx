@@ -16,7 +16,7 @@ import type { McpServer, ResultPolicyAction, ToolWithAssignments } from "@/types
 import { useTools } from "@/lib/tool.query";
 import { CallPolicies } from "./policy/CallPolicies";
 import { ResultPolicies } from "./policy/ResultPolicies";
-import { OriginBadge } from "./OriginBadge";
+import { OriginBadge } from "../llm/OriginBadge";
 import styles from "./ToolDrawer.module.css";
 
 export function ToolDrawer(props: {

@@ -41,10 +41,11 @@ export function ExpandCollapseTransition(props: ExpandCollapseTransitionProps): 
 
 // --- Internal helpers ---
 
-const EXPAND_DURATION = 200;
+const EXPAND_DURATION = 1000;
 
 /** Track active ResizeObservers so collapse can clean them up. */
 const activeObservers = new WeakMap<Element, ResizeObserver>();
+const activeAnimations = new WeakMap<HTMLElement, Animation>();
 
 function animateExpand(
     el: Element,
@@ -58,15 +59,28 @@ function animateExpand(
         return;
     }
 
+    cancelActiveAnimation(wrapper);
+
     // Animate from 0 to current content height.
     const height = wrapper.scrollHeight;
-    wrapper.animate(
+    wrapper.style.overflow = "hidden";
+    wrapper.style.height = "0px";
+    const animation = wrapper.animate(
         [
-            { height: "0px", opacity: 0 },
-            { height: `${height}px`, opacity: 1 },
+            { height: "0px" },
+            { height: `${height}px` },
         ],
-        { duration, easing: "ease-out" },
+        { duration, easing: "ease-out", fill: "forwards" },
     );
+    activeAnimations.set(wrapper, animation);
+
+    animation.finished
+        .catch(() => undefined)
+        .then(() => {
+            if (activeAnimations.get(wrapper) !== animation) return;
+            activeAnimations.delete(wrapper);
+            clearWrapperStyles(wrapper);
+        });
 
     // Watch for content height changes (e.g. Suspense resolving) and animate them.
     let prevHeight = height;
@@ -79,10 +93,25 @@ function animateExpand(
             if (newHeight === prevHeight) return;
 
             resizeAnimation?.cancel();
-            resizeAnimation = wrapper.animate([{ height: `${prevHeight}px` }, { height: `${newHeight}px` }], {
-                duration,
-                easing: "ease-out",
-            });
+            wrapper.style.overflow = "hidden";
+            wrapper.style.height = `${prevHeight}px`;
+
+            resizeAnimation = wrapper.animate(
+                [{ height: `${prevHeight}px` }, { height: `${newHeight}px` }],
+                {
+                    duration,
+                    easing: "ease-out",
+                    fill: "forwards",
+                },
+            );
+            activeAnimations.set(wrapper, resizeAnimation);
+            resizeAnimation.finished
+                .catch(() => undefined)
+                .then(() => {
+                    if (activeAnimations.get(wrapper) !== resizeAnimation) return;
+                    activeAnimations.delete(wrapper);
+                    clearWrapperStyles(wrapper);
+                });
             prevHeight = newHeight;
         });
     });
@@ -111,13 +140,35 @@ function animateCollapse(
         return;
     }
 
+    cancelActiveAnimation(wrapper);
+
     const height = wrapper.scrollHeight;
+    wrapper.style.overflow = "hidden";
+    wrapper.style.height = `${height}px`;
     const animation = wrapper.animate(
         [
-            { height: `${height}px`, opacity: 1 },
-            { height: "0px", opacity: 0 },
+            { height: `${height}px` },
+            { height: "0px" },
         ],
-        { duration, easing: "ease-in" },
+        { duration, easing: "ease-in", fill: "forwards" },
     );
-    animation.finished.then(done);
+    activeAnimations.set(wrapper, animation);
+    animation.finished
+        .catch(() => undefined)
+        .then(() => {
+            if (activeAnimations.get(wrapper) === animation) {
+                activeAnimations.delete(wrapper);
+            }
+            done();
+        });
+}
+
+function clearWrapperStyles(wrapper: HTMLElement): void {
+    wrapper.style.removeProperty("height");
+    wrapper.style.removeProperty("overflow");
+}
+
+function cancelActiveAnimation(wrapper: HTMLElement): void {
+    activeAnimations.get(wrapper)?.cancel();
+    activeAnimations.delete(wrapper);
 }

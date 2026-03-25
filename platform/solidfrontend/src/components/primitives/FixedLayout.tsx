@@ -1,3 +1,11 @@
+/**
+ * Viewport-locked shell: sidebar + main area, both constrained to window height.
+ * The main area scrolls independently within its fixed box, so child columns
+ * (e.g. VerticalSplit) can each have their own scroll containers.
+ *
+ * Compare with StaticLayout, which lets the page grow beyond the viewport
+ * and uses the body scrollbar instead.
+ */
 import { useLocation } from "@solidjs/router";
 import { type JSX, type ParentProps, Show } from "solid-js";
 import { Sidebar } from "~/components/sidebar/Sidebar";

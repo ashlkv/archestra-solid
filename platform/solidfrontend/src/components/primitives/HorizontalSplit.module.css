@@ -1,0 +1,6 @@
+.horizontal-split {
+    display: grid;
+    grid-template-rows: var(--split);
+    gap: 1rem;
+    box-sizing: border-box;
+}

@@ -14,6 +14,13 @@ import { getAuthHeaders } from "@/lib/api";
 import { type ChatSession, createChat } from "@/lib/chat/create-chat";
 import { useConversation } from "@/lib/chat.query";
 import { useChatModels } from "@/lib/chat-models.query";
+import { HorizontalSplit } from '~/components/primitives/HorizontalSplit';
+import { VerticalSplit } from '~/components/primitives/VerticalSplit';
+import { Scrollable } from '~/components/primitives/Scrollable';
+import { Column } from '~/components/primitives/Column';
+import { ChatSplit } from '~/components/chat/ChatSplit';
+import { ConversationSplit } from '~/components/chat/ConversationSplit';
+import { ChatHistory } from '~/components/chat/ChatHistory';
 
 export default function ChatPage(): JSX.Element {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -147,95 +154,69 @@ export default function ChatPage(): JSX.Element {
         chatSession()?.stop();
     };
 
-    return (
-        <div
-            style={{
-                display: "flex",
-                "flex-direction": "column",
-                height: "100%",
-                overflow: "hidden",
-            }}
-            data-label="Chat page"
-        >
-            {/* Header */}
-            <div
-                style={{
-                    display: "flex",
-                    "align-items": "center",
-                    gap: "0.75rem",
-                    padding: "0.75rem 1rem",
-                    "border-bottom": "1px solid var(--border)",
-                    "flex-shrink": "0",
-                }}
-                data-label="Chat header"
-            >
-                <AgentSelector agentId={agentId()} onAgentChange={setAgentId} disabled={!!conversationId()} />
-                <Show when={agentName()}>
-                    <span style={{ "font-weight": "500" }}>{agentName()}</span>
-                </Show>
-            </div>
+    return (<ChatSplit>
+        <Scrollable>
+            <ConversationSplit>
+                <Scrollable>
+                    <ChatMessages
+                        messages={() => chatSession()?.messages() ?? []}
+                        status={() => chatSession()?.status() ?? "ready"}
+                        error={() => chatSession()?.error()}
+                        agentName={agentName()}
+                    />
+                </Scrollable>
+                <Column>
+                    <Show when={conversationId() && chatSession()}>
+                        <PromptInput
+                            onSubmit={onActiveSubmit}
+                            onStop={onStop}
+                            status={chatSession()?.status() ?? "ready"}
+                            placeholder={`Message ${agentName() ?? "assistant"}...`}
+                            headerContent={agentId() ? <ChatToolsDisplay agentId={agentId()!} conversationId={conversationId()} /> : undefined}
+                            footerLeft={
+                                <>
+                                    <ModelSelector
+                                        selectedModel={selectedModel()}
+                                        onModelChange={setSelectedModel}
+                                        disabled={!!conversationId()}
+                                    />
+                                    <ApiKeySelector
+                                        selectedKeyId={selectedApiKeyId()}
+                                        onKeyChange={setSelectedApiKeyId}
+                                        currentProvider={selectedModelProvider()}
+                                    />
+                                </>
+                            }
+                        />
+                    </Show>
+                    <Show when={!conversationId()}>
+                        <PromptInput
+                            onSubmit={onInitialSubmit}
+                            status={creating() ? "submitted" : "ready"}
+                            disabled={!agentId()}
+                            placeholder={
+                                agentId() ? `Message ${agentName() ?? "assistant"}...` : "Select an agent to start chatting"
+                            }
+                            headerContent={agentId() ? <ChatToolsDisplay agentId={agentId()!} /> : undefined}
+                            footerLeft={
+                                <>
+                                    <ModelSelector selectedModel={selectedModel()} onModelChange={setSelectedModel} />
+                                    <ApiKeySelector
+                                        selectedKeyId={selectedApiKeyId()}
+                                        onKeyChange={setSelectedApiKeyId}
+                                        currentProvider={selectedModelProvider()}
+                                    />
+                                </>
+                            }
+                        />
+                    </Show>
+                </Column>
+            </ConversationSplit>
+        </Scrollable>
+        <Scrollable>
 
-            {/* Messages */}
-            <ChatMessages
-                messages={() => chatSession()?.messages() ?? []}
-                status={() => chatSession()?.status() ?? "ready"}
-                error={() => chatSession()?.error()}
-                agentName={agentName()}
-            />
-
-            {/* Prompt Input */}
-            <Show when={conversationId() && chatSession()}>
-                <PromptInput
-                    onSubmit={onActiveSubmit}
-                    onStop={onStop}
-                    status={chatSession()?.status() ?? "ready"}
-                    placeholder={`Message ${agentName() ?? "assistant"}...`}
-                    headerContent={
-                        <Show when={agentId()}>
-                            <ChatToolsDisplay agentId={agentId()!} conversationId={conversationId()} />
-                        </Show>
-                    }
-                    footerLeft={
-                        <>
-                            <ModelSelector
-                                selectedModel={selectedModel()}
-                                onModelChange={setSelectedModel}
-                                disabled={!!conversationId()}
-                            />
-                            <ApiKeySelector
-                                selectedKeyId={selectedApiKeyId()}
-                                onKeyChange={setSelectedApiKeyId}
-                                currentProvider={selectedModelProvider()}
-                            />
-                        </>
-                    }
-                />
-            </Show>
-            <Show when={!conversationId()}>
-                <PromptInput
-                    onSubmit={onInitialSubmit}
-                    status={creating() ? "submitted" : "ready"}
-                    disabled={!agentId()}
-                    placeholder={
-                        agentId() ? `Message ${agentName() ?? "assistant"}...` : "Select an agent to start chatting"
-                    }
-                    headerContent={
-                        <Show when={agentId()}>
-                            <ChatToolsDisplay agentId={agentId()!} />
-                        </Show>
-                    }
-                    footerLeft={
-                        <>
-                            <ModelSelector selectedModel={selectedModel()} onModelChange={setSelectedModel} />
-                            <ApiKeySelector
-                                selectedKeyId={selectedApiKeyId()}
-                                onKeyChange={setSelectedApiKeyId}
-                                currentProvider={selectedModelProvider()}
-                            />
-                        </>
-                    }
-                />
-            </Show>
-        </div>
-    );
+            <AgentSelector agentId={agentId()} onAgentChange={setAgentId} disabled={!!conversationId()} />
+            <ChatHistory />
+        </Scrollable>
+    </ChatSplit>)
 }

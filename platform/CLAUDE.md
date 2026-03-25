@@ -142,6 +142,10 @@ docker compose -f dev/docker-compose.observability.yml up -d  # Alternative: Sta
 2. **Document in `../docs/pages/platform-deployment.md`** - All new env vars MUST be documented in the Environment Variables section. Use best judgement on whether it warrants a new subsection
 3. **Frontend access via `/api/config`** - If the frontend needs to reference an env var value, expose it through `backend/src/routes/config.ts` response and consume via the `useFeature()` hook
 
+## Current Focus: SolidJS Frontend (`solidfrontend/`)
+
+**Our primary development focus is the SolidJS frontend in `solidfrontend/`.** We are gradually porting the original Next.js frontend (`frontend/`) to SolidJS. Unless explicitly told otherwise, assume frontend work means work in `solidfrontend/`. The Next.js frontend in `frontend/` serves as a reference for porting. See `solidfrontend/CLAUDE.md` for SolidJS-specific conventions.
+
 ## Architecture
 
 **Tech Stack**: pnpm monorepo, Fastify backend (port 9000), metrics server (port 9050), Next.js frontend (port 3000), PostgreSQL + Drizzle ORM, Biome linting, Tilt orchestration, Kubernetes for MCP server runtime

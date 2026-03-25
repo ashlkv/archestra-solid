@@ -7,7 +7,7 @@ import { Badge } from "@/components/primitives/Badge";
 import { CostBadge } from "@/components/primitives/CostBadge";
 import { ProviderModelBadge } from "@/components/primitives/ProviderModelBadge";
 import { Spinner } from "@/components/primitives/Spinner";
-import { Split } from "@/components/primitives/Split";
+import { VerticalSplit } from "@/components/primitives/VerticalSplit";
 import { TimestampBadge } from "@/components/primitives/TimestampBadge";
 import { TokensBadge } from "@/components/primitives/TokensBadge";
 import { useAgents } from "@/lib/agent.query";
@@ -58,7 +58,7 @@ export function InteractionDetailContent(props: { interactionId: string; view: "
 
             <Show when={interaction()}>
                 <Show when={props.view === "chat"}>
-                    <Split columns={[3, 7]}>
+                    <VerticalSplit columns={[3, 7]}>
                         <div style={{ position: "sticky", top: "0", "align-self": "start" }}>
                             <Show when={toolNames().length > 0}>
                                 <SessionToolsTable toolNames={toolNames()} />
@@ -69,7 +69,7 @@ export function InteractionDetailContent(props: { interactionId: string; view: "
                                 <ChatViewer messages={uiMessages()} timestamp={interaction()!.createdAt} />
                             </Show>
                         </div>
-                    </Split>
+                    </VerticalSplit>
                 </Show>
 
                 <Show when={props.view === "raw"}>
@@ -85,7 +85,7 @@ export function InteractionDetailContent(props: { interactionId: string; view: "
                                 />
                             }
                         >
-                            <Split columns={[5, 5]}>
+                            <VerticalSplit columns={[5, 5]}>
                                 <JsonSection
                                     title="Raw request (original)"
                                     data={interaction()!.request}
@@ -99,7 +99,7 @@ export function InteractionDetailContent(props: { interactionId: string; view: "
                                     expandable={false}
                                     help={HELP_PROCESSED_REQUEST}
                                 />
-                            </Split>
+                            </VerticalSplit>
                         </Show>
                         <JsonSection title="Raw response" data={interaction()!.response} expandable={false} />
                     </div>

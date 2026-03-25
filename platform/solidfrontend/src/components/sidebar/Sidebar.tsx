@@ -1,5 +1,5 @@
 import { A, useLocation } from "@solidjs/router";
-import { For, type JSX } from "solid-js";
+import { createEffect, createSignal, For, type JSX } from "solid-js";
 import {
     Bot,
     Cable,
@@ -7,11 +7,11 @@ import {
     MessageCircle,
     MessagesSquare,
     Network,
-    Router,
     Settings,
     Shield,
     Wrench,
 } from "~/components/icons";
+import { Tooltip } from "@/components/primitives/Tooltip";
 import styles from "./Sidebar.module.css";
 import { SidebarHeader } from "./SidebarHeader";
 
@@ -73,7 +73,7 @@ const navigationItems: MenuItem[] = [
     },
 ];
 
-const enabledRoutes = ["/mcp-catalog", "/tools", "/logs"];
+const enabledRoutes = ["/mcp-catalog", "/tools", "/logs", "/chat"];
 
 function isEnabled(item: MenuItem): boolean {
     const prefix = item.matchPrefix ?? item.url;
@@ -87,10 +87,32 @@ function isActive(item: MenuItem, pathname: string): boolean {
 
 export function Sidebar(props: { class?: string }): JSX.Element {
     const location = useLocation();
+    const [collapsed, setCollapsed] = createSignal(true, { name: "sidebarCollapsed" });
+
+    createEffect(() => {
+        if (typeof window === "undefined") return;
+        const stored = window.localStorage.getItem(SIDEBAR_COLLAPSED_STORAGE_KEY);
+        if (stored === "false") {
+            setCollapsed(false);
+        }
+    });
+
+    const toggleCollapsed = () => {
+        setCollapsed((previous) => {
+            const next = !previous;
+            if (typeof window !== "undefined") {
+                window.localStorage.setItem(SIDEBAR_COLLAPSED_STORAGE_KEY, String(next));
+            }
+            return next;
+        });
+    };
 
     return (
-        <aside class={`${styles.sidebar}${props.class ? ` ${props.class}` : ""}`} data-label="Sidebar">
-            <SidebarHeader />
+        <aside
+            class={`${styles.sidebar} ${collapsed() ? styles.collapsed : ""}${props.class ? ` ${props.class}` : ""}`}
+            data-label="Sidebar"
+        >
+            <SidebarHeader collapsed={collapsed()} onToggle={toggleCollapsed} />
 
             <div class={styles.content}>
                 <ul class={styles.menu}>
@@ -101,14 +123,16 @@ export function Sidebar(props: { class?: string }): JSX.Element {
 
                             return (
                                 <li>
-                                    <A
-                                        href={enabled ? item.url : "#"}
-                                        class={`${styles["menu-item"]} ${active() ? styles.active : ""} ${!enabled ? styles.disabled : ""}`}
-                                        data-label={item.title}
-                                    >
-                                        {item.icon()}
-                                        <span>{item.title}</span>
-                                    </A>
+                                    <TooltipLink content={item.title} enabled={collapsed()}>
+                                        <A
+                                            href={enabled ? item.url : "#"}
+                                            class={`${styles["menu-item"]} ${active() ? styles.active : ""} ${!enabled ? styles.disabled : ""}`}
+                                            data-label={item.title}
+                                        >
+                                            {item.icon()}
+                                            <span class={styles["menu-item-label"]}>{item.title}</span>
+                                        </A>
+                                    </TooltipLink>
                                 </li>
                             );
                         }}
@@ -117,4 +141,11 @@ export function Sidebar(props: { class?: string }): JSX.Element {
             </div>
         </aside>
     );
+}
+
+const SIDEBAR_COLLAPSED_STORAGE_KEY = "archestra.sidebar.collapsed";
+
+function TooltipLink(props: { content: string; enabled: boolean; children: JSX.Element }): JSX.Element {
+    if (!props.enabled) return props.children;
+    return <Tooltip content={props.content}>{props.children}</Tooltip>;
 }

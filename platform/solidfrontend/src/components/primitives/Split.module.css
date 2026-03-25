@@ -1,5 +1,0 @@
-.split {
-    display: grid;
-    grid-template-columns: var(--columns);
-    gap: 1rem;
-}

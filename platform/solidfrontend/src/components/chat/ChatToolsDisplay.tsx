@@ -11,7 +11,6 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/primitives/Di
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/primitives/Popover";
 import {
     useConversationEnabledTools,
-    useGlobalChatTools,
     useProfileToolsWithIds,
     useUpdateConversationEnabledTools,
 } from "@/lib/chat-tools.query";
@@ -26,14 +25,13 @@ import styles from "./ChatToolsDisplay.module.css";
 
 export function ChatToolsDisplay(props: { agentId: string; conversationId?: string }): JSX.Element {
     const { data: profileToolsData, query: profileQuery } = useProfileToolsWithIds(() => props.agentId);
-    const { data: globalToolsData, query: globalQuery } = useGlobalChatTools(undefined as undefined);
     const { data: enabledToolsData } = useConversationEnabledTools(() => props.conversationId ?? "");
     const { submit: updateEnabledTools } = useUpdateConversationEnabledTools();
 
     const [pendingActions, setPendingActions] = createSignal<PendingToolAction[]>([], { name: "pendingActions" });
     const [addToolsOpen, setAddToolsOpen] = createSignal(false, { name: "addToolsOpen" });
 
-    const isLoading = () => profileQuery.pending || globalQuery.pending;
+    const isLoading = () => profileQuery.pending;
 
     // Load pending actions when context changes
     createEffect(
@@ -49,21 +47,16 @@ export function ChatToolsDisplay(props: { agentId: string; conversationId?: stri
         ),
     );
 
-    // Merge profile + global tools, excluding agent delegation tools
+    // Profile tools, excluding agent delegation tools
     const allTools = (): ChatToolItem[] => {
-        const profileTools = (profileToolsData() ?? []).filter((t) => !isAgentTool(t.name));
-        const profileIds = new Set(profileTools.map((t) => t.id));
-        const globalTools = (globalToolsData() ?? []).filter((t) => !profileIds.has(t.id));
-        return [...profileTools, ...globalTools];
+        return (profileToolsData() ?? []).filter((t) => !isAgentTool(t.name));
     };
 
     // Default enabled tools logic
     const defaultEnabledToolIds = (): string[] => {
-        const profileDefaults = (profileToolsData() ?? [])
+        return (profileToolsData() ?? [])
             .filter((t) => !t.name.startsWith("archestra__") || DEFAULT_ARCHESTRA_TOOL_NAMES.includes(t.name))
             .map((t) => t.id);
-        const globalDefaults = (globalToolsData() ?? []).map((t) => t.id);
-        return [...profileDefaults, ...globalDefaults];
     };
 
     // Compute current enabled tool IDs

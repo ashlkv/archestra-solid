@@ -1,0 +1,6 @@
+.vertical-split {
+    display: grid;
+    grid-template-columns: var(--split);
+    gap: 1rem;
+    box-sizing: border-box;
+}

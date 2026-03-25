@@ -8,7 +8,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } fro
 import { Assignments } from "./Assignments";
 import { CallPolicyToggle } from "./policy/CallPolicyToggle";
 import { GroupPolicyBar } from "./policy/GroupPolicyBar";
-import { OriginBadge } from "./OriginBadge";
+import { OriginBadge } from "../llm/OriginBadge";
 import { ResultPolicySelect } from "./policy/ResultPolicySelect";
 import { ToolName } from "./ToolName";
 import styles from "./ToolTable.module.css";

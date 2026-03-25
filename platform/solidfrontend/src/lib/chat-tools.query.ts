@@ -10,13 +10,6 @@ type AgentToolItem = {
     description: string | null;
 };
 
-type GlobalToolItem = {
-    id: string;
-    name: string;
-    description: string | null;
-    catalogId: string;
-};
-
 type EnabledToolsData = {
     hasCustomSelection: boolean;
     enabledToolIds: string[];
@@ -32,16 +25,6 @@ export const useProfileToolsWithIds = createQuery<AgentToolItem[], string>({
             query: { excludeLlmProxyOrigin: true },
         });
         return { data: (data ?? []) as AgentToolItem[], error };
-    },
-});
-
-export const useGlobalChatTools = createQuery<GlobalToolItem[]>({
-    queryKey: "fetch-global-chat-tools",
-    callback: async () => {
-        const { error, data } = await archestraApiSdk.getChatGlobalTools({
-            headers: getAuthHeaders(),
-        });
-        return { data: (data ?? []) as GlobalToolItem[], error };
     },
 });
 

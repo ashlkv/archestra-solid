@@ -147,37 +147,33 @@ export function ModelSelector(props: {
         setToolCallingFilter(!toolCallingFilter());
     };
 
-    // Loading state
-    if (query.pending) {
-        return (
-            <button class={styles.trigger} disabled>
-                <Loader2 size={14} class={styles.spinning} />
-                <span class={styles["trigger-name"]}>Loading models...</span>
-            </button>
-        );
-    }
-
-    // No models
-    if (availableProviders().length === 0) {
-        return (
-            <button class={styles.trigger} disabled>
-                <span class={styles["trigger-name"]}>No models available</span>
-            </button>
-        );
-    }
-
-    const info = selectedModelInfo();
-    const logoProvider = info ? PROVIDER_LOGO_MAP[info.provider] : undefined;
+    const logoProvider = () => {
+        const info = selectedModelInfo();
+        return info ? PROVIDER_LOGO_MAP[info.provider] : undefined;
+    };
 
     return (
+        <>
+            <Show when={query.pending}>
+                <button class={styles.trigger} disabled>
+                    <Loader2 size={14} class={styles.spinning} />
+                    <span class={styles["trigger-name"]}>Loading models...</span>
+                </button>
+            </Show>
+            <Show when={!query.pending && availableProviders().length === 0}>
+                <button class={styles.trigger} disabled>
+                    <span class={styles["trigger-name"]}>No models available</span>
+                </button>
+            </Show>
+            <Show when={!query.pending && availableProviders().length > 0}>
         <Dialog open={open()} onOpenChange={onOpenChange}>
             <DialogTrigger>
                 <button class={styles.trigger} disabled={props.disabled} data-label="Model selector trigger">
-                    <Show when={logoProvider}>
-                        <ProviderLogo provider={logoProvider!} class={styles["trigger-logo"]} />
+                    <Show when={logoProvider()}>
+                        <ProviderLogo provider={logoProvider()!} class={styles["trigger-logo"]} />
                     </Show>
                     <span class={styles["trigger-name"]}>
-                        {info?.model.displayName || props.selectedModel || "Select model"}
+                        {selectedModelInfo()?.model.displayName || props.selectedModel || "Select model"}
                     </span>
                 </button>
             </DialogTrigger>
@@ -304,6 +300,8 @@ export function ModelSelector(props: {
                 </div>
             </DialogContent>
         </Dialog>
+            </Show>
+        </>
     );
 }
 

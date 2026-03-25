@@ -1,9 +1,10 @@
 .container {
     display: flex;
     flex-direction: column;
-    border-top: 1px solid var(--border);
+    border-left: 2px solid var(--border);
     background: var(--background);
     flex-shrink: 0;
+    height: 10rem;
 }
 
 .header {
@@ -25,7 +26,6 @@
     width: 100%;
     min-height: 4rem;
     max-height: 12rem;
-    padding: 0.625rem 0.75rem;
     border: none;
     background: transparent;
     color: var(--foreground);

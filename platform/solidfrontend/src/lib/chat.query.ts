@@ -52,6 +52,18 @@ export const useCreateConversation = createSubmission<CreateConversationPayload,
     onError: (error) => showError(error.message),
 });
 
+export const useUpdateConversation = createSubmission<{ id: string; title: string }>({
+    callback: async (payload) => {
+        return archestraApiSdk.updateChatConversation({
+            headers: getAuthHeaders(),
+            path: { id: payload.id },
+            body: { title: payload.title },
+        });
+    },
+    onSuccess: () => revalidate("fetch-conversations"),
+    onError: (error) => showError(error.message),
+});
+
 export const useDeleteConversation = createSubmission<string>({
     callback: async (conversationId) => {
         return archestraApiSdk.deleteChatConversation({

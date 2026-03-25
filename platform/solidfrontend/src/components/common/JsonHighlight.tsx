@@ -1,7 +1,7 @@
 import { EditorState } from "@codemirror/state";
 import { EditorView } from "@codemirror/view";
 import { type JSX, onCleanup } from "solid-js";
-import { readonlyJsonExtensions } from "./codemirror-extensions";
+import { readonlyJsonExtensions } from "../logs/codemirror-extensions";
 import styles from "./JsonHighlight.module.css";
 
 export function JsonHighlight(props: {

@@ -88,6 +88,14 @@ Whenever you are asked to port UI, port it from `../frontend`. It also has Tanst
 - Do not use `clientOnly` - render everything on the server
 - If there's a hydration issue, fix the root cause instead of adding workarounds
 - Route components should just render their content directly
+- Never pass `<Show>` inside a JSX prop — use a ternary instead (Show produces hydration markers that mismatch when used as a prop value):
+  ```tsx
+  // Good
+  headerContent={agentId() ? <Tools agentId={agentId()!} /> : undefined}
+
+  // Bad — causes hydration error
+  headerContent={<Show when={agentId()}><Tools agentId={agentId()!} /></Show>}
+  ```
 
 **Queries**:
 - Do not import `action`, `createAsync`, `query`, `revalidate`, `useAction`, `useSubmission` from `@solidjs/router` in components - use query hooks from `lib/*.query.ts` instead
