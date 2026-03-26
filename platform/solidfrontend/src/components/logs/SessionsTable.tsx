@@ -24,7 +24,8 @@ interface SessionsTableProps {
 }
 
 export function SessionsTable(props: SessionsTableProps): JSX.Element {
-    const initialIds = parseInitialRouteIds();
+    const location = useLocation();
+    const initialIds = parseInitialRouteIds(location.pathname);
 
     const [expandedSessionId, setExpandedSessionId] = createSignal<string | undefined>(initialIds.sessionId, {
         name: "expandedSession",
@@ -32,7 +33,6 @@ export function SessionsTable(props: SessionsTableProps): JSX.Element {
 
     // Collapse when the router navigates to the base path (e.g. sidebar click).
     // replaceState changes don't trigger this since the router is unaware of them.
-    const location = useLocation();
     createEffect(() => {
         if (location.pathname === LLM_PROXY_BASE || location.pathname === `${LLM_PROXY_BASE}/`) {
             setExpandedSessionId(undefined);
@@ -190,10 +190,9 @@ function replaceUrl(path: string): void {
 
 /**
  * Parse sessionId and entryId from the initial URL on mount.
+ * Uses the router pathname (works during SSR) instead of window.location.
  */
-function parseInitialRouteIds(): { sessionId: string | undefined; entryId: string | undefined } {
-    if (typeof window === "undefined") return { sessionId: undefined, entryId: undefined };
-    const pathname = window.location.pathname;
+function parseInitialRouteIds(pathname: string): { sessionId: string | undefined; entryId: string | undefined } {
     const sessionMatch = pathname.match(/\/logs\/llm-proxy\/session\/([^/]+)/);
     const entryMatch = pathname.match(/\/logs\/llm-proxy(?:\/session\/[^/]+)?\/entry\/([^/]+)/);
     return { sessionId: sessionMatch?.[1], entryId: entryMatch?.[1] };

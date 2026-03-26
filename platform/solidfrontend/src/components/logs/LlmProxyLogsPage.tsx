@@ -1,4 +1,4 @@
-import { useSearchParams } from "@solidjs/router";
+import { useLocation, useSearchParams } from "@solidjs/router";
 import { createSignal, type JSX, Show } from "solid-js";
 import { InteractionDrawer } from "@/components/logs/InteractionDrawer";
 import { Pagination } from "@/components/common/Pagination";
@@ -15,6 +15,7 @@ import { Main } from "~/components/primitives/Main";
 const LLM_PROXY_BASE = "/logs/llm-proxy";
 
 export function LlmProxyLogsPage(): JSX.Element {
+    const location = useLocation();
     const [searchParams, setSearchParams] = useSearchParams();
 
     const page = () => Number(asString(searchParams.page) || "0");
@@ -45,7 +46,7 @@ export function LlmProxyLogsPage(): JSX.Element {
     const hasFilters = () => !!(profileId() || userId() || search() || startDate());
 
     // Drawer state
-    const initialEntryId = parseInitialEntryId();
+    const initialEntryId = parseInitialEntryId(location.pathname);
     const [activeInteractionId, setActiveInteractionId] = createSignal<string | null>(initialEntryId);
 
     const openDrawer = (interactionId: string) => {
@@ -131,8 +132,7 @@ function replaceUrl(path: string): void {
     window.history.replaceState(null, "", `${path}${searchParams}`);
 }
 
-function parseInitialEntryId(): string | null {
-    if (typeof window === "undefined") return null;
-    const match = window.location.pathname.match(/\/entry\/([^/]+)$/);
+function parseInitialEntryId(pathname: string): string | null {
+    const match = pathname.match(/\/entry\/([^/]+)$/);
     return match?.[1] ?? null;
 }

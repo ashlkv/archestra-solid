@@ -1,0 +1,59 @@
+.root {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.label {
+    cursor: pointer;
+    user-select: none;
+    color: var(--muted-foreground);
+}
+
+.label[data-checked] {
+    color: var(--foreground);
+}
+
+.label[data-disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.control {
+    display: inline-flex;
+    align-items: center;
+    width: 1.75rem;
+    height: 1rem;
+    padding: 1px;
+    border-radius: 1rem;
+    background: color-mix(in srgb, var(--foreground) 20%, transparent);
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+    flex-shrink: 0;
+}
+
+.control[data-checked] {
+    background: var(--primary);
+}
+
+.control[data-disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.control:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+}
+
+.thumb {
+    width: 0.875rem;
+    height: 0.875rem;
+    border-radius: 50%;
+    background: white;
+    transition: transform 0.15s ease;
+}
+
+.thumb[data-checked] {
+    transform: translateX(0.75rem);
+}

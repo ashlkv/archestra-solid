@@ -1,5 +1,6 @@
 import { Dialog as KobalteDialog } from "@kobalte/core/dialog";
 import type { JSX, ParentProps } from "solid-js";
+import { Show } from "solid-js";
 import { X } from "@/components/icons";
 import styles from "./Dialog.module.css";
 
@@ -20,7 +21,7 @@ export function DialogTrigger(props: ParentProps): JSX.Element {
 }
 
 export function DialogContent(
-    props: ParentProps<{ title?: string; size?: "small" | "medium" | "large" }>,
+    props: ParentProps<{ title?: string; size?: "small" | "medium" | "large"; hideHeader?: boolean; noPadding?: boolean }>,
 ): JSX.Element {
     const contentClass = () => {
         const classes = [styles.content];
@@ -39,13 +40,18 @@ export function DialogContent(
             <KobalteDialog.Overlay class={styles.overlay} />
             <div class={styles.positioner}>
                 <KobalteDialog.Content class={contentClass()}>
-                    <div class={styles.header}>
-                        <KobalteDialog.Title class={styles.title}>{props.title}</KobalteDialog.Title>
-                        <KobalteDialog.CloseButton class={styles.close}>
-                            <X size={16} />
-                        </KobalteDialog.CloseButton>
-                    </div>
-                    <div class={styles.body}>{props.children}</div>
+                    <Show when={!props.hideHeader}>
+                        <div class={styles.header}>
+                            <KobalteDialog.Title class={styles.title}>{props.title}</KobalteDialog.Title>
+                            <KobalteDialog.CloseButton class={styles.close}>
+                                <X size={16} />
+                            </KobalteDialog.CloseButton>
+                        </div>
+                    </Show>
+                    <Show when={props.hideHeader}>
+                        <KobalteDialog.Title class={styles["sr-only"]}>{props.title}</KobalteDialog.Title>
+                    </Show>
+                    <div class={`${styles.body} ${props.noPadding ? styles["no-padding"] : ""}`}>{props.children}</div>
                 </KobalteDialog.Content>
             </div>
         </KobalteDialog.Portal>

@@ -1,5 +1,5 @@
 import { providerDisplayNames, type SupportedProvider } from "@shared";
-import { createSignal, For, type JSX, Show } from "solid-js";
+import { createEffect, createSignal, For, type JSX, on, Show } from "solid-js";
 import {
     Check,
     Copy,
@@ -10,11 +10,14 @@ import {
     Loader2,
     Mic,
     RefreshCcw,
+    Search,
     Settings2,
     Video,
     X,
 } from "@/components/icons";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/primitives/Dialog";
+import { Button } from "@/components/primitives/Button";
+import { Dialog, DialogContent } from "@/components/primitives/Dialog";
+import { ProviderModelButton } from "@/components/primitives/ProviderModelButton";
 import { Tooltip } from "@/components/primitives/Tooltip";
 import { groupModelsByProvider, useChatModels, useSyncChatModels } from "@/lib/chat-models.query";
 import type { ChatModel, ModelCapabilities } from "@/types";
@@ -42,10 +45,26 @@ const PROVIDER_LOGO_MAP: Record<SupportedProvider, string> = {
     zhipuai: "zhipuai",
 };
 
+const PROVIDER_HEADING_COLORS: Partial<Record<SupportedProvider, string>> = {
+    anthropic: "var(--color-3)",
+    openai: "var(--color-8)",
+    gemini: "var(--color-15)",
+    bedrock: "var(--color-6)",
+    cerebras: "var(--color-10)",
+    cohere: "var(--color-12)",
+    mistral: "var(--color-4)",
+    vllm: "var(--color-13)",
+    ollama: "var(--color-7)",
+    zhipuai: "var(--color-14)",
+};
+
 export function ModelSelector(props: {
     selectedModel: string;
     onModelChange: (model: string) => void;
     disabled?: boolean;
+    size?: "medium" | "small";
+    currentProvider?: SupportedProvider;
+    monochrome?: boolean;
 }): JSX.Element {
     const { data: models, query } = useChatModels(undefined as undefined);
     const { submission: syncSubmission, submit: syncModels } = useSyncChatModels();
@@ -62,6 +81,19 @@ export function ModelSelector(props: {
             setToolCallingFilter(false);
         }
     };
+
+    let modelListRef: HTMLDivElement | undefined;
+
+    createEffect(
+        on(open, (isOpen) => {
+            if (isOpen) {
+                requestAnimationFrame(() => {
+                    const selected = modelListRef?.querySelector('[data-selected="true"]');
+                    selected?.scrollIntoView({ block: "center" });
+                });
+            }
+        }),
+    );
 
     const modelsByProvider = () => groupModelsByProvider(models() ?? []);
 
@@ -147,40 +179,35 @@ export function ModelSelector(props: {
         setToolCallingFilter(!toolCallingFilter());
     };
 
-    const logoProvider = () => {
-        const info = selectedModelInfo();
-        return info ? PROVIDER_LOGO_MAP[info.provider] : undefined;
-    };
-
     return (
         <>
             <Show when={query.pending}>
-                <button class={styles.trigger} disabled>
+                <Button variant="outline" size={props.size ?? "small"} class={styles.trigger} disabled>
                     <Loader2 size={14} class={styles.spinning} />
                     <span class={styles["trigger-name"]}>Loading models...</span>
-                </button>
+                </Button>
             </Show>
             <Show when={!query.pending && availableProviders().length === 0}>
-                <button class={styles.trigger} disabled>
+                <Button variant="outline" size={props.size ?? "small"} class={styles.trigger} disabled>
                     <span class={styles["trigger-name"]}>No models available</span>
-                </button>
+                </Button>
             </Show>
             <Show when={!query.pending && availableProviders().length > 0}>
         <Dialog open={open()} onOpenChange={onOpenChange}>
-            <DialogTrigger>
-                <button class={styles.trigger} disabled={props.disabled} data-label="Model selector trigger">
-                    <Show when={logoProvider()}>
-                        <ProviderLogo provider={logoProvider()!} class={styles["trigger-logo"]} />
-                    </Show>
-                    <span class={styles["trigger-name"]}>
-                        {selectedModelInfo()?.model.displayName || props.selectedModel || "Select model"}
-                    </span>
-                </button>
-            </DialogTrigger>
-            <DialogContent title="Select model" size="medium">
+            <ProviderModelButton
+                provider={props.currentProvider ?? ""}
+                model={selectedModelInfo()?.model.displayName || props.selectedModel || "Select model"}
+                showProviderLogo
+                size={props.size}
+                chevron
+                monochrome={props.monochrome}
+                onClick={() => onOpenChange(true)}
+                disabled={props.disabled}
+            />
+            <DialogContent title="Select model" size="medium" hideHeader noPadding>
                 <div class={styles["dialog-body"]}>
-                    {/* Filters bar */}
-                    <div class={styles["filters-bar"]}>
+                    {/* Toolbar: filters + search + refresh + close */}
+                    <div class={styles.toolbar}>
                         <Show when={availableModalities().size > 0}>
                             <span class={styles["filters-label"]}>Filter:</span>
                             <div class={styles["filters-group"]}>
@@ -202,9 +229,16 @@ export function ModelSelector(props: {
                                 />
                             </div>
                         </Show>
-                        <Show when={availableModalities().size === 0}>
-                            <div style={{ flex: "1" }} />
-                        </Show>
+                        <div class={styles["search-wrapper"]}>
+                            <Search size={14} class={styles["search-icon"]} />
+                            <input
+                                type="text"
+                                placeholder="Search models..."
+                                value={searchQuery()}
+                                onInput={(event) => setSearchQuery(event.currentTarget.value)}
+                                autofocus
+                            />
+                        </div>
                         <Tooltip content="Refresh models from providers">
                             <button
                                 class={styles["refresh-button"]}
@@ -215,21 +249,17 @@ export function ModelSelector(props: {
                                 <RefreshCcw size={16} class={syncSubmission.pending ? styles.spinning : ""} />
                             </button>
                         </Tooltip>
-                    </div>
-
-                    {/* Search */}
-                    <div class={styles["search-input"]}>
-                        <input
-                            type="text"
-                            placeholder="Search models..."
-                            value={searchQuery()}
-                            onInput={(event) => setSearchQuery(event.currentTarget.value)}
-                            autofocus
-                        />
+                        <button
+                            class={styles["close-button"]}
+                            onClick={() => onOpenChange(false)}
+                            data-label="Close model selector"
+                        >
+                            <X size={16} />
+                        </button>
                     </div>
 
                     {/* Model list */}
-                    <div class={styles["model-list"]}>
+                    <div class={styles["model-list"]} ref={modelListRef}>
                         {/* Current model if not in available list */}
                         <Show when={!isModelAvailable() && props.selectedModel}>
                             <div class={styles["provider-group"]}>
@@ -255,13 +285,25 @@ export function ModelSelector(props: {
                         <For each={filteredProviders()}>
                             {(group) => (
                                 <div class={styles["provider-group"]}>
-                                    <div class={styles["provider-heading"]}>{providerDisplayNames[group.provider]}</div>
+                                    <div
+                                        class={styles["provider-heading"]}
+                                        style={{
+                                            background: PROVIDER_HEADING_COLORS[group.provider] ?? "color-mix(in srgb, var(--foreground) 15%, transparent)",
+                                        }}
+                                    >
+                                        <ProviderLogo
+                                            provider={PROVIDER_LOGO_MAP[group.provider]}
+                                            class={styles["model-logo"]}
+                                        />
+                                        {providerDisplayNames[group.provider]}
+                                    </div>
                                     <For each={group.models}>
                                         {(model) => (
                                             <div
-                                                class={styles["model-item"]}
+                                                class={`${styles["model-item"]} ${props.selectedModel === model.id ? styles.selected : ""}`}
                                                 onClick={() => onSelectModel(model.id)}
                                                 data-label={`Model: ${model.id}`}
+                                                data-selected={props.selectedModel === model.id ? "true" : undefined}
                                             >
                                                 <ProviderLogo
                                                     provider={PROVIDER_LOGO_MAP[group.provider]}

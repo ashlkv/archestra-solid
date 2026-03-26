@@ -1,6 +1,8 @@
 import { A, useLocation } from "@solidjs/router";
-import { For, type JSX, type ParentProps, Show } from "solid-js";
+import { For, createSignal, type JSX, type ParentProps, Show } from "solid-js";
+import { SearchInput } from "@/components/primitives/SearchInput";
 import styles from "./UiLayout.module.css";
+import { filterUiNavItems } from "./UiLayout.utils";
 
 const primitiveModules = import.meta.glob("../../components/primitives/*.tsx");
 const commonModules = import.meta.glob("../../components/common/*.tsx");
@@ -28,11 +30,14 @@ const COMMON = buildNavItems(commonModules, { pagination: "pagination-logs" });
 const LLM = buildNavItems(llmModules);
 
 const COMPONENTS: NavItem[] = [
+    { title: "Editable text", url: "/ui/editable-text" },
     { title: "Add MCP card", url: "/ui/add-mcp-card" },
     { title: "MCP card", url: "/ui/mcp-card" },
     { title: "MCP icons", url: "/ui/mcp-icons" },
     { title: "MCP instance hover card", url: "/ui/mcp-instance-hover-card" },
+    { title: "MCP option card", url: "/ui/mcp-option-card" },
     { title: "Prompt input", url: "/ui/prompt-input" },
+    { title: "Text input", url: "/ui/text-input" },
     { title: "Tool hover card", url: "/ui/tool-hover-card" },
 ];
 
@@ -60,15 +65,35 @@ function NavSection(props: { label: string; items: NavItem[] }): JSX.Element {
 }
 
 export function UiLayout(props: ParentProps): JSX.Element {
+    const [searchQuery, setSearchQuery] = createSignal("", { name: "searchQuery" });
+
+    const filteredPrimitives = () => filterUiNavItems({ items: PRIMITIVES, searchQuery: searchQuery() });
+    const filteredCommon = () => filterUiNavItems({ items: COMMON, searchQuery: searchQuery() });
+    const filteredLlm = () => filterUiNavItems({ items: LLM, searchQuery: searchQuery() });
+    const filteredComponents = () => filterUiNavItems({ items: COMPONENTS, searchQuery: searchQuery() });
+    const hasResults = () =>
+        filteredPrimitives().length > 0 ||
+        filteredCommon().length > 0 ||
+        filteredLlm().length > 0 ||
+        filteredComponents().length > 0;
+
     return (
         <div class={styles.layout}>
             <nav class={styles.sidebar} data-label="UiDemoSidebar">
                 <div class={styles.header}>UI</div>
+                <div class={styles.search} data-label="UiDemoSearch">
+                    <SearchInput value={searchQuery()} onChange={setSearchQuery} placeholder="Search components..." />
+                </div>
                 <div class={styles.nav}>
-                    <NavSection label="Primitives" items={PRIMITIVES} />
-                    <NavSection label="Common" items={COMMON} />
-                    <NavSection label="LLM" items={LLM} />
-                    <NavSection label="Components" items={COMPONENTS} />
+                    <NavSection label="Primitives" items={filteredPrimitives()} />
+                    <NavSection label="Common" items={filteredCommon()} />
+                    <NavSection label="LLM" items={filteredLlm()} />
+                    <NavSection label="Components" items={filteredComponents()} />
+                    <Show when={!hasResults()}>
+                        <div class={styles["empty-state"]} data-label="UiDemoEmptyState">
+                            No matching demos
+                        </div>
+                    </Show>
                 </div>
             </nav>
             <div class={styles.content}>{props.children}</div>

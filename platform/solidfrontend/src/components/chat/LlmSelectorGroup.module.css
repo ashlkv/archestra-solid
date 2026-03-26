@@ -1,0 +1,11 @@
+.group {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 0;
+}
+
+.separator {
+    color: var(--muted-foreground);
+    font-size: var(--small-font-size);
+}

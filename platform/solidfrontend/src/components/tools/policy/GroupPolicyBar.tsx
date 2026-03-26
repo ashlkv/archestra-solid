@@ -70,6 +70,7 @@ export function GroupPolicyBar(props: {
                     options={callOptions}
                     placeholder="Select action"
                     disabled={disabled()}
+                    size="small"
                 />
             </div>
 
@@ -81,6 +82,7 @@ export function GroupPolicyBar(props: {
                     options={resultOptions}
                     placeholder="Select action"
                     disabled={disabled()}
+                    size="small"
                 />
             </div>
 

@@ -265,7 +265,7 @@ function ToolRow(props: {
                         toolId={props.tool.id}
                         policyId={props.resultPolicy?.id}
                         value={props.resultPolicy?.action}
-                        size="xsmall"
+                        size="small"
                     />
                 </TableCell>
             </Show>

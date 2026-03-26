@@ -8,6 +8,8 @@ export function IconContext7(props: Props): JSX.Element {
             src="https://avatars.githubusercontent.com/u/74989412?s=96&v=4"
             alt="Context7"
             title={props.title}
+            width={props.size ?? 16}
+            height={props.size ?? 16}
             class={props.class}
         />
     );

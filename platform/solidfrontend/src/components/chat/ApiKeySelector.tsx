@@ -1,15 +1,19 @@
 import { providerDisplayNames, type SupportedProvider } from "@shared";
 import { createEffect, createSignal, For, type JSX, on, Show } from "solid-js";
-import { Building2, Check, Key, User, Users } from "@/components/icons";
+import { ChevronDown, Key } from "@/components/icons";
+import { Button } from "@/components/primitives/Button";
+import { DropdownPanel, DropdownPanelEmpty, DropdownPanelItem } from "@/components/primitives/DropdownPanel";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/primitives/Popover";
+import { ProviderModelBadge } from "@/components/primitives/ProviderModelBadge";
 import { useAvailableChatApiKeys } from "@/lib/chat-api-keys.query";
 import type { ChatApiKey, ChatApiKeyScope } from "@/types";
+import { getApiKeyListItems } from "./ApiKeySelector.utils";
 import styles from "./ApiKeySelector.module.css";
 
-const SCOPE_ICONS: Record<ChatApiKeyScope, (size: number) => JSX.Element> = {
-    personal: (size) => <User size={size} />,
-    team: (size) => <Users size={size} />,
-    org_wide: (size) => <Building2 size={size} />,
+const SCOPE_LABELS: Record<ChatApiKeyScope, string> = {
+    personal: "me",
+    team: "team",
+    org_wide: "org",
 };
 
 export function ApiKeySelector(props: {
@@ -17,10 +21,11 @@ export function ApiKeySelector(props: {
     onKeyChange: (keyId: string) => void;
     currentProvider?: SupportedProvider;
     disabled?: boolean;
+    size?: "medium" | "small" | "xsmall";
+    autoSelect?: boolean;
 }): JSX.Element {
     const { data: availableKeys, query } = useAvailableChatApiKeys(undefined as undefined);
     const [open, setOpen] = createSignal(false, { name: "open" });
-    const [searchQuery, setSearchQuery] = createSignal("", { name: "searchQuery" });
 
     const keys = () => availableKeys() ?? [];
 
@@ -29,6 +34,7 @@ export function ApiKeySelector(props: {
         on(
             () => [keys(), props.currentProvider, props.selectedKeyId] as const,
             ([keyList, provider, currentKeyId]) => {
+                if (props.autoSelect === false) return;
                 if (!keyList.length || currentKeyId) return;
 
                 const providerKeys = provider ? keyList.filter((k) => k.provider === provider) : [];
@@ -51,46 +57,11 @@ export function ApiKeySelector(props: {
         ),
     );
 
-    const keysByProvider = () => {
-        const grouped: Partial<Record<SupportedProvider, ChatApiKey[]>> = {};
-        for (const key of keys()) {
-            if (!grouped[key.provider]) {
-                grouped[key.provider] = [];
-            }
-            grouped[key.provider]!.push(key);
-        }
-        return grouped;
-    };
-
-    const sortedProviders = () => {
-        const providerList = Object.keys(keysByProvider()) as SupportedProvider[];
-        const current = props.currentProvider;
-        if (!current) return providerList;
-        return providerList.sort((a, b) => {
-            if (a === current) return -1;
-            if (b === current) return 1;
-            return a.localeCompare(b);
+    const keyItems = () =>
+        getApiKeyListItems({
+            keys: keys(),
+            currentProvider: props.currentProvider,
         });
-    };
-
-    const providerGroups = () => {
-        const search = searchQuery().toLowerCase();
-        const result: Array<{ provider: SupportedProvider; keys: ChatApiKey[] }> = [];
-        for (const provider of sortedProviders()) {
-            const providerKeys = keysByProvider()[provider] ?? [];
-            const filtered = search
-                ? providerKeys.filter(
-                      (key) =>
-                          key.name.toLowerCase().includes(search) ||
-                          (key.teamName ?? "").toLowerCase().includes(search),
-                  )
-                : providerKeys;
-            if (filtered.length > 0) {
-                result.push({ provider, keys: filtered });
-            }
-        }
-        return result;
-    };
 
     const selectedKey = () => keys().find((k) => k.id === props.selectedKeyId);
 
@@ -100,56 +71,43 @@ export function ApiKeySelector(props: {
             return;
         }
         setOpen(false);
-        setSearchQuery("");
         props.onKeyChange(keyId);
     };
 
     return (
         <Show when={!query.pending && keys().length > 0}>
-        <Popover open={open()} onOpenChange={setOpen}>
-            <PopoverTrigger>
-                <button class={styles.trigger} disabled={props.disabled} data-label="API key selector trigger">
-                    <Key size={14} />
-                    <span class={styles["trigger-name"]}>
-                        {selectedKey() ? getKeyDisplayName(selectedKey()!) : "Select key"}
-                    </span>
-                </button>
-            </PopoverTrigger>
-            <PopoverContent>
-                <div class={styles["popover-body"]}>
-                    <div class={styles["search-input"]}>
-                        <input
-                            type="text"
-                            placeholder="Search API keys..."
-                            value={searchQuery()}
-                            onInput={(event) => setSearchQuery(event.currentTarget.value)}
-                            autofocus
-                        />
-                    </div>
+            <Popover open={open()} onOpenChange={setOpen}>
+                <PopoverTrigger>
+                    <Button
+                        variant="muted"
+                        size={props.size ?? "small"}
+                        class={styles.trigger}
+                        disabled={props.disabled}
+                        data-label="API key selector trigger"
+                    >
+                        <Key size={12} />
+                        <span class={styles["trigger-name"]}>{selectedKey()?.name ?? "Select key"}</span>
+                        <ChevronDown size={14} />
+                    </Button>
+                </PopoverTrigger>
+                <PopoverContent>
+                    <DropdownPanel>
+                        <Show when={keyItems().length === 0}>
+                            <DropdownPanelEmpty>No API keys found.</DropdownPanelEmpty>
+                        </Show>
 
-                    <Show when={providerGroups().length === 0}>
-                        <div class={styles["empty-state"]}>No API keys found.</div>
-                    </Show>
-
-                    <For each={providerGroups()}>
-                        {(group) => (
-                            <div class={styles["provider-group"]}>
-                                <div class={styles["provider-heading"]}>{providerDisplayNames[group.provider]}</div>
-                                <For each={group.keys}>
-                                    {(key) => (
-                                        <KeyItem
-                                            apiKey={key}
-                                            isSelected={props.selectedKeyId === key.id}
-                                            onSelect={() => onSelectKey(key.id)}
-                                        />
-                                    )}
-                                </For>
-                            </div>
-                        )}
-                    </For>
-                </div>
-            </PopoverContent>
-        </Popover>
+                        <For each={keyItems()}>
+                            {(item) => (
+                                <KeyItem
+                                    apiKey={item.key}
+                                    isSelected={props.selectedKeyId === item.key.id}
+                                    onSelect={() => onSelectKey(item.key.id)}
+                                />
+                            )}
+                        </For>
+                    </DropdownPanel>
+                </PopoverContent>
+            </Popover>
         </Show>
     );
 }
@@ -158,26 +116,33 @@ export function ApiKeySelector(props: {
 // Internal
 // ---------------------------------------------------------------------------
 
-function KeyItem(props: { apiKey: ChatApiKey; isSelected: boolean; onSelect: () => void }): JSX.Element {
+function KeyItem(props: {
+    apiKey: ChatApiKey;
+    isSelected: boolean;
+    onSelect: () => void;
+}): JSX.Element {
     return (
-        <div class={styles["key-item"]} onClick={props.onSelect} data-label={`Key: ${props.apiKey.name}`}>
-            <div class={styles["key-info"]}>
-                {SCOPE_ICONS[props.apiKey.scope](12)}
+        <DropdownPanelItem
+            onClick={props.onSelect}
+            selected={props.isSelected}
+            class={styles["key-item"]}
+            data-label={`Key: ${props.apiKey.name}`}
+        >
+            <div class={styles["key-main"]}>
+                <Key size={12} class={styles["key-icon"]} />
                 <span class={styles["key-name"]}>{props.apiKey.name}</span>
-                <Show when={props.apiKey.scope === "team" && props.apiKey.teamName}>
-                    <span class={styles["team-badge"]}>{props.apiKey.teamName}</span>
-                </Show>
+                <span class={styles["key-separator"]}>for</span>
+                <ProviderModelBadge
+                    provider={props.apiKey.provider}
+                    class={styles["provider-badge"]}
+                    showProviderLogo={true}
+                    size="medium"
+                />
             </div>
-            <Show when={props.isSelected}>
-                <Check size={16} />
-            </Show>
-        </div>
+            <span class={styles["scope-label"]} title={providerDisplayNames[props.apiKey.provider]}>
+                {SCOPE_LABELS[props.apiKey.scope]}
+            </span>
+        </DropdownPanelItem>
     );
 }
 
-function getKeyDisplayName(key: ChatApiKey): string {
-    if (key.scope === "team" && key.teamName) {
-        return `${key.name} (${key.teamName})`;
-    }
-    return key.name;
-}

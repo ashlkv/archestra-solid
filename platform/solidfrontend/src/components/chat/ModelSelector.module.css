@@ -2,16 +2,8 @@
     display: inline-flex;
     align-items: center;
     gap: 0.375rem;
-    padding: 0.25rem 0.5rem;
-    border-radius: var(--radius);
-    border: 1px solid var(--border);
-    background: var(--background);
-    color: var(--foreground);
-    cursor: pointer;
     max-width: 280px;
     min-width: 0;
-    font-family: inherit;
-    font-size: inherit;
 }
 
 .trigger:hover {
@@ -23,12 +15,6 @@
     cursor: default;
 }
 
-.trigger-logo {
-    width: 14px;
-    height: 14px;
-    flex-shrink: 0;
-}
-
 .trigger-name {
     overflow: hidden;
     text-overflow: ellipsis;
@@ -37,7 +23,15 @@
     text-align: left;
 }
 
-/* Dialog content — no padding on body, we handle it ourselves */
+.trigger-badge {
+    cursor: pointer;
+}
+
+.trigger-badge:hover {
+    opacity: 0.85;
+}
+
+/* Dialog content */
 .dialog-body {
     display: flex;
     flex-direction: column;
@@ -45,7 +39,8 @@
     overflow: hidden;
 }
 
-.filters-bar {
+/* Combined toolbar: filters + search + refresh + close */
+.toolbar {
     display: flex;
     align-items: center;
     gap: 0.25rem;
@@ -65,7 +60,6 @@
     flex-wrap: wrap;
     align-items: center;
     gap: 0.25rem;
-    flex: 1;
 }
 
 .filter-toggle {
@@ -88,6 +82,33 @@
     background: var(--primary);
     color: oklch(from var(--primary) clamp(0, (0.5 - l) * 100, 1) 0 0);
     border-color: var(--primary);
+}
+
+.search-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    flex: 1;
+    min-width: 0;
+    margin-left: 0.25rem;
+}
+
+.search-wrapper input {
+    flex: 1;
+    min-width: 0;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: var(--foreground);
+}
+
+.search-wrapper input::placeholder {
+    color: var(--muted-foreground);
+}
+
+.search-icon {
+    color: var(--muted-foreground);
+    flex-shrink: 0;
 }
 
 .refresh-button {
@@ -113,6 +134,23 @@
     cursor: default;
 }
 
+.close-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.25rem;
+    border-radius: var(--radius);
+    border: none;
+    background: none;
+    color: var(--muted-foreground);
+    cursor: pointer;
+}
+
+.close-button:hover {
+    color: var(--foreground);
+    background: color-mix(in srgb, var(--foreground) 10%, transparent);
+}
+
 .spinning {
     animation: spin 1s linear infinite;
 }
@@ -122,29 +160,11 @@
     to { transform: rotate(360deg); }
 }
 
-.search-input {
-    padding: 0.75rem;
-    border-bottom: 1px solid var(--border);
-    flex-shrink: 0;
-}
-
-.search-input input {
-    width: 100%;
-    border: none;
-    outline: none;
-    background: transparent;
-    color: var(--foreground);
-}
-
-.search-input input::placeholder {
-    color: var(--muted-foreground);
-}
-
+/* Model list */
 .model-list {
     flex: 1;
     overflow-y: auto;
     min-height: 0;
-    max-height: 400px;
 }
 
 .provider-group {
@@ -152,9 +172,13 @@
 }
 
 .provider-heading {
-    padding: 0.375rem 0.75rem;
-    color: var(--muted-foreground);
-    font-weight: bold;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.25rem 0.625rem 0.25rem 0.5rem;
+    border-radius: 1rem;
+    margin: 0.5rem 0.75rem 0.25rem;
+    font-weight: 500;
 }
 
 .model-item {
@@ -172,6 +196,10 @@
 .model-item.disabled {
     opacity: 0.5;
     cursor: default;
+}
+
+.model-item.selected {
+    background: color-mix(in srgb, var(--primary) 8%, transparent);
 }
 
 .model-logo {

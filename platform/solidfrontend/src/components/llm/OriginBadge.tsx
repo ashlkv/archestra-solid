@@ -2,53 +2,75 @@ import type { JSX } from "solid-js";
 import { Dynamic } from "solid-js/web";
 import { getIcon } from "@/components/mcp-icons";
 import { IconClaudeCode } from "@/components/mcp-icons/IconClaudeCode";
-import { Badge } from "@/components/primitives/Badge";
 import styles from "./OriginBadge.module.css";
 
-/**
- * Displays a badge showing the origin of a tool.
- *
- * Smart defaults:
- * - If `mcpServerName` is provided, uses that directly.
- * - If the tool name contains `__`, extracts the server prefix.
- * - If `archestra__`, shows "archestra" with primary variant.
- * - Otherwise assumes "LLM Proxy" — and since Claude Code is currently the only
- *   external agent, shows the Claude Code icon + "Claude Code".
- */
-export function OriginBadge(props: { toolName: string; mcpServerName?: string | null }): JSX.Element {
+type BadgeColor = { bg: string; fg: string };
+
+type OriginStyle = { color: BadgeColor };
+
+const ORIGIN_STYLES: Record<string, OriginStyle> = {
+    archestra: { color: { bg: "var(--foreground)", fg: "var(--background)" } },
+    github: { color: { bg: "#24292f", fg: "#ffffff" } },
+    kubernetes: { color: { bg: "#326ce5", fg: "#ffffff" } },
+    k8s: { color: { bg: "#326ce5", fg: "#ffffff" } },
+    playwright: { color: { bg: "color-mix(in srgb, var(--foreground) 15%, transparent)", fg: "var(--foreground)" } },
+    jira: { color: { bg: "#0052cc", fg: "#ffffff" } },
+    context7: { color: { bg: "#1a1a1a", fg: "#ffffff" } },
+    "claude code": { color: { bg: "#d97757", fg: "#ffffff" } },
+};
+
+const DEFAULT_COLOR: BadgeColor = {
+    bg: "color-mix(in srgb, var(--foreground) 15%, transparent)",
+    fg: "var(--foreground)",
+};
+
+export function OriginBadge(props: { toolName: string; mcpServerName?: string | null; size?: "small" | "medium"; class?: string }): JSX.Element {
     const origin = () => resolveOrigin(props.toolName, props.mcpServerName);
+    const color = () => origin().originStyle?.color ?? DEFAULT_COLOR;
 
     return (
-        <Badge variant={origin().variant} class={styles.badge}>
-            <Dynamic component={origin().icon} size={14} class={styles.icon} />
+        <span class={`${styles.badge} ${props.size === "medium" ? styles.medium : ""} ${props.class ?? ""}`}>
+            <span class={styles["icon-section"]} style={{ background: color().bg, color: color().fg }}>
+                <Dynamic
+                    component={origin().icon}
+                    size={14}
+                    class={`${styles.icon} ${origin().originStyle ? styles["icon-colored"] : ""}`}
+                />
+            </span>
             <span class={styles.label}>{origin().label}</span>
-        </Badge>
+        </span>
     );
 }
 
 type Origin = {
     label: string;
-    variant: "primary" | "muted";
+    originStyle?: OriginStyle;
     icon: (props: { size?: number; class?: string }) => JSX.Element;
 };
 
 function resolveOrigin(toolName: string, mcpServerName?: string | null): Origin {
-    if (toolName.startsWith("archestra__")) {
-        return { label: "archestra", variant: "primary", icon: getIcon("archestra") };
-    }
+    const name = mcpServerName ?? extractServerName(toolName);
 
-    // Explicit MCP server name from tool entity (available in full ToolTable)
-    if (mcpServerName) {
-        return { label: mcpServerName, variant: "muted", icon: getIcon(mcpServerName) };
-    }
-
-    // Extract server prefix from tool name convention: server__method
-    const lastSep = toolName.lastIndexOf("__");
-    if (lastSep !== -1) {
-        const serverName = toolName.slice(0, lastSep);
-        return { label: serverName, variant: "muted", icon: getIcon(serverName) };
+    if (name) {
+        const style = findStyle(name);
+        return { label: name, originStyle: style, icon: getIcon(name) };
     }
 
     // No MCP server — currently only Claude Code uses LLM Proxy as external agent
-    return { label: "Claude Code", variant: "muted", icon: IconClaudeCode };
+    return { label: "Claude Code", originStyle: ORIGIN_STYLES["claude code"], icon: IconClaudeCode };
+}
+
+function extractServerName(toolName: string): string | undefined {
+    if (toolName.startsWith("archestra__")) return "archestra";
+    const lastSep = toolName.lastIndexOf("__");
+    if (lastSep !== -1) return toolName.slice(0, lastSep);
+    return undefined;
+}
+
+function findStyle(name: string): OriginStyle | undefined {
+    const key = name.toLowerCase();
+    for (const [pattern, style] of Object.entries(ORIGIN_STYLES)) {
+        if (key.includes(pattern)) return style;
+    }
+    return undefined;
 }

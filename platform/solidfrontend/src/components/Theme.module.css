@@ -18,6 +18,12 @@ body {
     --primary: oklch(0.145 0 0);
     --secondary: oklch(0.54 0.18 288.03);
 
+    /* frequently used computed vars */
+    --transparent-foreground-4: color-mix(in srgb, var(--foreground) 40%, transparent);
+    --transparent-foreground-3: color-mix(in srgb, var(--foreground) 30%, transparent);
+    --transparent-foreground-2: color-mix(in srgb, var(--foreground) 20%, transparent);
+    --transparent-foreground-1: color-mix(in srgb, var(--foreground) 10%, transparent);
+
     --destructive: oklch(0.64 0.24 18);
     --info: oklch(0.68 0.1 200);
     --success: oklch(0.72 0.2 145);
@@ -69,6 +75,7 @@ body {
     --large-line-height: 1.5rem;
 
     --line-height: var(--medium-line-height-ratio);
+    --line-height-rem: var(--medium-line-height);
 
     /* Line height ratios (line-height / font-size) */
     --xsmall-line-height-ratio: calc(var(--xsmall-line-height) / var(--small-font-size));

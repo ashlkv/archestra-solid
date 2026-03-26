@@ -1,8 +1,8 @@
 import type { Component } from "solid-js";
-import { Bug, Hammer, Server } from "@/components/icons";
 import { IconArchestra } from "./IconArchestra";
 import { IconClaudeCode } from "./IconClaudeCode";
 import { IconContext7 } from "./IconContext7";
+import { IconDefault } from "./IconDefault";
 import { IconGitHub } from "./IconGitHub";
 import { IconJira } from "./IconJira";
 import { IconKubernetes } from "./IconKubernetes";
@@ -21,12 +21,9 @@ const wellKnown: Record<string, IconComponent> = {
     playwright: IconPlaywright,
 };
 
-const builtIn: Record<string, IconComponent> = {
-    "internal-dev": Hammer,
-    coding: Bug,
-};
+const builtIn: Record<string, IconComponent> = {};
 
-export const defaultIcon: IconComponent = Server;
+export const defaultIcon: IconComponent = IconDefault;
 
 export function getIcon(name: string): IconComponent {
     const key = name.toLowerCase();

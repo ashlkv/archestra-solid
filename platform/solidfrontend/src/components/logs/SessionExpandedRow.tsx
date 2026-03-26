@@ -59,7 +59,7 @@ function SessionExpandedContent(props: Props): JSX.Element {
 
     return (
         <Show when={!interactionsQuery.pending}>
-            <Table style={{ "margin-left": "2rem" }}>
+            <Table style={{ "margin-left": "2rem", width: "auto" }}>
                 <TableBody>
                     <For each={interactions()}>
                         {(interaction) => (
@@ -166,6 +166,7 @@ export function LogRow(props: LogRowProps): JSX.Element {
                 <ProviderModelBadge
                     provider={dynamicInteraction?.provider ?? "Unknown"}
                     model={dynamicInteraction?.modelName ?? "Unknown"}
+                    size="medium"
                 />
             </TableCell>
             <TableCell>

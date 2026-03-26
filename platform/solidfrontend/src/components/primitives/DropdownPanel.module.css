@@ -1,0 +1,30 @@
+.panel {
+    min-width: 18rem;
+    max-height: 20rem;
+    overflow-y: auto;
+    font-size: var(--small-font-size);
+    line-height: var(--small-line-height);
+}
+
+.item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.625rem 0.75rem;
+    cursor: pointer;
+}
+
+.item:hover {
+    background: color-mix(in srgb, var(--foreground) 4%, transparent);
+}
+
+.selected {
+    background: color-mix(in srgb, var(--foreground) 6%, transparent);
+}
+
+.empty {
+    padding: 1.5rem 1rem;
+    text-align: center;
+    color: var(--muted-foreground);
+}

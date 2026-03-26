@@ -1,6 +1,8 @@
 import { Select as KobalteSelect } from "@kobalte/core/select";
 import { type JSX, Show } from "solid-js";
 import { Check, ChevronDown } from "@/components/icons";
+import buttonStyles from "./Button.module.css";
+import dropdownPanelStyles from "./DropdownPanel.module.css";
 import styles from "./Select.module.css";
 import { Spinner } from "./Spinner";
 
@@ -35,6 +37,11 @@ export function Select(props: Props): JSX.Element {
         if (props.size === "xsmall") return styles.xsmall;
         return "";
     };
+    const buttonSizeClass = () => {
+        if (props.size === "small") return buttonStyles.small;
+        if (props.size === "xsmall") return buttonStyles.xsmall;
+        return buttonStyles.medium;
+    };
 
     const iconSize = () => {
         if (props.size === "xsmall") return 12;
@@ -57,7 +64,7 @@ export function Select(props: Props): JSX.Element {
             placeholder={props.placeholder}
             disabled={props.disabled || props.loading}
             name={props.name}
-            gutter={4}
+            gutter={2}
             sectionComponent={
                 props.groups
                     ? (sectionProps) => (
@@ -81,7 +88,9 @@ export function Select(props: Props): JSX.Element {
             )}
             class={styles.select}
         >
-            <KobalteSelect.Trigger class={`${styles.trigger} ${sizeClass()} ${props.class ?? ""}`}>
+            <KobalteSelect.Trigger
+                class={`${buttonStyles.button} ${buttonStyles.outline} ${buttonSizeClass()} ${styles.trigger} ${sizeClass()} ${props.class ?? ""}`}
+            >
                 <KobalteSelect.Value<SelectOption>>{(state) => state.selectedOption().label}</KobalteSelect.Value>
                 <KobalteSelect.Icon class={styles.icon}>
                     <Show when={props.loading}>
@@ -92,7 +101,7 @@ export function Select(props: Props): JSX.Element {
                     </Show>
                 </KobalteSelect.Icon>
             </KobalteSelect.Trigger>
-            <KobalteSelect.Content class={styles.content}>
+            <KobalteSelect.Content class={`${dropdownPanelStyles.panel} ${styles.content} ${sizeClass()}`}>
                 <KobalteSelect.Listbox />
             </KobalteSelect.Content>
         </KobalteSelect>

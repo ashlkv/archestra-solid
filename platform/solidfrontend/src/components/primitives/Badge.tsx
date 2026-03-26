@@ -15,13 +15,20 @@ type Variant =
     | "warning"
     | "destructive";
 
+type Size = "small" | "medium";
+
 type Props = ParentProps<{
     variant?: Variant;
+    size?: Size;
     caps?: boolean;
     pill?: boolean;
     class?: string;
 }> &
     Omit<ComponentProps<"span">, "class">;
+
+const sizeClasses: Record<string, string> = {
+    medium: styles.medium,
+};
 
 const variantClasses: Record<string, string> = {
     ghost: styles.ghost,
@@ -37,15 +44,16 @@ const variantClasses: Record<string, string> = {
 };
 
 export function Badge(props: Props): JSX.Element {
-    const [local, rest] = splitProps(props, ["variant", "caps", "pill", "class", "children"]);
+    const [local, rest] = splitProps(props, ["variant", "size", "caps", "pill", "class", "children"]);
     const variantClass = () => (local.variant ? (variantClasses[local.variant] ?? "") : "");
+    const sizeClass = () => (local.size ? (sizeClasses[local.size] ?? "") : "");
     const capsClass = () => (local.caps ? styles.caps : "");
     const pillClass = () => (local.pill ? styles.pill : "");
 
     return (
         <span
             data-label="Badge"
-            class={`${styles.badge} ${variantClass()} ${capsClass()} ${pillClass()} ${local.class ?? ""}`}
+            class={`${styles.badge} ${variantClass()} ${sizeClass()} ${capsClass()} ${pillClass()} ${local.class ?? ""}`}
             {...rest}
         >
             {local.children}

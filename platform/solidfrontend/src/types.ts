@@ -56,9 +56,17 @@ export type SessionData = archestraApiTypes.GetInteractionSessionsResponses["200
 
 export type McpToolCallData = archestraApiTypes.GetMcpToolCallsResponses["200"]["data"][number];
 
-export type DualLlmResult = archestraApiTypes.GetDualLlmResultsByInteractionResponses["200"][number];
+export type DualLlmResult = {
+    toolCallId: string;
+    conversations: Array<{ role: "user" | "assistant"; content: string }>;
+    result: string;
+};
 
 export type Agent = { id: string; name: string };
+
+export type AgentDetail = NonNullable<archestraApiTypes.GetAgentResponses["200"]>;
+
+export type CatalogTool = NonNullable<archestraApiTypes.GetInternalMcpCatalogToolsResponses["200"]>[number];
 
 export type Conversation = NonNullable<archestraApiTypes.GetChatConversationResponses["200"]>;
 

@@ -13,6 +13,13 @@
     white-space: nowrap;
 }
 
+.medium {
+    height: 1.625rem;
+    line-height: 1.625rem;
+    padding: 0 0.75rem;
+    font-size: inherit;
+}
+
 .caps {
     font-variant: small-caps;
     font-weight: 600;

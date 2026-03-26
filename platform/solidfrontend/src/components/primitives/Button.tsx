@@ -4,7 +4,7 @@ import { Show, splitProps } from "solid-js";
 import styles from "./Button.module.css";
 import { Tooltip } from "./Tooltip";
 
-type Variant = "default" | "ghost" | "outline" | "info" | "success" | "warning" | "destructive";
+type Variant = "default" | "ghost" | "muted" | "outline" | "shadow" | "info" | "success" | "warning" | "destructive";
 
 export type IconSize = "icon" | "icon-medium" | "icon-small" | "icon-xsmall";
 export type TextButtonSize = "inherit" | "medium" | "large" | "small" | "xsmall";
@@ -36,7 +36,9 @@ const sizeClasses: Record<string, string> = {
 
 const variantClasses: Record<string, string> = {
     ghost: styles.ghost,
+    muted: styles.muted,
     outline: styles.outline,
+    shadow: styles.shadow,
     info: styles.info,
     success: styles.success,
     warning: styles.warning,

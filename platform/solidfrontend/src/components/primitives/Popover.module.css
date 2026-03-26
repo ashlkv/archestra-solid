@@ -12,22 +12,21 @@
     padding: 0.75rem;
     background: var(--background);
     border: 1px solid var(--border);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow-md);
+    border-radius: 0;
+    box-shadow: 2px 2px var(--transparent-foreground-1);
     z-index: 50;
     animation: fadeIn 150ms ease-out;
 }
 
-.arrow {
-    fill: var(--background);
-    stroke: var(--border);
-    stroke-width: 1px;
+.content:focus,
+.content:focus-visible {
+    outline: none;
 }
 
 @keyframes fadeIn {
     from {
         opacity: 0;
-        transform: translateY(-4px);
+        transform: translateY(-2px);
     }
     to {
         opacity: 1;

@@ -11,16 +11,12 @@ import { VerticalSplit } from "@/components/primitives/VerticalSplit";
 import { TimestampBadge } from "@/components/primitives/TimestampBadge";
 import { TokensBadge } from "@/components/primitives/TokensBadge";
 import { useAgents } from "@/lib/agent.query";
-import { useDualLlmResultsByInteraction } from "@/lib/dual-llm-result.query";
 import { useInteraction } from "@/lib/interaction.query";
 import { DynamicInteraction } from "@/lib/interaction.utils";
 import type { Agent } from "@/types";
 
 export function InteractionDetailContent(props: { interactionId: string; view: "chat" | "raw" }): JSX.Element {
     const { data: interaction, query: interactionQuery } = useInteraction(() => ({
-        interactionId: props.interactionId,
-    }));
-    const { data: dualLlmResults } = useDualLlmResultsByInteraction(() => ({
         interactionId: props.interactionId,
     }));
 
@@ -34,10 +30,12 @@ export function InteractionDetailContent(props: { interactionId: string; view: "
         }
     };
 
+    const dualLlmAnalyses = () => (interaction() as any)?.dualLlmAnalyses ?? [];
+
     const uiMessages = () => {
         const di = dynamicInteraction();
         if (!di) return [];
-        return di.mapToUiMessages(dualLlmResults() ?? []);
+        return di.mapToUiMessages(dualLlmAnalyses());
     };
 
     const toolNames = () => dynamicInteraction()?.getToolNamesUsed() ?? [];
@@ -130,10 +128,9 @@ export function InteractionHeaderBar(props: { interactionId: string }): JSX.Elem
     const { data: interaction } = useInteraction(() => ({
         interactionId: props.interactionId,
     }));
-    const { data: dualLlmResults } = useDualLlmResultsByInteraction(() => ({
-        interactionId: props.interactionId,
-    }));
     const { data: agents } = useAgents();
+
+    const dualLlmAnalyses = () => (interaction() as any)?.dualLlmAnalyses ?? [];
 
     const dynamicInteraction = () => {
         const i = interaction();
@@ -170,6 +167,7 @@ export function InteractionHeaderBar(props: { interactionId: string }): JSX.Elem
                 <ProviderModelBadge
                     provider={dynamicInteraction()?.provider ?? "Unknown"}
                     model={dynamicInteraction()?.modelName ?? "Unknown"}
+                    size="medium"
                 />
                 <TokensBadge
                     inputTokens={interaction()!.inputTokens ?? 0}
@@ -188,8 +186,8 @@ export function InteractionHeaderBar(props: { interactionId: string }): JSX.Elem
                     actualModel={interaction()!.model}
                     variant="interaction"
                 />
-                <Show when={(dualLlmResults() ?? []).length > 0}>
-                    <Badge variant="muted">Dual LLM ({(dualLlmResults() ?? []).length} checks)</Badge>
+                <Show when={dualLlmAnalyses().length > 0}>
+                    <Badge variant="muted">Dual LLM ({dualLlmAnalyses().length} checks)</Badge>
                 </Show>
                 <TimestampBadge date={interaction()!.createdAt} />
             </div>

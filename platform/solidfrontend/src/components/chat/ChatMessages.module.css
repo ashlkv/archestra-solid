@@ -52,10 +52,8 @@
     word-break: break-word;
 }
 
-.message.user .message-content {
-    background: var(--primary);
-    color: oklch(from var(--primary) clamp(0, (0.5 - l) * 100, 1) 0 0);
-    border-bottom-right-radius: 4px;
+.message-bubble {
+    max-width: 100%;
 }
 
 .message.assistant .message-content {

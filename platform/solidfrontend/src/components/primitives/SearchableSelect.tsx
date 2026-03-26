@@ -4,12 +4,18 @@ import { Button } from "@/components/primitives/Button";
 import { Input } from "@/components/primitives/Input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/primitives/Popover";
 
-export function SearchableSelect(props: {
+type SearchableSelectItem = {
+    value: string;
+    label: string;
+};
+
+export function SearchableSelect<T extends SearchableSelectItem>(props: {
     value: string;
     onValueChange: (value: string) => void;
     placeholder?: string;
     searchPlaceholder?: string;
-    items: Array<{ value: string; label: string }>;
+    items: T[];
+    renderItem?: (item: T, state: { selected: boolean }) => JSX.Element;
 }): JSX.Element {
     const [searchQuery, setSearchQuery] = createSignal("", { name: "searchQuery" });
 
@@ -64,6 +70,7 @@ export function SearchableSelect(props: {
                             {(item) => (
                                 <button
                                     type="button"
+                                    data-label={`SearchableSelect option: ${item.label}`}
                                     style={{
                                         display: "flex",
                                         width: "100%",
@@ -83,17 +90,24 @@ export function SearchableSelect(props: {
                                         setSearchQuery("");
                                     }}
                                 >
-                                    <span
-                                        style={{
-                                            overflow: "hidden",
-                                            "text-overflow": "ellipsis",
-                                            "white-space": "nowrap",
-                                        }}
-                                    >
-                                        {item.label}
-                                    </span>
-                                    <Show when={props.value === item.value}>
-                                        <Check style={{ width: "14px", height: "14px", "flex-shrink": 0 }} />
+                                    <Show when={props.renderItem}>
+                                        {props.renderItem?.(item, { selected: props.value === item.value })}
+                                    </Show>
+                                    <Show when={!props.renderItem}>
+                                        <>
+                                            <span
+                                                style={{
+                                                    overflow: "hidden",
+                                                    "text-overflow": "ellipsis",
+                                                    "white-space": "nowrap",
+                                                }}
+                                            >
+                                                {item.label}
+                                            </span>
+                                            <Show when={props.value === item.value}>
+                                                <Check style={{ width: "14px", height: "14px", "flex-shrink": 0 }} />
+                                            </Show>
+                                        </>
                                     </Show>
                                 </button>
                             )}

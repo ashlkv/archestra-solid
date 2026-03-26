@@ -2,6 +2,7 @@ import type { ChatStatus, UIMessage } from "ai";
 import { For, type JSX, Show } from "solid-js";
 import { Loader2, MessageCircle } from "@/components/icons";
 import { Markdown } from "@/components/primitives/Markdown";
+import { TextBubble } from "@/components/primitives/TextBubble";
 import styles from "./ChatMessages.module.css";
 import { type AnyToolPart, MessageTool } from "./MessageTool";
 
@@ -58,9 +59,12 @@ export function ChatMessages(props: {
                                 <>
                                     <Show when={part.type === "text" && "text" in part}>
                                         <Show when={message.role === "user"}>
-                                            <div class={styles["message-content"]}>
-                                                {(part as { text: string }).text}
-                                            </div>
+                                            <TextBubble
+                                                text={(part as { text: string }).text}
+                                                variant="user"
+                                                size="inherit"
+                                                class={styles["message-bubble"]}
+                                            />
                                         </Show>
                                         <Show when={message.role === "assistant"}>
                                             <div class={styles["message-content"]}>

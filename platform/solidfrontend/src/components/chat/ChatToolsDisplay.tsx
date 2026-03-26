@@ -209,7 +209,7 @@ function ServerPill(props: {
     return (
         <Popover open={open()} onOpenChange={setOpen}>
             <PopoverTrigger>
-                <button class={styles.pill} data-label={`Server: ${props.serverName}`}>
+                <button class={styles.pill} data-label={`Tools: ${props.serverName}`}>
                     <span class={styles["pill-name"]}>{props.serverName}</span>
                     <span class={styles["pill-count"]}>
                         ({enabledTools().length}/{props.tools.length})

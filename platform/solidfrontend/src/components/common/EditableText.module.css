@@ -1,0 +1,64 @@
+.editable-wrapper {
+    display: block;
+    position: relative;
+    white-space: pre-wrap;
+}
+
+.mirror {
+    display: inline-block;
+    visibility: hidden;
+    word-break: break-word;
+}
+
+.mirror::after {
+    content: " ";
+}
+
+.single-line {
+    white-space: nowrap;
+}
+
+.input,
+.textarea {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    border: none;
+    padding: 0;
+    margin: 0;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+    text-align: inherit;
+    color: inherit;
+    background: none;
+    appearance: none;
+    resize: none;
+    outline: none;
+    overflow: hidden;
+    -webkit-tap-highlight-color: transparent;
+    white-space: inherit;
+}
+
+.input:disabled,
+.textarea:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.input::placeholder,
+.textarea::placeholder,
+.placeholder {
+    color: var(--transparent-foreground-4);
+}
+
+.static-wrapper {
+    display: block;
+    position: relative;
+    white-space: pre-wrap;
+}
+
+.static-text {
+    display: inline;
+}

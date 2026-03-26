@@ -1,0 +1,18 @@
+.kbd {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.25rem;
+    height: 1.25rem;
+    padding: 0 0.375rem;
+    font-family: inherit;
+    font-size: var(--xsmall-font-size);
+    font-weight: 500;
+    line-height: 1;
+    color: var(--muted-foreground);
+    background: color-mix(in srgb, var(--foreground) 6%, transparent);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: 0 1px 0 color-mix(in srgb, var(--foreground) 8%, transparent);
+    white-space: nowrap;
+}

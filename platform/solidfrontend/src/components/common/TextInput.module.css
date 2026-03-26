@@ -1,0 +1,32 @@
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.editable-text-wrapper {
+    --vertical-padding: calc((var(--input-height) - var(--line-height-rem)) / 2);
+    line-height: var(--line-height);
+    padding: var(--vertical-padding) 0.5rem;
+    box-sizing: border-box;
+    background: color-mix(in oklch, var(--muted-background) 82%, white);
+    box-shadow: 0 2px var(--border);
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+    cursor: text;
+}
+
+.focused {
+    border-bottom-color: var(--ring);
+    background: color-mix(in oklch, var(--muted-background) 92%, white);
+}
+
+.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.helper {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: var(--small-font-size);
+}

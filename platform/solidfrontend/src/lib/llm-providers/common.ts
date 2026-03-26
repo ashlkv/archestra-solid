@@ -1,7 +1,11 @@
 import type { archestraApiTypes } from "@shared";
 
 export type Interaction = archestraApiTypes.GetInteractionsResponses["200"]["data"][number];
-export type DualLlmResult = archestraApiTypes.GetDualLlmResultsByInteractionResponses["200"][number];
+export type DualLlmResult = {
+    toolCallId: string;
+    conversations: Array<{ role: "user" | "assistant"; content: string }>;
+    result: string;
+};
 
 export interface RefusalInfo {
     toolName?: string;

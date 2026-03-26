@@ -116,12 +116,13 @@
 
 /* Links */
 .markdown a {
-    color: var(--primary);
-    text-decoration: none;
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 0.125em;
 }
 
 .markdown a:hover {
-    text-decoration: underline;
+    opacity: 0.85;
 }
 
 /* Blockquotes */

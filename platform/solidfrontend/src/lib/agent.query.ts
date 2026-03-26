@@ -2,6 +2,7 @@ import { archestraApiSdk } from "@shared";
 import { revalidate } from "@solidjs/router";
 import { showError } from "@/components/primitives/Toast";
 import { createQuery, createSubmission, getAuthHeaders } from "@/lib/api";
+import type { AgentDetail } from "@/types";
 
 type Agent = { id: string; name: string };
 
@@ -13,6 +14,39 @@ export const useAgents = createQuery({
     },
 });
 
+export const useAgent = createQuery<AgentDetail, string>({
+    queryKey: "fetch-agent",
+    callback: async (agentId: string) => {
+        const { error, data } = await archestraApiSdk.getAgent({
+            headers: getAuthHeaders(),
+            path: { id: agentId },
+        });
+        return { data: data as AgentDetail | undefined, error };
+    },
+});
+
+type UpdateAgentPayload = { id: string; [key: string]: unknown };
+
+const updateAgent = createSubmission<UpdateAgentPayload>({
+    callback: async (payload) => {
+        const { id, ...body } = payload;
+        return archestraApiSdk.updateAgent({
+            headers: getAuthHeaders(),
+            path: { id },
+            body: body as Parameters<typeof archestraApiSdk.updateAgent>[0]["body"],
+        });
+    },
+    onSuccess: () => {
+        revalidate("fetch-agent");
+        revalidate("fetch-agents");
+    },
+    onError: (error) => showError(error.message),
+});
+
+export function useUpdateAgent() {
+    return updateAgent();
+}
+
 type AssignToolParams = { agentId: string; toolId: string };
 
 const assignTool = createSubmission({
@@ -23,10 +57,31 @@ const assignTool = createSubmission({
             body: { useDynamicTeamCredential: true },
         });
     },
-    onSuccess: () => revalidate("fetch-tools"),
+    onSuccess: () => {
+        revalidate("fetch-tools");
+        revalidate("fetch-agent");
+    },
     onError: (error) => showError(error.message),
 });
 
 export function useAssignTool(toolId?: string) {
     return assignTool(toolId ? ([payload]) => payload.toolId === toolId : undefined);
+}
+
+const unassignToolFromAgent = createSubmission({
+    callback: async ({ agentId, toolId }: AssignToolParams) => {
+        return archestraApiSdk.unassignToolFromAgent({
+            headers: getAuthHeaders(),
+            path: { agentId, toolId },
+        });
+    },
+    onSuccess: () => {
+        revalidate("fetch-tools");
+        revalidate("fetch-agent");
+    },
+    onError: (error) => showError(error.message),
+});
+
+export function useUnassignToolFromAgent() {
+    return unassignToolFromAgent();
 }

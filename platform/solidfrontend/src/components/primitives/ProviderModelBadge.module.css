@@ -10,11 +10,25 @@
     white-space: nowrap;
 }
 
+.medium {
+    height: 1.625rem;
+    line-height: 1.625rem;
+    font-size: inherit;
+}
+
 .provider {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
     padding: 0 0.5rem 0 0.625rem;
     background: color-mix(in srgb, var(--foreground) 15%, transparent);
     color: var(--foreground);
     font-weight: 500;
+}
+
+.logo {
+    display: block;
+    flex-shrink: 0;
 }
 
 .model {

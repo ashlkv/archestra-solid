@@ -4,7 +4,7 @@ import styles from "./Popover.module.css";
 
 export function Popover(props: ParentProps<{ open?: boolean; onOpenChange?: (open: boolean) => void }>): JSX.Element {
     return (
-        <KobaltePopover open={props.open} onOpenChange={props.onOpenChange}>
+        <KobaltePopover open={props.open} onOpenChange={props.onOpenChange} placement="bottom-start" gutter={2}>
             {props.children}
         </KobaltePopover>
     );
@@ -22,7 +22,6 @@ export function PopoverContent(props: ParentProps): JSX.Element {
     return (
         <KobaltePopover.Portal>
             <KobaltePopover.Content class={styles.content}>
-                <KobaltePopover.Arrow class={styles.arrow} />
                 {props.children}
             </KobaltePopover.Content>
         </KobaltePopover.Portal>

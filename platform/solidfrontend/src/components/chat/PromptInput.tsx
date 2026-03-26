@@ -1,7 +1,8 @@
 import type { ChatStatus } from "ai";
 import { type JSX, Show } from "solid-js";
-import { Send, Square } from "@/components/icons";
+import { Square } from "@/components/icons";
 import { Button } from "@/components/primitives/Button";
+import { Kbd } from "@/components/primitives/Kbd";
 import styles from "./PromptInput.module.css";
 
 export function PromptInput(props: {
@@ -27,6 +28,10 @@ export function PromptInput(props: {
         if (event.key === "Enter" && !event.shiftKey) {
             event.preventDefault();
             submitMessage();
+        }
+        if (event.key === "Escape" && isActive()) {
+            event.preventDefault();
+            props.onStop?.();
         }
     };
 
@@ -59,20 +64,14 @@ export function PromptInput(props: {
                 <div class={styles["footer-left"]}>{props.footerLeft}</div>
                 <div class={styles["footer-right"]}>
                     <Show when={isActive()}>
-                        <Button variant="outline" size="small" onClick={() => props.onStop?.()} data-label="Stop">
-                            <Square size={16} />
-                        </Button>
+                        <span class={styles.hint}>
+                            <Kbd>Esc</Kbd> to stop
+                        </span>
                     </Show>
                     <Show when={!isActive()}>
-                        <Button
-                            variant="default"
-                            size="icon"
-                            onClick={submitMessage}
-                            disabled={props.disabled}
-                            data-label="Send"
-                        >
-                            <Send size={16} />
-                        </Button>
+                        <span class={styles.hint}>
+                            <Kbd>Enter</Kbd> to submit
+                        </span>
                     </Show>
                 </div>
             </div>

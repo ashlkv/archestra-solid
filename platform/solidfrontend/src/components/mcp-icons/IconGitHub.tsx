@@ -4,7 +4,7 @@ type Props = { size?: number; class?: string; title?: string };
 
 export function IconGitHub(props: Props): JSX.Element {
     return (
-        <svg viewBox="0 0 24 24" fill="black" class={props.class}>
+        <svg viewBox="0 0 24 24" fill="currentColor" width={props.size ?? 16} height={props.size ?? 16} class={props.class}>
             <Show when={props.title}>
                 <title>{props.title}</title>
             </Show>

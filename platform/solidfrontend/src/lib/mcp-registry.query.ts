@@ -64,3 +64,22 @@ export const useMcpServerDetails = createQuery({
     queryKey: "fetch-mcp-server-details",
     callback: (name: string) => archestraCatalogSdk.getMcpServer({ path: { name } }),
 });
+
+export const useCatalogTools = createQuery({
+    queryKey: "fetch-catalog-tools",
+    callback: async (catalogId: string) => {
+        const { error, data } = await archestraApiSdk.getInternalMcpCatalogTools({
+            headers: getAuthHeaders(),
+            path: { id: catalogId },
+        });
+        return { data: data ?? [], error };
+    },
+});
+
+export async function fetchCatalogTools(catalogId: string) {
+    const { data } = await archestraApiSdk.getInternalMcpCatalogTools({
+        headers: getAuthHeaders(),
+        path: { id: catalogId },
+    });
+    return data ?? [];
+}

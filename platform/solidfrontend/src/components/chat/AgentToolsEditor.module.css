@@ -1,0 +1,136 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+/* Server row */
+
+.server-row-cell > div {
+    gap: 0.75rem;
+}
+
+.tool-count {
+    margin-left: auto;
+    color: var(--muted-foreground);
+    white-space: nowrap;
+}
+
+/* Expanded tool rows */
+
+.expanded-table {
+    min-width: 0;
+    width: calc(100% - 2rem);
+    margin-left: 2rem;
+}
+
+.tool-checkbox {
+    flex-shrink: 0;
+    transform: scale(0.8);
+}
+
+.tool-name {
+    font-family: var(--monospace-font);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: var(--small-font-size);
+}
+
+/* Add server dropdown */
+
+.dropdown-body {
+    width: 28rem;
+    max-height: 24rem;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 0.5rem;
+}
+
+.server-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+}
+
+.server-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+    padding: 0.5rem 0.625rem;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    min-width: 0;
+}
+
+.server-card:hover {
+    background: var(--muted-background);
+}
+
+.server-card-active {
+    border-color: var(--primary);
+    background: color-mix(in srgb, var(--primary) 5%, transparent);
+}
+
+.server-card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+}
+
+.server-card-icon {
+    flex-shrink: 0;
+}
+
+.server-card-name {
+    font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex: 1;
+    min-width: 0;
+}
+
+.server-card-check {
+    color: var(--primary);
+    flex-shrink: 0;
+}
+
+.server-card-description {
+    color: var(--muted-foreground);
+    font-size: var(--small-font-size);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin: 0;
+}
+
+.server-card-count {
+    color: var(--muted-foreground);
+    font-size: var(--small-font-size);
+}
+
+.install-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.25rem;
+    margin-top: 0.25rem;
+    cursor: pointer;
+    color: var(--muted-foreground);
+    border-top: 1px solid var(--border);
+    text-decoration: none;
+    font-size: var(--small-font-size);
+}
+
+.install-link:hover {
+    color: var(--foreground);
+}
+
+.empty-state {
+    padding: 1rem;
+    text-align: center;
+    color: var(--muted-foreground);
+    grid-column: 1 / -1;
+}
