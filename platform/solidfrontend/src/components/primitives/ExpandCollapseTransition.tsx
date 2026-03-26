@@ -41,7 +41,7 @@ export function ExpandCollapseTransition(props: ExpandCollapseTransitionProps): 
 
 // --- Internal helpers ---
 
-const EXPAND_DURATION = 1000;
+const EXPAND_DURATION = 300;
 
 /** Track active ResizeObservers so collapse can clean them up. */
 const activeObservers = new WeakMap<Element, ResizeObserver>();
