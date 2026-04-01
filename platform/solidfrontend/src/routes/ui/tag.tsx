@@ -1,6 +1,6 @@
 import { createSignal, For, type JSX, Show } from "solid-js";
-import { UiLayout } from "@/components/ui-demo/UiLayout";
-import { Tag } from "@/components/primitives/Tag";
+import { UiLayout } from "@/ui-demo/UiLayout";
+import { Tag } from "@/primitives/Tag";
 
 export default function TagDemo(): JSX.Element {
     const [tags, setTags] = createSignal(["kubernetes", "mcp-server", "production", "v2.1.0"]);

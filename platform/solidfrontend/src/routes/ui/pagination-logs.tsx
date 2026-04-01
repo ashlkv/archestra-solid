@@ -1,6 +1,6 @@
 import { createSignal, type JSX } from "solid-js";
-import { Pagination } from "@/components/common/Pagination";
-import { UiLayout } from "@/components/ui-demo/UiLayout";
+import { Pagination } from "@/common/Pagination";
+import { UiLayout } from "@/ui-demo/UiLayout";
 
 export default function PaginationLogsDemo(): JSX.Element {
     const [page, setPage] = createSignal(0);

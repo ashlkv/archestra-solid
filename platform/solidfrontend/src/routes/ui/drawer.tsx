@@ -1,7 +1,7 @@
 import { createSignal, type JSX } from "solid-js";
-import { Button } from "@/components/primitives/Button";
-import { Drawer, DrawerContent, DrawerFooter, DrawerTrigger } from "@/components/primitives/Drawer";
-import { UiLayout } from "@/components/ui-demo/UiLayout";
+import { Button } from "@/primitives/Button";
+import { Drawer, DrawerContent, DrawerFooter, DrawerTrigger } from "@/primitives/Drawer";
+import { UiLayout } from "@/ui-demo/UiLayout";
 
 export default function DrawerDemo(): JSX.Element {
     const [controlledOpen, setControlledOpen] = createSignal(false);

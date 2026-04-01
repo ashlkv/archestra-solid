@@ -1,5 +1,5 @@
-import { useMcpRegistry } from "@/lib/mcp-registry.query";
-import { McpRegistry } from "~/components/mcp-registry/McpRegistry";
+import { useMcpRegistry } from "@/mcp-registry/mcp-registry.query";
+import { McpRegistry } from "~/mcp-registry/components/McpRegistry";
 
 export default function RegistryPage() {
     const { data: catalog, query } = useMcpRegistry();

@@ -1,7 +1,7 @@
 import { createSignal, type JSX } from "solid-js";
-import { Button } from "@/components/primitives/Button";
-import { ExpandCollapseTransition } from "@/components/primitives/ExpandCollapseTransition";
-import { UiLayout } from "@/components/ui-demo/UiLayout";
+import { Button } from "@/primitives/Button";
+import { ExpandCollapseTransition } from "@/primitives/ExpandCollapseTransition";
+import { UiLayout } from "@/ui-demo/UiLayout";
 
 export default function ExpandCollapseTransitionDemo(): JSX.Element {
     const [shown1, setShown1] = createSignal(false);

@@ -1,6 +1,6 @@
 import { createSignal, type JSX } from "solid-js";
-import { Input } from "@/components/primitives/Input";
-import { UiLayout } from "@/components/ui-demo/UiLayout";
+import { Input } from "@/primitives/Input";
+import { UiLayout } from "@/ui-demo/UiLayout";
 
 export default function InputDemo(): JSX.Element {
     const [textValue, setTextValue] = createSignal("Hello world");

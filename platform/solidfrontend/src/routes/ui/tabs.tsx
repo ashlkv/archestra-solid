@@ -1,6 +1,6 @@
 import { createSignal, type JSX } from "solid-js";
-import { UiLayout } from "@/components/ui-demo/UiLayout";
-import { Tabs, TabList, Tab, TabContent } from "@/components/primitives/Tabs";
+import { UiLayout } from "@/ui-demo/UiLayout";
+import { Tabs, TabList, Tab, TabContent } from "@/primitives/Tabs";
 
 export default function TabsDemo(): JSX.Element {
     const [controlledTab, setControlledTab] = createSignal("overview");

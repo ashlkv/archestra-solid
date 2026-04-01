@@ -1,8 +1,8 @@
 import { A, useParams } from "@solidjs/router";
 import type { JSX } from "solid-js";
-import { ArrowLeft } from "@/components/icons";
-import { McpToolCallDetailContent } from "@/components/logs/McpToolCallDetailContent";
-import { PageHeader } from "@/components/primitives/PageHeader";
+import { ArrowLeft } from "@/icons";
+import { McpToolCallDetailContent } from "@/logs/components/McpToolCallDetailContent";
+import { PageHeader } from "@/primitives/PageHeader";
 
 export default function McpToolCallDetailPage(): JSX.Element {
     const params = useParams<{ id: string }>();

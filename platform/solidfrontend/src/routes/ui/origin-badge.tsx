@@ -1,6 +1,6 @@
 import type { JSX } from "solid-js";
-import { OriginBadge } from "@/components/llm/OriginBadge";
-import { UiLayout } from "@/components/ui-demo/UiLayout";
+import { OriginBadge } from "@/common/OriginBadge";
+import { UiLayout } from "@/ui-demo/UiLayout";
 
 export default function OriginBadgeDemo(): JSX.Element {
     return (

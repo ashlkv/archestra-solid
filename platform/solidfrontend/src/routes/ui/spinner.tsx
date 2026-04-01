@@ -1,6 +1,6 @@
 import type { JSX } from "solid-js";
-import { Spinner } from "@/components/primitives/Spinner";
-import { UiLayout } from "@/components/ui-demo/UiLayout";
+import { Spinner } from "@/primitives/Spinner";
+import { UiLayout } from "@/ui-demo/UiLayout";
 
 export default function SpinnerDemo(): JSX.Element {
     return (

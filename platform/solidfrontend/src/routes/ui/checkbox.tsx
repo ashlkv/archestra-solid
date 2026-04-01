@@ -1,6 +1,6 @@
 import { createSignal, type JSX } from "solid-js";
-import { Checkbox } from "@/components/primitives/Checkbox";
-import { UiLayout } from "@/components/ui-demo/UiLayout";
+import { Checkbox } from "@/primitives/Checkbox";
+import { UiLayout } from "@/ui-demo/UiLayout";
 
 export default function CheckboxDemo(): JSX.Element {
     const [checked, setChecked] = createSignal(false);

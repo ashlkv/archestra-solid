@@ -1,14 +1,14 @@
 import type { JSX } from "solid-js";
-import { Ellipsis, Pencil, Copy, Trash2, ExternalLink, Settings } from "@/components/icons";
-import { Button } from "@/components/primitives/Button";
+import { Ellipsis, Pencil, Copy, Trash2, ExternalLink, Settings } from "@/icons";
+import { Button } from "@/primitives/Button";
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
-} from "@/components/primitives/DropdownMenu";
-import { UiLayout } from "@/components/ui-demo/UiLayout";
+} from "@/primitives/DropdownMenu";
+import { UiLayout } from "@/ui-demo/UiLayout";
 
 export default function DropdownMenuDemo(): JSX.Element {
     return (

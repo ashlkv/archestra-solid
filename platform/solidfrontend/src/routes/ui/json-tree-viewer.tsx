@@ -1,7 +1,7 @@
 import { createSignal, type JSX } from "solid-js";
-import { JsonTreeViewer } from "@/components/common/JsonTreeViewer";
-import { Button } from "@/components/primitives/Button";
-import { UiLayout } from "@/components/ui-demo/UiLayout";
+import { JsonTreeViewer } from "@/common/JsonTreeViewer";
+import { Button } from "@/primitives/Button";
+import { UiLayout } from "@/ui-demo/UiLayout";
 import llmRequestExample from "./llm-request-example.json";
 
 const MIXED_NESTED = {

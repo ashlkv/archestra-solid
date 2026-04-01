@@ -1,7 +1,7 @@
 import { createSignal, type JSX } from "solid-js";
-import { UiLayout } from "@/components/ui-demo/UiLayout";
-import { Transition } from "@/components/primitives/Transition";
-import { Button } from "@/components/primitives/Button";
+import { UiLayout } from "@/ui-demo/UiLayout";
+import { Transition } from "@/primitives/Transition";
+import { Button } from "@/primitives/Button";
 
 function fadeIn(element: Element, done: () => void) {
     element.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 300, easing: "ease-out" }).onfinish = done;

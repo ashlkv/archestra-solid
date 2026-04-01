@@ -1,7 +1,7 @@
 import type { JSX } from "solid-js";
-import { Trash2, X, Ban } from "@/components/icons";
-import { DestructiveButton } from "@/components/primitives/DestructiveButton";
-import { UiLayout } from "@/components/ui-demo/UiLayout";
+import { Trash2, X, Ban } from "@/icons";
+import { DestructiveButton } from "@/primitives/DestructiveButton";
+import { UiLayout } from "@/ui-demo/UiLayout";
 
 export default function DestructiveButtonDemo(): JSX.Element {
     return (

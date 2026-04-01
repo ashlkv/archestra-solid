@@ -1,6 +1,6 @@
 import type { JSX } from "solid-js";
-import { Panel } from "@/components/primitives/Panel";
-import { UiLayout } from "@/components/ui-demo/UiLayout";
+import { Panel } from "@/primitives/Panel";
+import { UiLayout } from "@/ui-demo/UiLayout";
 
 export default function PanelDemo(): JSX.Element {
     return (

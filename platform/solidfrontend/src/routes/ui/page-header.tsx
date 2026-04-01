@@ -1,6 +1,6 @@
 import type { JSX } from "solid-js";
-import { PageHeader } from "@/components/primitives/PageHeader";
-import { UiLayout } from "@/components/ui-demo/UiLayout";
+import { PageHeader } from "@/primitives/PageHeader";
+import { UiLayout } from "@/ui-demo/UiLayout";
 
 export default function PageHeaderDemo(): JSX.Element {
     return (

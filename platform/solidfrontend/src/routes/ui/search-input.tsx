@@ -1,6 +1,6 @@
 import { createSignal, type JSX } from "solid-js";
-import { SearchInput } from "@/components/primitives/SearchInput";
-import { UiLayout } from "@/components/ui-demo/UiLayout";
+import { SearchInput } from "@/primitives/SearchInput";
+import { UiLayout } from "@/ui-demo/UiLayout";
 
 export default function SearchInputDemo(): JSX.Element {
     const [basicValue, setBasicValue] = createSignal("");

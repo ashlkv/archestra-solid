@@ -1,9 +1,9 @@
 import type { ChatStatus } from "ai";
 import { createSignal, type JSX } from "solid-js";
-import { PromptInput } from "@/components/chat/PromptInput";
-import { Badge } from "@/components/primitives/Badge";
-import { Button } from "@/components/primitives/Button";
-import { UiLayout } from "@/components/ui-demo/UiLayout";
+import { PromptInput } from "@/chat/components/PromptInput";
+import { Badge } from "@/primitives/Badge";
+import { Button } from "@/primitives/Button";
+import { UiLayout } from "@/ui-demo/UiLayout";
 
 export default function PromptInputDemo(): JSX.Element {
     const [status, setStatus] = createSignal<ChatStatus>("ready");

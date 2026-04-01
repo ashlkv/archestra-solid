@@ -1,6 +1,6 @@
 import type { JSX } from "solid-js";
-import { TruncatedText } from "@/components/common/TruncatedText";
-import { UiLayout } from "@/components/ui-demo/UiLayout";
+import { TruncatedText } from "@/common/TruncatedText";
+import { UiLayout } from "@/ui-demo/UiLayout";
 
 const SHORT_TEXT = "Quick status check";
 const LONG_TEXT =

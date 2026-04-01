@@ -1,7 +1,7 @@
 import { createSignal, type JSX } from "solid-js";
-import { UiLayout } from "@/components/ui-demo/UiLayout";
-import { ToggleGroup, ToggleButton } from "@/components/primitives/ToggleGroup";
-import { Eye, EyeOff, Layers, Globe, Terminal } from "@/components/icons";
+import { UiLayout } from "@/ui-demo/UiLayout";
+import { ToggleGroup, ToggleButton } from "@/primitives/ToggleGroup";
+import { Eye, EyeOff, Layers, Globe, Terminal } from "@/icons";
 
 export default function ToggleGroupDemo(): JSX.Element {
     const [viewMode, setViewMode] = createSignal<"list" | "grid">("list");

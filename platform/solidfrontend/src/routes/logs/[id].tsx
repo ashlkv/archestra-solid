@@ -1,8 +1,8 @@
 import { A, useParams } from "@solidjs/router";
 import type { JSX } from "solid-js";
-import { ArrowLeft } from "@/components/icons";
-import { InteractionDetailContent } from "@/components/logs/InteractionDetailContent";
-import { PageHeader } from "@/components/primitives/PageHeader";
+import { ArrowLeft } from "@/icons";
+import { InteractionDetailContent } from "@/logs/components/InteractionDetailContent";
+import { PageHeader } from "@/primitives/PageHeader";
 
 export default function InteractionDetailPage(): JSX.Element {
     const params = useParams<{ id: string }>();

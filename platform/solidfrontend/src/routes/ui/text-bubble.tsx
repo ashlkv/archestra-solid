@@ -1,6 +1,6 @@
 import type { JSX } from "solid-js";
-import { UiLayout } from "@/components/ui-demo/UiLayout";
-import { TextBubble } from "@/components/primitives/TextBubble";
+import { UiLayout } from "@/ui-demo/UiLayout";
+import { TextBubble } from "@/primitives/TextBubble";
 
 const SAMPLE_MARKDOWN = `Here is a **bold** statement and some \`inline code\`.
 

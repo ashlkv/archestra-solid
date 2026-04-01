@@ -1,6 +1,6 @@
 import type { JSX } from "solid-js";
-import { Savings } from "@/components/llm/Savings";
-import { UiLayout } from "@/components/ui-demo/UiLayout";
+import { Savings } from "@/common/Savings";
+import { UiLayout } from "@/ui-demo/UiLayout";
 
 export default function SavingsDemo(): JSX.Element {
     return (

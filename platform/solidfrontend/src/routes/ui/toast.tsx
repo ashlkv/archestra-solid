@@ -1,7 +1,7 @@
 import type { JSX } from "solid-js";
-import { UiLayout } from "@/components/ui-demo/UiLayout";
-import { Button } from "@/components/primitives/Button";
-import { showToast, showError } from "@/components/primitives/Toast";
+import { UiLayout } from "@/ui-demo/UiLayout";
+import { Button } from "@/primitives/Button";
+import { showToast, showError } from "@/primitives/Toast";
 
 export default function ToastDemo(): JSX.Element {
     return (

@@ -1,6 +1,6 @@
 import type { JSX } from "solid-js";
-import { AddMcpCard } from "@/components/mcp-registry/AddMcpCard";
-import { UiLayout } from "@/components/ui-demo/UiLayout";
+import { AddMcpCard } from "@/mcp-registry/components/AddMcpCard";
+import { UiLayout } from "@/ui-demo/UiLayout";
 
 export default function AddMcpCardDemo(): JSX.Element {
     return (

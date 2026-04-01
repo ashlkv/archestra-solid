@@ -1,8 +1,8 @@
 import type { JSX } from "solid-js";
-import { Badge } from "@/components/primitives/Badge";
-import { Button } from "@/components/primitives/Button";
-import { ToolHoverCard } from "@/components/tools/ToolHoverCard";
-import { UiLayout } from "@/components/ui-demo/UiLayout";
+import { Badge } from "@/primitives/Badge";
+import { Button } from "@/primitives/Button";
+import { ToolHoverCard } from "@/tools/components/ToolHoverCard";
+import { UiLayout } from "@/ui-demo/UiLayout";
 
 export default function ToolHoverCardDemo(): JSX.Element {
     return (

@@ -1,6 +1,6 @@
 import { createSignal, type JSX } from "solid-js";
-import { Select } from "@/components/primitives/Select";
-import { UiLayout } from "@/components/ui-demo/UiLayout";
+import { Select } from "@/primitives/Select";
+import { UiLayout } from "@/ui-demo/UiLayout";
 
 export default function SelectDemo(): JSX.Element {
     const [basicValue, setBasicValue] = createSignal("banana");

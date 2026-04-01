@@ -1,6 +1,6 @@
 import type { JSX } from "solid-js";
-import { McpCard } from "@/components/mcp-registry/McpCard";
-import { UiLayout } from "@/components/ui-demo/UiLayout";
+import { McpCard } from "@/mcp-registry/components/McpCard";
+import { UiLayout } from "@/ui-demo/UiLayout";
 import type { MCP, McpServer } from "@/types";
 
 const remoteMcp: MCP = {

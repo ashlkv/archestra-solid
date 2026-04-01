@@ -1,6 +1,6 @@
 import { createSignal, type JSX } from "solid-js";
-import { ExpandCollapseButton } from "@/components/primitives/ExpandCollapseButton";
-import { UiLayout } from "@/components/ui-demo/UiLayout";
+import { ExpandCollapseButton } from "@/primitives/ExpandCollapseButton";
+import { UiLayout } from "@/ui-demo/UiLayout";
 
 export default function ExpandCollapseButtonDemo(): JSX.Element {
     const [expanded1, setExpanded1] = createSignal(false);

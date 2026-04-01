@@ -1,6 +1,6 @@
 import type { JSX } from "solid-js";
-import { Markdown } from "@/components/primitives/Markdown";
-import { UiLayout } from "@/components/ui-demo/UiLayout";
+import { Markdown } from "@/primitives/Markdown";
+import { UiLayout } from "@/ui-demo/UiLayout";
 
 const BASIC_MARKDOWN = `# Heading 1
 ## Heading 2

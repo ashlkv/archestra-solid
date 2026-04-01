@@ -1,12 +1,12 @@
 import { For, type JSX } from "solid-js";
-import { IconArchestra } from "@/components/mcp-icons/IconArchestra";
-import { IconClaudeCode } from "@/components/mcp-icons/IconClaudeCode";
-import { IconContext7 } from "@/components/mcp-icons/IconContext7";
-import { IconGitHub } from "@/components/mcp-icons/IconGitHub";
-import { IconJira } from "@/components/mcp-icons/IconJira";
-import { IconKubernetes } from "@/components/mcp-icons/IconKubernetes";
-import { IconPlaywright } from "@/components/mcp-icons/IconPlaywright";
-import { UiLayout } from "@/components/ui-demo/UiLayout";
+import { IconArchestra } from "@/mcp-icons/IconArchestra";
+import { IconClaudeCode } from "@/mcp-icons/IconClaudeCode";
+import { IconContext7 } from "@/mcp-icons/IconContext7";
+import { IconGitHub } from "@/mcp-icons/IconGitHub";
+import { IconJira } from "@/mcp-icons/IconJira";
+import { IconKubernetes } from "@/mcp-icons/IconKubernetes";
+import { IconPlaywright } from "@/mcp-icons/IconPlaywright";
+import { UiLayout } from "@/ui-demo/UiLayout";
 
 const ICONS: Array<{ name: string; component: (props: { size?: number; class?: string }) => JSX.Element }> = [
     { name: "Archestra", component: IconArchestra },

@@ -1,6 +1,6 @@
 import { createSignal, type JSX } from "solid-js";
-import { RadioGroup } from "@/components/primitives/RadioGroup";
-import { UiLayout } from "@/components/ui-demo/UiLayout";
+import { RadioGroup } from "@/primitives/RadioGroup";
+import { UiLayout } from "@/ui-demo/UiLayout";
 
 export default function RadioGroupDemo(): JSX.Element {
     const [selectedFruit, setSelectedFruit] = createSignal("apple");

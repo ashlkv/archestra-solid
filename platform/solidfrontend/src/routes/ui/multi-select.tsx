@@ -1,7 +1,7 @@
 import { createSignal, type JSX } from "solid-js";
-import { MultiSelect } from "@/components/primitives/MultiSelect";
-import { Tag } from "@/components/primitives/Tag";
-import { UiLayout } from "@/components/ui-demo/UiLayout";
+import { MultiSelect } from "@/primitives/MultiSelect";
+import { Tag } from "@/primitives/Tag";
+import { UiLayout } from "@/ui-demo/UiLayout";
 
 const FRUIT_OPTIONS = [
     { value: "apple", label: "Apple" },

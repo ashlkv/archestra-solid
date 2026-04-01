@@ -1,6 +1,6 @@
 import { createSignal, type JSX } from "solid-js";
-import { TextInput } from "@/components/common/TextInput";
-import { UiLayout } from "@/components/ui-demo/UiLayout";
+import { TextInput } from "@/common/TextInput";
+import { UiLayout } from "@/ui-demo/UiLayout";
 
 export default function TextInputDemo(): JSX.Element {
     const [singleLineValue, setSingleLineValue] = createSignal("Discrete title");

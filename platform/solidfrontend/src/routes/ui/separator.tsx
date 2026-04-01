@@ -1,6 +1,6 @@
 import type { JSX } from "solid-js";
-import { Separator } from "@/components/primitives/Separator";
-import { UiLayout } from "@/components/ui-demo/UiLayout";
+import { Separator } from "@/primitives/Separator";
+import { UiLayout } from "@/ui-demo/UiLayout";
 
 export default function SeparatorDemo(): JSX.Element {
     return (

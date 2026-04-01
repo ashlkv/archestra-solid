@@ -1,8 +1,8 @@
 import { createSignal, type JSX } from "solid-js";
-import { Button } from "@/components/primitives/Button";
-import { SearchableSelect } from "@/components/primitives/SearchableSelect";
-import { McpOptionCard } from "@/components/mcp-registry/McpOptionCard";
-import { UiLayout } from "@/components/ui-demo/UiLayout";
+import { Button } from "@/primitives/Button";
+import { SearchableSelect } from "@/primitives/SearchableSelect";
+import { McpOptionCard } from "@/mcp-registry/components/McpOptionCard";
+import { UiLayout } from "@/ui-demo/UiLayout";
 
 const MCP_OPTIONS = [
     {

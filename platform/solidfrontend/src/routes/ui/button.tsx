@@ -1,7 +1,7 @@
 import { For, type JSX } from "solid-js";
-import { Settings, Trash2, Plus, Search } from "@/components/icons";
-import { Button } from "@/components/primitives/Button";
-import { UiLayout } from "@/components/ui-demo/UiLayout";
+import { Settings, Trash2, Plus, Search } from "@/icons";
+import { Button } from "@/primitives/Button";
+import { UiLayout } from "@/ui-demo/UiLayout";
 
 const VARIANTS = ["default", "ghost", "outline", "info", "success", "warning", "destructive"] as const;
 const TEXT_SIZES = ["large", "medium", "small", "xsmall", "inherit"] as const;

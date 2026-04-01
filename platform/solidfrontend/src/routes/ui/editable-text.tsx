@@ -1,7 +1,7 @@
 import { createSignal, type JSX } from "solid-js";
-import { EditableText, type EditableTextApi } from "@/components/common/EditableText";
-import { Button } from "@/components/primitives/Button";
-import { UiLayout } from "@/components/ui-demo/UiLayout";
+import { EditableText, type EditableTextApi } from "@/common/EditableText";
+import { Button } from "@/primitives/Button";
+import { UiLayout } from "@/ui-demo/UiLayout";
 
 export default function EditableTextDemo(): JSX.Element {
     const [singleLineText, setSingleLineText] = createSignal("Inline title");

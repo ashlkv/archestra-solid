@@ -1,5 +1,5 @@
 import { archestraApiSdk } from "@shared";
-import { getAuthHeaders } from "@/lib/api";
+import { getAuthHeaders } from "@/api";
 
 export async function fetchUserTokenValue(): Promise<string | undefined> {
     const response = await archestraApiSdk.getUserTokenValue({ headers: getAuthHeaders() });

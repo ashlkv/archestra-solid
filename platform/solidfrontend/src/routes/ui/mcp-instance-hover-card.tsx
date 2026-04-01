@@ -1,7 +1,7 @@
 import type { JSX } from "solid-js";
-import { McpInstanceHoverCard } from "@/components/mcp-registry/McpInstanceHoverCard";
-import { Badge } from "@/components/primitives/Badge";
-import { UiLayout } from "@/components/ui-demo/UiLayout";
+import { McpInstanceHoverCard } from "@/mcp-registry/components/McpInstanceHoverCard";
+import { Badge } from "@/primitives/Badge";
+import { UiLayout } from "@/ui-demo/UiLayout";
 import type { McpServer } from "@/types";
 
 const databaseInstance: McpServer = {

@@ -1,6 +1,6 @@
 import { For, type JSX } from "solid-js";
-import { Badge } from "@/components/primitives/Badge";
-import { UiLayout } from "@/components/ui-demo/UiLayout";
+import { Badge } from "@/primitives/Badge";
+import { UiLayout } from "@/ui-demo/UiLayout";
 
 const VARIANTS = [
     "default",

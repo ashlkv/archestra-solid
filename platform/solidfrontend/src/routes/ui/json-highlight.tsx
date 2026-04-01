@@ -1,6 +1,6 @@
 import type { JSX } from "solid-js";
-import { JsonHighlight } from "@/components/common/JsonHighlight";
-import { UiLayout } from "@/components/ui-demo/UiLayout";
+import { JsonHighlight } from "@/common/JsonHighlight";
+import { UiLayout } from "@/ui-demo/UiLayout";
 
 const SIMPLE_JSON = JSON.stringify(
     {

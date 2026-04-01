@@ -1,6 +1,6 @@
 import type { JSX } from "solid-js";
-import { CopyButton } from "@/components/primitives/CopyButton";
-import { UiLayout } from "@/components/ui-demo/UiLayout";
+import { CopyButton } from "@/primitives/CopyButton";
+import { UiLayout } from "@/ui-demo/UiLayout";
 
 export default function CopyButtonDemo(): JSX.Element {
     return (

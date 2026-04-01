@@ -1,6 +1,6 @@
 import { createSignal, type JSX } from "solid-js";
-import { ComboboxInput, type ComboboxOption } from "@/components/primitives/ComboboxInput";
-import { UiLayout } from "@/components/ui-demo/UiLayout";
+import { ComboboxInput, type ComboboxOption } from "@/primitives/ComboboxInput";
+import { UiLayout } from "@/ui-demo/UiLayout";
 
 const FRUIT_OPTIONS: ComboboxOption[] = [
     { value: "apple", label: "Apple" },

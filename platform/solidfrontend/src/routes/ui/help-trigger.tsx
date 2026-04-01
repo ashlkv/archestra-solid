@@ -1,6 +1,6 @@
 import type { JSX } from "solid-js";
-import { HelpTrigger } from "@/components/primitives/HelpTrigger";
-import { UiLayout } from "@/components/ui-demo/UiLayout";
+import { HelpTrigger } from "@/primitives/HelpTrigger";
+import { UiLayout } from "@/ui-demo/UiLayout";
 
 export default function HelpTriggerDemo(): JSX.Element {
     return (

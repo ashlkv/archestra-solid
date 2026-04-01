@@ -1,7 +1,7 @@
 import { archestraApiSdk } from "@shared";
 import { revalidate } from "@solidjs/router";
-import { showError } from "@/components/primitives/Toast";
-import { createQuery, createSubmission, getAuthHeaders } from "@/lib/api";
+import { showError } from "@/primitives/Toast";
+import { createQuery, createSubmission, getAuthHeaders } from "@/api";
 import type { AgentDetail } from "@/types";
 
 type Agent = { id: string; name: string };

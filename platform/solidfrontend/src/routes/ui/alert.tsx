@@ -1,6 +1,6 @@
 import type { JSX } from "solid-js";
-import { Alert } from "@/components/primitives/Alert";
-import { UiLayout } from "@/components/ui-demo/UiLayout";
+import { Alert } from "@/primitives/Alert";
+import { UiLayout } from "@/ui-demo/UiLayout";
 
 export default function AlertDemo(): JSX.Element {
     return (

@@ -1,6 +1,6 @@
 import { createSignal, type JSX } from "solid-js";
-import { DebouncedInput } from "@/components/primitives/DebouncedInput";
-import { UiLayout } from "@/components/ui-demo/UiLayout";
+import { DebouncedInput } from "@/primitives/DebouncedInput";
+import { UiLayout } from "@/ui-demo/UiLayout";
 
 export default function DebouncedInputDemo(): JSX.Element {
     const [defaultValue, setDefaultValue] = createSignal("");

@@ -1,7 +1,7 @@
 import { createSignal, type JSX } from "solid-js";
-import { ChevronDown, ChevronRight } from "@/components/icons";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/primitives/Collapsible";
-import { UiLayout } from "@/components/ui-demo/UiLayout";
+import { ChevronDown, ChevronRight } from "@/icons";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/primitives/Collapsible";
+import { UiLayout } from "@/ui-demo/UiLayout";
 
 export default function CollapsibleDemo(): JSX.Element {
     const [controlledOpen, setControlledOpen] = createSignal(false);

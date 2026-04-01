@@ -1,6 +1,6 @@
 import type { JSX } from "solid-js";
-import { JsonSection } from "@/components/common/JsonSection";
-import { UiLayout } from "@/components/ui-demo/UiLayout";
+import { JsonSection } from "@/common/JsonSection";
+import { UiLayout } from "@/ui-demo/UiLayout";
 
 const BASIC_DATA = {
     model: "claude-opus-4-1-20250805",

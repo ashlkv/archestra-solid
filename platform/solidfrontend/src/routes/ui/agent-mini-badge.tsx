@@ -1,6 +1,6 @@
 import type { JSX } from "solid-js";
-import { AgentMiniBadge } from "@/components/llm/AgentMiniBadge";
-import { UiLayout } from "@/components/ui-demo/UiLayout";
+import { AgentMiniBadge } from "@/common/AgentMiniBadge";
+import { UiLayout } from "@/ui-demo/UiLayout";
 
 const AGENTS = [
     { id: "a1b2c3d4-e5f6-7890-abcd-ef1234567890", name: "Code Review" },

@@ -1,12 +1,12 @@
 import { useNavigate } from "@solidjs/router";
 import { createMemo, createSignal } from "solid-js";
-import { PageHeader } from "~/components/primitives/PageHeader";
-import { AgentAssignmentTabs } from "~/components/tools/AgentAssignmentTabs";
-import { ToolDrawer } from "~/components/tools/ToolDrawer";
-import { ToolTable } from "~/components/tools/ToolTable";
+import { PageHeader } from "~/primitives/PageHeader";
+import { AgentAssignmentTabs } from "~/tools/components/AgentAssignmentTabs";
+import { ToolDrawer } from "~/tools/components/ToolDrawer";
+import { ToolTable } from "~/tools/components/ToolTable";
 import { useAgents, useAssignTool } from "~/lib/agent.query";
-import { useResultPolicies, useToolCallPolicies } from "~/lib/policy.query";
-import { useTools, useUnassignTool } from "~/lib/tool.query";
+import { useResultPolicies, useToolCallPolicies } from "~/tools/policy.query";
+import { useTools, useUnassignTool } from "~/tools/tool.query";
 
 export default function ToolsPage(props: { initialToolId?: string }) {
     const navigate = useNavigate();

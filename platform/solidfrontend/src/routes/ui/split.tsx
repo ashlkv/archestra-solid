@@ -1,7 +1,7 @@
 import type { JSX } from "solid-js";
-import { HorizontalSplit } from "@/components/primitives/HorizontalSplit";
-import { VerticalSplit } from "@/components/primitives/VerticalSplit";
-import { UiLayout } from "@/components/ui-demo/UiLayout";
+import { HorizontalSplit } from "@/primitives/HorizontalSplit";
+import { VerticalSplit } from "@/primitives/VerticalSplit";
+import { UiLayout } from "@/ui-demo/UiLayout";
 
 const panelStyle = {
     padding: "1rem",

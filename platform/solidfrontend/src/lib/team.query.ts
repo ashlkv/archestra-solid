@@ -1,5 +1,5 @@
 import { archestraApiSdk } from "@shared";
-import { createQuery, getAuthHeaders } from "@/lib/api";
+import { createQuery, getAuthHeaders } from "@/api";
 
 export const useTeams = createQuery({
     queryKey: "fetch-teams",

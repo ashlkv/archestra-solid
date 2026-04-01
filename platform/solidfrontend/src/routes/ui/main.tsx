@@ -1,5 +1,5 @@
 import type { JSX } from "solid-js";
-import { UiLayout } from "@/components/ui-demo/UiLayout";
+import { UiLayout } from "@/ui-demo/UiLayout";
 
 export default function MainComponentDemo(): JSX.Element {
     return (
@@ -45,7 +45,7 @@ export default function MainComponentDemo(): JSX.Element {
                                 overflow: "auto",
                             }}
                         >
-                            {`import { Main } from "@/components/primitives/Main";
+                            {`import { Main } from "@/primitives/Main";
 
 <Main>
   <h1>Page title</h1>

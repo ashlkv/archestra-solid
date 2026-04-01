@@ -1,6 +1,6 @@
 import { createSignal, type JSX } from "solid-js";
-import { SearchableSelect } from "@/components/primitives/SearchableSelect";
-import { UiLayout } from "@/components/ui-demo/UiLayout";
+import { SearchableSelect } from "@/primitives/SearchableSelect";
+import { UiLayout } from "@/ui-demo/UiLayout";
 
 const COUNTRIES = [
     { value: "us", label: "United States" },

@@ -1,5 +1,5 @@
 import type { JSX } from "solid-js";
-import { LlmProxyLogsPage } from "@/components/logs/LlmProxyLogsPage";
+import { LlmProxyLogsPage } from "@/logs/components/LlmProxyLogsPage";
 
 /**
  * Index route for /logs/llm-proxy.

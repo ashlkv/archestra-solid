@@ -1,7 +1,7 @@
 import { createSignal, type JSX } from "solid-js";
-import { Button } from "@/components/primitives/Button";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/primitives/Popover";
-import { UiLayout } from "@/components/ui-demo/UiLayout";
+import { Button } from "@/primitives/Button";
+import { Popover, PopoverContent, PopoverTrigger } from "@/primitives/Popover";
+import { UiLayout } from "@/ui-demo/UiLayout";
 
 export default function PopoverDemo(): JSX.Element {
     const [controlledOpen, setControlledOpen] = createSignal(false);

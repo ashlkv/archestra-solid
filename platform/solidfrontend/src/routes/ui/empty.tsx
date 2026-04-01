@@ -1,8 +1,8 @@
 import type { JSX } from "solid-js";
-import { FileText, Search, Server } from "@/components/icons";
-import { Button } from "@/components/primitives/Button";
-import { Empty, EmptyContent, EmptyDescription, EmptyMedia, EmptyTitle } from "@/components/primitives/Empty";
-import { UiLayout } from "@/components/ui-demo/UiLayout";
+import { FileText, Search, Server } from "@/icons";
+import { Button } from "@/primitives/Button";
+import { Empty, EmptyContent, EmptyDescription, EmptyMedia, EmptyTitle } from "@/primitives/Empty";
+import { UiLayout } from "@/ui-demo/UiLayout";
 
 export default function EmptyDemo(): JSX.Element {
     return (

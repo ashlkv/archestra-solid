@@ -1,5 +1,5 @@
 import { createSignal, For, type JSX } from "solid-js";
-import { UiLayout } from "@/components/ui-demo/UiLayout";
+import { UiLayout } from "@/ui-demo/UiLayout";
 import {
     Table,
     TableBody,
@@ -7,7 +7,7 @@ import {
     TableHead,
     TableHeaderCell,
     TableRow,
-} from "@/components/primitives/Table";
+} from "@/primitives/Table";
 
 const SAMPLE_DATA = [
     { id: "1", name: "fetch-weather", server: "weather-api", status: "Active", calls: 1432 },

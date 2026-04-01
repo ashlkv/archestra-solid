@@ -1,8 +1,8 @@
 import type { JSX } from "solid-js";
-import { Info, User } from "@/components/icons";
-import { Button } from "@/components/primitives/Button";
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/primitives/HoverCard";
-import { UiLayout } from "@/components/ui-demo/UiLayout";
+import { Info, User } from "@/icons";
+import { Button } from "@/primitives/Button";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/primitives/HoverCard";
+import { UiLayout } from "@/ui-demo/UiLayout";
 
 export default function HoverCardDemo(): JSX.Element {
     return (

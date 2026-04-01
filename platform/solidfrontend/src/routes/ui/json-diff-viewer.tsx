@@ -1,6 +1,6 @@
 import type { JSX } from "solid-js";
-import { JsonDiffViewer } from "@/components/common/JsonDiffViewer";
-import { UiLayout } from "@/components/ui-demo/UiLayout";
+import { JsonDiffViewer } from "@/common/JsonDiffViewer";
+import { UiLayout } from "@/ui-demo/UiLayout";
 
 const ORIGINAL_SIMPLE = {
     model: "gpt-4o",

@@ -1,6 +1,6 @@
 import { createSignal, type JSX } from "solid-js";
-import { UiLayout } from "@/components/ui-demo/UiLayout";
-import { Textarea } from "@/components/primitives/Textarea";
+import { UiLayout } from "@/ui-demo/UiLayout";
+import { Textarea } from "@/primitives/Textarea";
 
 export default function TextareaDemo(): JSX.Element {
     const [value, setValue] = createSignal("");

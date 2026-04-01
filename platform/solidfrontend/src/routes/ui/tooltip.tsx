@@ -1,8 +1,8 @@
 import type { JSX } from "solid-js";
-import { UiLayout } from "@/components/ui-demo/UiLayout";
-import { Tooltip } from "@/components/primitives/Tooltip";
-import { Button } from "@/components/primitives/Button";
-import { Info, Settings, Trash2 } from "@/components/icons";
+import { UiLayout } from "@/ui-demo/UiLayout";
+import { Tooltip } from "@/primitives/Tooltip";
+import { Button } from "@/primitives/Button";
+import { Info, Settings, Trash2 } from "@/icons";
 
 export default function TooltipDemo(): JSX.Element {
     return (
