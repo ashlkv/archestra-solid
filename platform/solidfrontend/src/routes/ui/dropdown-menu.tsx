@@ -47,7 +47,7 @@ export default function DropdownMenuDemo(): JSX.Element {
                         <h3>With separator and destructive item</h3>
                         <DropdownMenu>
                             <DropdownMenuTrigger>
-                                <Button variant="outline" size="icon">
+                                <Button variant="outline" size="icon" tooltip="More actions">
                                     <Ellipsis size={16} />
                                 </Button>
                             </DropdownMenuTrigger>
@@ -73,7 +73,7 @@ export default function DropdownMenuDemo(): JSX.Element {
                         <h3>With disabled items</h3>
                         <DropdownMenu>
                             <DropdownMenuTrigger>
-                                <Button variant="secondary">Actions</Button>
+                                <Button variant="muted">Actions</Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent>
                                 <DropdownMenuItem>Enabled action</DropdownMenuItem>

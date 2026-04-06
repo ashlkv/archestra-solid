@@ -199,7 +199,7 @@ export function McpInstallDialog(props: Props) {
 
                     {/* Instructions */}
                     <Show when={props.catalogItem?.instructions}>
-                        <Markdown class={styles.instructions}>{props.catalogItem!.instructions}</Markdown>
+                        <Markdown class={styles.instructions}>{props.catalogItem!.instructions ?? undefined}</Markdown>
                     </Show>
 
                     {/* No auth description for simple remote servers */}

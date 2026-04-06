@@ -40,9 +40,15 @@ const PROVIDER_LOGO_MAP: Record<SupportedProvider, string> = {
     cerebras: "cerebras",
     cohere: "cohere",
     mistral: "mistral",
+    perplexity: "perplexity",
+    groq: "groq",
+    xai: "xai",
+    openrouter: "openrouter",
     vllm: "vllm",
     ollama: "ollama-cloud",
     zhipuai: "zhipuai",
+    deepseek: "deepseek",
+    minimax: "minimax",
 };
 
 const PROVIDER_HEADING_COLORS: Partial<Record<SupportedProvider, string>> = {
@@ -265,8 +271,8 @@ export function ModelSelector(props: {
                             <div class={styles["provider-group"]}>
                                 <div class={styles["provider-heading"]}>Current (API key missing)</div>
                                 <div class={`${styles["model-item"]} ${styles.disabled}`}>
-                                    <Show when={logoProvider}>
-                                        <ProviderLogo provider={logoProvider!} class={styles["model-logo"]} />
+                                    <Show when={props.currentProvider && PROVIDER_LOGO_MAP[props.currentProvider]}>
+                                        <ProviderLogo provider={PROVIDER_LOGO_MAP[props.currentProvider!]} class={styles["model-logo"]} />
                                     </Show>
                                     <span class={styles["model-name"]}>{props.selectedModel}</span>
                                     <div class={styles["model-details"]}>

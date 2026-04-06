@@ -21,7 +21,7 @@ type ToggleItemProps = {
     tooltip: string;
     label?: string;
     children: JSX.Element;
-    size: TextButtonSize & IconSize;
+    size?: TextButtonSize | IconSize;
 } & Omit<ComponentProps<typeof Button>, "variant" | "size" | "class" | "children">;
 
 export function ToggleButton(props: ToggleItemProps): JSX.Element {

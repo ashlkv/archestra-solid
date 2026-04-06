@@ -44,8 +44,21 @@ function Separator() {
     return <div class={styles.separator} data-label="Separator" />;
 }
 
+type LocalConfig = Extract<Server["server"], { type: "local" }>;
+type RemoteConfig = Extract<Server["server"], { type: "remote" }>;
+
 export function McpAboutDialog(props: Props): JSX.Element {
     const { data: server, query } = useMcpServerDetails(props.serverName);
+
+    const localConfig = (): LocalConfig | undefined => {
+        const config = server()?.server;
+        return config?.type === "local" ? config : undefined;
+    };
+
+    const remoteConfig = (): RemoteConfig | undefined => {
+        const config = server()?.server;
+        return config?.type === "remote" ? config : undefined;
+    };
 
     return (
         <Dialog
@@ -196,26 +209,26 @@ export function McpAboutDialog(props: Props): JSX.Element {
                                         <span class={styles["field-label"]}>Type:</span>
                                         <Badge variant="muted">{server()!.server!.type}</Badge>
                                     </div>
-                                    <Show when={server()!.server!.type === "local"}>
+                                    <Show when={localConfig()}>
                                         <div class={styles.field}>
                                             <span class={styles["field-label"]}>Command:</span>
-                                            <code class={styles.code}>{server()!.server!.command}</code>
+                                            <code class={styles.code}>{localConfig()!.command}</code>
                                         </div>
-                                        <Show when={server()!.server!.args && server()!.server!.args!.length > 0}>
+                                        <Show when={localConfig()!.args && localConfig()!.args!.length > 0}>
                                             <div class={styles.field}>
                                                 <span class={styles["field-label"]}>Arguments:</span>
-                                                <code class={styles.code}>{server()!.server!.args!.join(" ")}</code>
+                                                <code class={styles.code}>{localConfig()!.args!.join(" ")}</code>
                                             </div>
                                         </Show>
                                         <Show
                                             when={
-                                                server()!.server!.env && Object.keys(server()!.server!.env!).length > 0
+                                                localConfig()!.env && Object.keys(localConfig()!.env!).length > 0
                                             }
                                         >
                                             <div>
                                                 <span class={styles["field-label"]}>Environment variables:</span>
                                                 <div class={styles["env-vars"]}>
-                                                    <For each={Object.entries(server()!.server!.env!)}>
+                                                    <For each={Object.entries(localConfig()!.env!)}>
                                                         {([key, value]) => (
                                                             <div class={styles["env-var"]}>
                                                                 <span class={styles["env-var-key"]}>{key}</span>={value}
@@ -226,28 +239,28 @@ export function McpAboutDialog(props: Props): JSX.Element {
                                             </div>
                                         </Show>
                                     </Show>
-                                    <Show when={server()!.server!.type === "remote"}>
+                                    <Show when={remoteConfig()}>
                                         <div class={styles.field}>
                                             <span class={styles["field-label"]}>URL:</span>
                                             <a
-                                                href={server()!.server!.url}
+                                                href={remoteConfig()!.url}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
                                                 class={styles.link}
                                             >
-                                                {server()!.server!.url}
+                                                {remoteConfig()!.url}
                                             </a>
                                         </div>
-                                        <Show when={server()!.server!.docs_url}>
+                                        <Show when={remoteConfig()!.docs_url}>
                                             <div class={styles.field}>
                                                 <span class={styles["field-label"]}>Docs URL:</span>
                                                 <a
-                                                    href={server()!.server!.docs_url}
+                                                    href={remoteConfig()!.docs_url!}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
                                                     class={styles.link}
                                                 >
-                                                    {server()!.server!.docs_url}
+                                                    {remoteConfig()!.docs_url}
                                                 </a>
                                             </div>
                                         </Show>

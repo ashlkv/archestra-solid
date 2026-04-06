@@ -142,7 +142,8 @@ export function InteractionHeaderBar(props: { interactionId: string }): JSX.Elem
         }
     };
 
-    const getProfileName = (profileId: string): string => {
+    const getProfileName = (profileId: string | null): string => {
+        if (!profileId) return "Unknown";
         const agentList = agents() ?? [];
         return agentList.find((a: Agent) => a.id === profileId)?.name ?? profileId;
     };

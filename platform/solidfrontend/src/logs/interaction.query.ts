@@ -17,25 +17,20 @@ type InteractionSessionsParams = {
 
 export const useInteractionSessions = createQuery<SessionData[], InteractionSessionsParams>({
     queryKey: "fetch-interaction-sessions",
-    callback: async (params) => {
-        const response = await archestraApiSdk.getInteractionSessions({
-            headers: getAuthHeaders(),
-            query: {
-                limit: params.limit ?? DEFAULT_TABLE_LIMIT,
-                offset: params.offset ?? 0,
-                ...(params.profileId ? { profileId: params.profileId } : {}),
-                ...(params.userId ? { userId: params.userId } : {}),
-                ...(params.sessionId ? { sessionId: params.sessionId } : {}),
-                ...(params.search ? { search: params.search } : {}),
-                ...(params.startDate ? { startDate: params.startDate } : {}),
-                ...(params.endDate ? { endDate: params.endDate } : {}),
-            },
-        });
-        if (response.error) {
-            showError(response.error?.error?.message ?? "Failed to fetch sessions");
-        }
-        return response;
-    },
+    callback: async (params) => archestraApiSdk.getInteractionSessions({
+        headers: getAuthHeaders(),
+        query: {
+            limit: params.limit ?? DEFAULT_TABLE_LIMIT,
+            offset: params.offset ?? 0,
+            ...(params.profileId ? { profileId: params.profileId } : {}),
+            ...(params.userId ? { userId: params.userId } : {}),
+            ...(params.sessionId ? { sessionId: params.sessionId } : {}),
+            ...(params.search ? { search: params.search } : {}),
+            ...(params.startDate ? { startDate: params.startDate } : {}),
+            ...(params.endDate ? { endDate: params.endDate } : {}),
+        },
+    }),
+    onError: (error) => showError(error.message ?? "Failed to fetch sessions"),
     initialValue: [],
 });
 
@@ -50,38 +45,28 @@ type InteractionsParams = {
 
 export const useInteractions = createQuery<Interaction[], InteractionsParams>({
     queryKey: "fetch-interactions",
-    callback: async (params) => {
-        const response = await archestraApiSdk.getInteractions({
-            headers: getAuthHeaders(),
-            query: {
-                limit: params.limit ?? DEFAULT_TABLE_LIMIT,
-                offset: params.offset ?? 0,
-                ...(params.sessionId ? { sessionId: params.sessionId } : {}),
-                ...(params.profileId ? { profileId: params.profileId } : {}),
-                ...(params.sortBy ? { sortBy: params.sortBy as any } : {}),
-                ...(params.sortDirection ? { sortDirection: params.sortDirection as any } : {}),
-            },
-        });
-        if (response.error) {
-            showError(response.error?.error?.message ?? "Failed to fetch interactions");
-        }
-        return response;
-    },
+    callback: async (params) => archestraApiSdk.getInteractions({
+        headers: getAuthHeaders(),
+        query: {
+            limit: params.limit ?? DEFAULT_TABLE_LIMIT,
+            offset: params.offset ?? 0,
+            ...(params.sessionId ? { sessionId: params.sessionId } : {}),
+            ...(params.profileId ? { profileId: params.profileId } : {}),
+            ...(params.sortBy ? { sortBy: params.sortBy as any } : {}),
+            ...(params.sortDirection ? { sortDirection: params.sortDirection as any } : {}),
+        },
+    }),
+    onError: (error) => showError(error.message ?? "Failed to fetch interactions"),
     initialValue: [],
 });
 
 export const useInteraction = createQuery<Interaction | undefined, { interactionId: string }>({
     queryKey: "fetch-interaction",
-    callback: async (params) => {
-        const response = await archestraApiSdk.getInteraction({
-            headers: getAuthHeaders(),
-            path: { interactionId: params.interactionId },
-        });
-        if (response.error) {
-            showError(response.error?.error?.message ?? "Failed to fetch interaction");
-        }
-        return response;
-    },
+    callback: async (params) => archestraApiSdk.getInteraction({
+        headers: getAuthHeaders(),
+        path: { interactionId: params.interactionId },
+    }),
+    onError: (error) => showError(error.message ?? "Failed to fetch interaction"),
     initialValue: undefined,
 });
 

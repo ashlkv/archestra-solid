@@ -74,7 +74,8 @@ export default function McpGatewayLogsPage(): JSX.Element {
         });
     };
 
-    const getProfileName = (agentId: string): string => {
+    const getProfileName = (agentId: string | null): string => {
+        if (!agentId) return "Unknown";
         const agentList = agents() ?? [];
         return agentList.find((a: Agent) => a.id === agentId)?.name ?? agentId;
     };

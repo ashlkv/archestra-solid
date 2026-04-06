@@ -12,7 +12,7 @@ export function getLineNumberAtPosition(element: HTMLElement, position: number):
     clone.innerHTML = breakTextAtSpace(element.innerHTML, position);
     element.parentElement?.appendChild(clone);
     const computedStyle = getComputedStyle(clone);
-    const lineHeight = Number.parseFloat(computedStyle["line-height"]);
+    const lineHeight = Number.parseFloat(computedStyle.lineHeight);
     const heightAtPosition = clone.offsetHeight;
     element.parentElement?.removeChild(clone);
 

@@ -13,7 +13,7 @@ export function DestructiveButton(props: Props): JSX.Element {
         <Button
             variant={local.variant ?? "ghost"}
             class={`${styles["destructive-button"]} ${local.class ?? ""}`}
-            {...rest}
+            {...(rest as any)}
         />
     );
 }

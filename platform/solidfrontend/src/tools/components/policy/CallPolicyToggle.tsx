@@ -14,6 +14,7 @@ const ICONS: Record<PolicyAction, () => JSX.Element> = {
     allow_when_context_is_untrusted: () => <Check size={13} />,
     block_when_context_is_untrusted: () => <Handshake size={13} />,
     block_always: () => <Ban size={13} />,
+    require_approval: () => <Handshake size={13} />,
 };
 
 export function CallPolicyToggle(props: {

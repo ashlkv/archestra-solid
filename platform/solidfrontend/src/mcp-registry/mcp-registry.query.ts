@@ -82,5 +82,5 @@ export async function fetchCatalogTools(catalogId: string) {
         headers: getAuthHeaders(),
         path: { id: catalogId },
     });
-    return response.data?.data ?? [];
+    return response.data ?? [];
 }

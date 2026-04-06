@@ -52,7 +52,8 @@ export function SessionsTable(props: SessionsTableProps): JSX.Element {
         });
     };
 
-    const getProfileName = (id: string): string => {
+    const getProfileName = (id: string | null): string => {
+        if (!id) return "Unknown";
         const agent = props.agents.find((a) => a.id === id);
         return agent?.name ?? id;
     };
@@ -239,5 +240,5 @@ function sessionToInteraction(session: SessionData): Interaction {
         createdAt: session.lastRequestTime,
         requestType: undefined,
         externalAgentIdLabel: session.externalAgentIdLabels?.[0] ?? null,
-    } as Interaction;
+    } as unknown as Interaction;
 }

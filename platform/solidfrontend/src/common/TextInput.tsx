@@ -62,7 +62,7 @@ export function TextInput(props: {
     const onWrapperClick = (event: MouseEvent) => {
         if (event.currentTarget === event.target) {
             if (!props.disabled) {
-                wrapperElement?.querySelector("input, textarea")?.focus();
+                (wrapperElement?.querySelector("input, textarea") as HTMLElement | null)?.focus();
             }
         }
     };

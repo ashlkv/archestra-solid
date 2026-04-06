@@ -3,13 +3,14 @@ import { Badge } from "./Badge";
 
 const PALETTE_SIZE = 18;
 
-function colorIndex(agentId: string): number {
+function colorIndex(agentId: string | null): number {
+    if (!agentId) return 0;
     const lastChar = agentId.replace(/-/g, "").slice(-1);
     const num = Number.parseInt(lastChar, 16);
     return (Number.isNaN(num) ? 0 : num) % PALETTE_SIZE;
 }
 
-export function AgentBadge(props: ParentProps<{ agentId: string }>): JSX.Element {
+export function AgentBadge(props: ParentProps<{ agentId: string | null }>): JSX.Element {
     const cssVar = () => `var(--color-${colorIndex(props.agentId)})`;
 
     return (

@@ -16,10 +16,21 @@ export class ApiError extends Error {
     }
 }
 
-export type QueryResult<DataType> =
-    | { data: () => DataType; query: { pending: false; error: undefined }; pagination: () => { total: number; limit: number; offset: number } | undefined; refetch: () => void }
-    | { data: () => undefined; query: { pending: true; error: undefined }; pagination: () => undefined; refetch: () => void }
-    | { data: () => undefined; query: { pending: false; error: ApiError }; pagination: () => undefined; refetch: () => void };
+export type Pagination = {
+    currentPage: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+    hasNext: boolean;
+    hasPrev: boolean;
+};
+
+export type QueryResult<DataType> = {
+    data: () => DataType;
+    query: { pending: boolean; error: ApiError | undefined };
+    pagination: () => Pagination | undefined;
+    refetch: () => void;
+};
 
 export type MutationResult<DataType> =
     | { submission: { pending: true; error: undefined }; submit: (data: DataType) => Promise<void> }
@@ -93,19 +104,23 @@ function extractError(response: SdkResponse<unknown>): ApiError | undefined {
 
 /**
  * Factory for creating query hooks with TanStack Query-like API.
+ * Accepts both paginated and non-paginated responses from SDK.
  */
 export function createQuery<Data, Filter = void>({
     queryKey,
     callback,
     initialValue,
+    onError,
 }: {
     queryKey: string;
-    callback: (params: Filter) => Promise<SdkResponse<Data>>;
+    callback: (params: Filter) => Promise<SdkResponse<Data | { data: Data; pagination: Pagination }>>;
     initialValue: Data;
+    onError?: (error: ApiError) => void;
 }): (params: Filter | (() => Filter)) => QueryResult<Data> {
     const serverQuery = query(async (params: Filter) => {
         const response = await callback(params);
         const error = extractError(response);
+        if (error && onError) onError(error);
         // Unwrap paginated responses ({ data: { data: T[], pagination } }) but pass through non-paginated ({ data: T })
         const data = response.data && typeof response.data === 'object' && 'data' in response.data
             ? response.data.data
@@ -125,9 +140,9 @@ export function createQuery<Data, Filter = void>({
         const data = createMemo(() => result()?.data as Data | undefined, initialValue, { name: queryKey });
         const pending = createMemo(() => result() === undefined, true, { name: `${queryKey}:pending` });
         const error = createMemo(() => result()?.error, undefined, { name: `${queryKey}:error` });
-        const pagination = createMemo(() => result()?.pagination as { total: number; limit: number; offset: number } | undefined, undefined, { name: `${queryKey}:pagination` });
+        const pagination = createMemo(() => result()?.pagination as Pagination | undefined, undefined, { name: `${queryKey}:pagination` });
         return {
-            data,
+            data: data as () => Data,
             query: {
                 get error() {
                     return error();
@@ -138,7 +153,7 @@ export function createQuery<Data, Filter = void>({
             },
             pagination,
             refetch: () => revalidate(queryKey),
-        } as QueryResult<Data>;
+        };
     };
 }
 

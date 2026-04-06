@@ -83,7 +83,7 @@ export default function ChatPage(): JSX.Element {
                 const currentConversationId = conversationId();
                 if (!conversationData || !currentConversationId) return;
 
-                setAgentId(conversationData.agentId);
+                setAgentId(conversationData.agentId ?? undefined);
                 if (conversationData.selectedModel) {
                     setSelectedModel(conversationData.selectedModel);
                 }

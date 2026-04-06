@@ -265,7 +265,7 @@ export function McpRegistry(props: {
                         <div class={styles["tab-content"]} data-label="Tools content">
                             <Show
                                 when={
-                                    selectedMcp()?.serverType !== "builtin" && getInstances(selectedId()!).length === 0
+                                    selectedMcp()?.serverType !== "builtin" && getInstances(selectedId()! as string).length === 0
                                 }
                             >
                                 <Empty data-label="Not installed" class={styles["empty-content"]}>
@@ -278,7 +278,7 @@ export function McpRegistry(props: {
                                 </Empty>
                             </Show>
                             <Show
-                                when={selectedMcp()?.serverType === "builtin" || getInstances(selectedId()!).length > 0}
+                                when={selectedMcp()?.serverType === "builtin" || getInstances(selectedId()! as string).length > 0}
                             >
                                 <AgentAssignmentTabs
                                     agents={agents}

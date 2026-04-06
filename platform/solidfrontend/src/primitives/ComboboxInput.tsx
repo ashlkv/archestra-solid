@@ -49,7 +49,7 @@ export function ComboboxInput(props: Props): JSX.Element {
             optionValue="value"
             optionTextValue="label"
             optionLabel="label"
-            triggerMode="button"
+            triggerMode={"button" as "focus" | "manual" | "input"}
             defaultFilter="contains"
             allowsEmptyCollection={true}
             noResetInputOnBlur={true}

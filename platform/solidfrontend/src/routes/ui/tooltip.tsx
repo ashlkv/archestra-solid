@@ -37,17 +37,17 @@ export default function TooltipDemo(): JSX.Element {
                     <h3>On buttons</h3>
                     <div style={{ display: "flex", gap: "0.5rem", "align-items": "center" }}>
                         <Tooltip content="Open settings">
-                            <Button variant="outline" size="icon-small" data-label="Settings button with tooltip">
+                            <Button variant="outline" size="icon-small" tooltip="Open settings" data-label="Settings button with tooltip">
                                 <Settings size={16} />
                             </Button>
                         </Tooltip>
                         <Tooltip content="More information">
-                            <Button variant="outline" size="icon-small" data-label="Info button with tooltip">
+                            <Button variant="outline" size="icon-small" tooltip="More information" data-label="Info button with tooltip">
                                 <Info size={16} />
                             </Button>
                         </Tooltip>
                         <Tooltip content="Delete this item">
-                            <Button variant="destructive" size="icon-small" data-label="Delete button with tooltip">
+                            <Button variant="destructive" size="icon-small" tooltip="Delete this item" data-label="Delete button with tooltip">
                                 <Trash2 size={16} />
                             </Button>
                         </Tooltip>

@@ -111,7 +111,7 @@ export default function MultiSelectDemo(): JSX.Element {
                                 renderTag={(option, onDelete) => (
                                     <Tag
                                         size="regular"
-                                        variant="secondary"
+                                        variant="muted"
                                         onDelete={onDelete}
                                         onPointerDown={(event) => event.stopPropagation()}
                                     >

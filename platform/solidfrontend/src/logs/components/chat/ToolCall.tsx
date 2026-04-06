@@ -99,13 +99,13 @@ function StatusIcon(props: { state: ToolState }): JSX.Element {
     return (
         <>
             <Show when={props.state === "input-available"}>
-                <Clock style={{ ...size, color: "var(--muted-foreground)" }} title={title()} />
+                <Clock style={{ ...size, color: "var(--muted-foreground)" }} />
             </Show>
             <Show when={props.state === "output-available" || props.state === "output-available-dual-llm"}>
-                <CircleCheck style={{ ...size, color: "#16a34a" }} title={title()} />
+                <CircleCheck style={{ ...size, color: "#16a34a" }} />
             </Show>
             <Show when={props.state === "output-denied"}>
-                <CircleX style={{ ...size, color: "var(--destructive)" }} title={title()} />
+                <CircleX style={{ ...size, color: "var(--destructive)" }} />
             </Show>
         </>
     );
