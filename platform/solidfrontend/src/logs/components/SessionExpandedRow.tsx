@@ -50,8 +50,7 @@ function SessionExpandedContent(props: Props): JSX.Element {
         offset: 0,
     });
 
-    const { data: interactionsData, query: interactionsQuery } = useInteractions(interactionsParams);
-    const interactions = () => interactionsData()?.data ?? [];
+    const { data: interactions, query: interactionsQuery } = useInteractions(interactionsParams);
 
     createEffect(() => {
         props.onPendingChange?.(interactionsQuery.pending);

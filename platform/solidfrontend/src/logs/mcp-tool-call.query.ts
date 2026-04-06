@@ -15,7 +15,7 @@ type McpToolCallsParams = {
     sortDirection?: string;
 };
 
-export const useMcpToolCalls = createQuery<{ data: McpToolCallData[]; total: number }, McpToolCallsParams>({
+export const useMcpToolCalls = createQuery<McpToolCallData[], McpToolCallsParams>({
     queryKey: "fetch-mcp-tool-calls",
     callback: async (params) => {
         const response = await archestraApiSdk.getMcpToolCalls({
@@ -33,10 +33,10 @@ export const useMcpToolCalls = createQuery<{ data: McpToolCallData[]; total: num
         });
         if (response.error) {
             showError(response.error?.error?.message ?? "Failed to fetch MCP tool calls");
-            return { data: { data: [], total: 0 } };
         }
-        return { data: { data: response.data?.data ?? [], total: response.data?.pagination?.total ?? 0 } };
+        return response;
     },
+    initialValue: [],
 });
 
 export const useMcpToolCall = createQuery<McpToolCallData | undefined, { mcpToolCallId: string }>({
@@ -48,8 +48,8 @@ export const useMcpToolCall = createQuery<McpToolCallData | undefined, { mcpTool
         });
         if (response.error) {
             showError(response.error?.error?.message ?? "Failed to fetch MCP tool call");
-            return { data: undefined };
         }
-        return { data: response.data };
+        return response;
     },
+    initialValue: undefined,
 });

@@ -10,23 +10,19 @@ import type { Conversation, ConversationListItem } from "@/types";
 
 export const useConversations = createQuery<ConversationListItem[]>({
     queryKey: "fetch-conversations",
-    callback: async () => {
-        const { error, data } = await archestraApiSdk.getChatConversations({
-            headers: getAuthHeaders(),
-        });
-        return { data: data as ConversationListItem[] | undefined, error };
-    },
+    callback: async () => archestraApiSdk.getChatConversations({
+        headers: getAuthHeaders(),
+    }),
+    initialValue: [],
 });
 
-export const useConversation = createQuery<Conversation, string>({
+export const useConversation = createQuery<Conversation | undefined, string>({
     queryKey: "fetch-conversation",
-    callback: async (conversationId: string) => {
-        const { error, data } = await archestraApiSdk.getChatConversation({
-            headers: getAuthHeaders(),
-            path: { id: conversationId },
-        });
-        return { data: data as Conversation | undefined, error };
-    },
+    callback: async (conversationId: string) => archestraApiSdk.getChatConversation({
+        headers: getAuthHeaders(),
+        path: { id: conversationId },
+    }),
+    initialValue: undefined,
 });
 
 // ---------------------------------------------------------------------------

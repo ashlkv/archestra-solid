@@ -6,12 +6,10 @@ import type { ChatModel } from "@/types";
 
 export const useChatModels = createQuery<ChatModel[]>({
     queryKey: "fetch-chat-models",
-    callback: async () => {
-        const { error, data } = await archestraApiSdk.getChatModels({
-            headers: getAuthHeaders(),
-        });
-        return { data: data ?? [], error };
-    },
+    callback: async () => archestraApiSdk.getChatModels({
+        headers: getAuthHeaders(),
+    }),
+    initialValue: [],
 });
 
 export const useSyncChatModels = createSubmission<void>({

@@ -12,11 +12,13 @@ type UpdateMcpPayload = {
 export const useMcpRegistry = createQuery({
     queryKey: "fetch-mcp-registry",
     callback: () => archestraApiSdk.getInternalMcpCatalog({ headers: getAuthHeaders() }),
+    initialValue: [],
 });
 
 export const useMcpServers = createQuery({
     queryKey: "fetch-mcp-servers",
     callback: () => archestraApiSdk.getMcpServers({ headers: getAuthHeaders() }),
+    initialValue: [],
 });
 
 const updateMcp = createSubmission({
@@ -63,23 +65,22 @@ export function useDeleteMcp() {
 export const useMcpServerDetails = createQuery({
     queryKey: "fetch-mcp-server-details",
     callback: (name: string) => archestraCatalogSdk.getMcpServer({ path: { name } }),
+    initialValue: undefined,
 });
 
 export const useCatalogTools = createQuery({
     queryKey: "fetch-catalog-tools",
-    callback: async (catalogId: string) => {
-        const { error, data } = await archestraApiSdk.getInternalMcpCatalogTools({
-            headers: getAuthHeaders(),
-            path: { id: catalogId },
-        });
-        return { data: data ?? [], error };
-    },
+    callback: async (catalogId: string) => archestraApiSdk.getInternalMcpCatalogTools({
+        headers: getAuthHeaders(),
+        path: { id: catalogId },
+    }),
+    initialValue: [],
 });
 
 export async function fetchCatalogTools(catalogId: string) {
-    const { data } = await archestraApiSdk.getInternalMcpCatalogTools({
+    const response = await archestraApiSdk.getInternalMcpCatalogTools({
         headers: getAuthHeaders(),
         path: { id: catalogId },
     });
-    return data ?? [];
+    return response.data?.data ?? [];
 }

@@ -16,7 +16,7 @@ export type ResultPolicy = archestraApiTypes.GetTrustedDataPoliciesResponses["20
 
 export type ResultPolicyAction = ResultPolicy["action"];
 
-export type Team = NonNullable<archestraApiTypes.GetTeamsResponses["200"]>[number];
+export type Team = NonNullable<archestraApiTypes.GetTeamsResponses["200"]["data"]>[number];
 
 export type InstallMcpServerPayload = archestraApiTypes.InstallMcpServerData["body"];
 

@@ -135,7 +135,7 @@ function ToolInputSection(props: {
                             toolId={props.toolId!}
                             policyId={props.callPolicy?.id}
                             value={props.callPolicy?.action as any}
-                            size="xsmall"
+                            size="small"
                         />
                         <span class={styles.divider} />
                     </Show>
@@ -203,7 +203,7 @@ function ToolOutputSection(props: {
                             toolId={props.toolId!}
                             policyId={props.resultPolicy?.id}
                             value={props.resultPolicy?.action as any}
-                            size="xsmall"
+                            size="small"
                         />
                         <span class={styles.divider} />
                     </Show>

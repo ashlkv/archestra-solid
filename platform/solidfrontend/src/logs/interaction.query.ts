@@ -15,7 +15,7 @@ type InteractionSessionsParams = {
     endDate?: string;
 };
 
-export const useInteractionSessions = createQuery<{ data: SessionData[]; total: number }, InteractionSessionsParams>({
+export const useInteractionSessions = createQuery<SessionData[], InteractionSessionsParams>({
     queryKey: "fetch-interaction-sessions",
     callback: async (params) => {
         const response = await archestraApiSdk.getInteractionSessions({
@@ -33,10 +33,10 @@ export const useInteractionSessions = createQuery<{ data: SessionData[]; total: 
         });
         if (response.error) {
             showError(response.error?.error?.message ?? "Failed to fetch sessions");
-            return { data: { data: [], total: 0 } };
         }
-        return { data: { data: response.data?.data ?? [], total: response.data?.pagination?.total ?? 0 } };
+        return response;
     },
+    initialValue: [],
 });
 
 type InteractionsParams = {
@@ -48,7 +48,7 @@ type InteractionsParams = {
     sortDirection?: string;
 };
 
-export const useInteractions = createQuery<{ data: Interaction[]; total: number }, InteractionsParams>({
+export const useInteractions = createQuery<Interaction[], InteractionsParams>({
     queryKey: "fetch-interactions",
     callback: async (params) => {
         const response = await archestraApiSdk.getInteractions({
@@ -64,10 +64,10 @@ export const useInteractions = createQuery<{ data: Interaction[]; total: number 
         });
         if (response.error) {
             showError(response.error?.error?.message ?? "Failed to fetch interactions");
-            return { data: { data: [], total: 0 } };
         }
-        return { data: { data: response.data?.data ?? [], total: response.data?.pagination?.total ?? 0 } };
+        return response;
     },
+    initialValue: [],
 });
 
 export const useInteraction = createQuery<Interaction | undefined, { interactionId: string }>({
@@ -79,21 +79,16 @@ export const useInteraction = createQuery<Interaction | undefined, { interaction
         });
         if (response.error) {
             showError(response.error?.error?.message ?? "Failed to fetch interaction");
-            return { data: undefined };
         }
-        return { data: response.data };
+        return response;
     },
+    initialValue: undefined,
 });
 
 export const useUniqueUserIds = createQuery<Agent[]>({
     queryKey: "fetch-unique-user-ids",
-    callback: async () => {
-        const response = await archestraApiSdk.getUniqueUserIds({
-            headers: getAuthHeaders(),
-        });
-        if (response.error) {
-            return { data: [] };
-        }
-        return { data: response.data ?? [] };
-    },
+    callback: async () => archestraApiSdk.getUniqueUserIds({
+        headers: getAuthHeaders(),
+    }),
+    initialValue: [],
 });

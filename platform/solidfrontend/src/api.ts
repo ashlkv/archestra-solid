@@ -6,9 +6,9 @@ import { createMemo } from "solid-js";
 import { getRequestEvent } from "solid-js/web";
 
 export type QueryResult<DataType> =
-    | { data: () => DataType; query: { pending: false; error: undefined }; refetch: () => void }
-    | { data: () => undefined; query: { pending: true; error: undefined }; refetch: () => void }
-    | { data: () => undefined; query: { pending: false; error: Error }; refetch: () => void };
+    | { data: () => DataType; query: { pending: false; error: undefined }; pagination: () => { total: number; limit: number; offset: number } | undefined; refetch: () => void }
+    | { data: () => undefined; query: { pending: true; error: undefined }; pagination: () => undefined; refetch: () => void }
+    | { data: () => undefined; query: { pending: false; error: Error }; pagination: () => undefined; refetch: () => void };
 
 export type MutationResult<DataType> =
     | { submission: { pending: true; error: undefined }; submit: (data: DataType) => Promise<void> }
@@ -40,14 +40,23 @@ type SdkResponse<T> = { data?: T; error?: { error?: { message?: string }; messag
 export function createQuery<Data, Filter = void>({
     queryKey,
     callback,
+    initialValue,
 }: {
     queryKey: string;
     callback: (params: Filter) => Promise<SdkResponse<Data>>;
+    initialValue: Data;
 }): (params: Filter | (() => Filter)) => QueryResult<Data> {
     const serverQuery = query(async (params: Filter) => {
         const response = await callback(params);
         const error = response.error?.error?.message || response.error?.message;
-        return { data: response.data, error };
+        // Unwrap paginated responses ({ data: { data: T[], pagination } }) but pass through non-paginated ({ data: T })
+        const data = response.data && typeof response.data === 'object' && 'data' in response.data
+            ? response.data.data
+            : response.data;
+        const pagination = response.data && typeof response.data === 'object' && 'pagination' in response.data
+            ? response.data.pagination
+            : undefined;
+        return { data, error, pagination };
     }, queryKey);
 
     return (params: Filter | (() => Filter)): QueryResult<Data> => {
@@ -56,12 +65,13 @@ export function createQuery<Data, Filter = void>({
         // createMemo makes query state visible in Solid Inspector (appears under Memos).
         // Unlike createSignal+createEffect, memos are pull-based — they don't push reactive
         // updates, so they can't cause the inspector thrashing that the signal approach did.
-        const data = createMemo(() => result()?.data as Data | undefined, undefined, { name: queryKey });
+        const data = createMemo(() => result()?.data as Data | undefined, initialValue, { name: queryKey });
         const pending = createMemo(() => result() === undefined, true, { name: `${queryKey}:pending` });
         const error = createMemo(() => {
             const message = result()?.error;
             return message ? new Error(message) : undefined;
         }, undefined, { name: `${queryKey}:error` });
+        const pagination = createMemo(() => result()?.pagination as { total: number; limit: number; offset: number } | undefined, undefined, { name: `${queryKey}:pagination` });
         return {
             data,
             query: {
@@ -72,6 +82,7 @@ export function createQuery<Data, Filter = void>({
                     return pending();
                 },
             },
+            pagination,
             refetch: () => revalidate(queryKey),
         } as QueryResult<Data>;
     };

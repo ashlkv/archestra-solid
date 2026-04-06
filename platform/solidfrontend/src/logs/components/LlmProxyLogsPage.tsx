@@ -36,13 +36,12 @@ export function LlmProxyLogsPage(): JSX.Element {
         endDate: endDate() || undefined,
     });
 
-    const { data: sessionsData, query: sessionsQuery } = useInteractionSessions(queryParams);
+    const { data: sessions, query: sessionsQuery, pagination } = useInteractionSessions(queryParams);
     const { data: agents } = useAgents();
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { data: userIds } = useUniqueUserIds();
 
-    const sessions = () => sessionsData()?.data ?? [];
-    const total = () => sessionsData()?.total ?? 0;
+    const total = () => pagination()?.total ?? 0;
     const hasFilters = () => !!(profileId() || userId() || search() || startDate());
 
     // Drawer state

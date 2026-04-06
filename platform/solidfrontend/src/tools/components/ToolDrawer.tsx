@@ -88,7 +88,7 @@ function ToolDrawerHeaderMeta(props: { tool: ToolWithAssignments }): JSX.Element
     return (
         <div class={styles.headerMeta}>
             <div class={styles.headerTimestamps}>
-                <OriginBadge toolName={props.tool.name} mcpServerName={props.tool.mcpServerName} />
+                <OriginBadge toolName={props.tool.name} />
                 <TimestampBadge date={props.tool.createdAt} />
                 <Show when={props.tool.updatedAt && props.tool.updatedAt !== props.tool.createdAt}>
                     <Badge variant="muted">Updated: {formatShortDate(props.tool.updatedAt)}</Badge>
@@ -382,10 +382,10 @@ function AgentTabs(props: {
 }): JSX.Element {
     const { data: mcpServers } = useMcpServers();
     const assignments = () => props.tool.assignments ?? [];
-    const isMcpTool = () => !!props.tool.mcpServerCatalogId;
+    const isMcpTool = () => !!props.tool.catalogId;
 
     const instances = (): McpServer[] => {
-        const catalogId = props.tool.mcpServerCatalogId;
+        const catalogId = props.tool.catalogId;
         if (!catalogId) return [];
         return (mcpServers() ?? []).filter((s) => s.catalogId === catalogId);
     };

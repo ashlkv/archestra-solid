@@ -7,24 +7,19 @@ import type { CallPolicy, ResultPolicy } from "@/types";
 export const useToolCallPolicies = createQuery({
     queryKey: "fetch-tool-invocation-policies",
     callback: () => archestraApiSdk.getToolInvocationPolicies({ headers: getAuthHeaders() }),
+    initialValue: [],
 });
 
 export const useOperators = createQuery({
     queryKey: "fetch-operators",
     callback: () => archestraApiSdk.getOperators({ headers: getAuthHeaders() }),
+    initialValue: [],
 });
 
 export const useUniqueExternalAgentIds = createQuery({
     queryKey: "fetch-unique-external-agent-ids",
     callback: () => archestraApiSdk.getUniqueExternalAgentIds({ headers: getAuthHeaders() }),
-});
-
-export const usePolicyConfigSubagentPrompt = createQuery({
-    queryKey: "fetch-policy-config-subagent-prompt",
-    callback: async () => {
-        const response = await archestraApiSdk.getPolicyConfigSubagentPrompt({ headers: getAuthHeaders() });
-        return { data: response.data?.promptTemplate ?? "", error: response.error };
-    },
+    initialValue: [],
 });
 
 type CallPolicyUpdate = Pick<CallPolicy, "id" | "action" | "conditions" | "reason">;
@@ -126,6 +121,7 @@ export function useDeleteCallPolicy() {
 export const useResultPolicies = createQuery({
     queryKey: "fetch-result-policies",
     callback: () => archestraApiSdk.getTrustedDataPolicies({ headers: getAuthHeaders() }),
+    initialValue: [],
 });
 
 type ResultPolicyUpdate = Pick<ResultPolicy, "id" | "action" | "conditions">;

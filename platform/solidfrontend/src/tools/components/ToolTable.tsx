@@ -203,7 +203,7 @@ function ToolRow(props: {
     onToolClick?: (toolId: string) => void;
 }) {
     const isAutoDiscovered = () =>
-        !props.tool.catalogId && !props.tool.mcpServerName && !props.tool.name.startsWith("archestra__");
+        !props.tool.catalogId && !props.tool.name.startsWith("archestra__");
     const showColumn = (column: Column) => {
         if (props.columns?.length) return props.columns.includes(column);
         return true;
@@ -234,7 +234,7 @@ function ToolRow(props: {
             </Show>
             <Show when={showColumn("origin")}>
                 <TableCell>
-                    <OriginBadge toolName={props.tool.name} mcpServerName={props.tool.mcpServerName} />
+                    <OriginBadge toolName={props.tool.name} />
                 </TableCell>
             </Show>
             <Show when={showColumn("assignments")}>
@@ -255,7 +255,7 @@ function ToolRow(props: {
                         toolId={props.tool.id}
                         policyId={props.callPolicy?.id}
                         value={props.callPolicy?.action}
-                        size="xsmall"
+                        size="small"
                     />
                 </TableCell>
             </Show>

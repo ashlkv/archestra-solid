@@ -2,27 +2,21 @@ import { archestraApiSdk } from "@shared";
 import { revalidate } from "@solidjs/router";
 import { showError } from "@/primitives/Toast";
 import { createQuery, createSubmission, getAuthHeaders } from "@/api";
-import type { AgentDetail } from "@/types";
+import type { Agent, AgentDetail } from "@/types";
 
-type Agent = { id: string; name: string };
-
-export const useAgents = createQuery({
+export const useAgents = createQuery<Agent[]>({
     queryKey: "fetch-agents",
-    callback: async () => {
-        const { error, data: { data: profiles } = {} } = await archestraApiSdk.getAgents({ headers: getAuthHeaders() });
-        return { data: profiles, error };
-    },
+    callback: async () => archestraApiSdk.getAgents({ headers: getAuthHeaders() }) as any,
+    initialValue: []
 });
 
-export const useAgent = createQuery<AgentDetail, string>({
+export const useAgent = createQuery<AgentDetail | undefined, string>({
     queryKey: "fetch-agent",
-    callback: async (agentId: string) => {
-        const { error, data } = await archestraApiSdk.getAgent({
-            headers: getAuthHeaders(),
-            path: { id: agentId },
-        });
-        return { data: data as AgentDetail | undefined, error };
-    },
+    callback: async (agentId: string) => archestraApiSdk.getAgent({
+        headers: getAuthHeaders(),
+        path: { id: agentId },
+    }),
+    initialValue: undefined,
 });
 
 type UpdateAgentPayload = { id: string; [key: string]: unknown };

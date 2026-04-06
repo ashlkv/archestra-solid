@@ -19,25 +19,25 @@ export const useProfileToolsWithIds = createQuery<AgentToolItem[], string>({
     queryKey: "fetch-profile-tools-with-ids",
     callback: async (agentId) => {
         if (!agentId) return { data: [], error: undefined };
-        const { error, data } = await archestraApiSdk.getAgentTools({
+        return archestraApiSdk.getAgentTools({
             headers: getAuthHeaders(),
             path: { agentId },
-            query: { excludeLlmProxyOrigin: true },
+            query: { excludeLlmProxyOrigin: true } as any,
         });
-        return { data: (data ?? []) as AgentToolItem[], error };
     },
+    initialValue: [],
 });
 
 export const useConversationEnabledTools = createQuery<EnabledToolsData | null, string>({
     queryKey: "fetch-conversation-enabled-tools",
     callback: async (conversationId) => {
         if (!conversationId) return { data: null, error: undefined };
-        const { error, data } = await archestraApiSdk.getConversationEnabledTools({
+        return archestraApiSdk.getConversationEnabledTools({
             headers: getAuthHeaders(),
             path: { id: conversationId },
         });
-        return { data: data ?? null, error };
     },
+    initialValue: null,
 });
 
 export const useUpdateConversationEnabledTools = createSubmission<{

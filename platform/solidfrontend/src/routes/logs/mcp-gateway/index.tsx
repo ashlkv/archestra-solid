@@ -49,11 +49,10 @@ export default function McpGatewayLogsPage(): JSX.Element {
     const drawerToolCallId = () => String(searchParams.logId ?? "") || null;
     const drawerOpen = () => drawerToolCallId() !== null;
 
-    const { data: toolCallsData, query: toolCallsQuery } = useMcpToolCalls(queryParams);
+    const { data: toolCalls, query: toolCallsQuery, pagination } = useMcpToolCalls(queryParams);
     const { data: agents } = useAgents();
 
-    const toolCalls = () => toolCallsData()?.data ?? [];
-    const total = () => toolCallsData()?.total ?? 0;
+    const total = () => pagination()?.total ?? 0;
 
     const hasFilters = () => agentId() || search() || startDate();
 

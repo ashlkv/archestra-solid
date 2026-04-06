@@ -92,7 +92,7 @@ export function McpRegistry(props: {
 
     const autoDiscoveredTools = () =>
         (allTools() ?? []).filter(
-            (tool) => !tool.catalogId && !tool.mcpServerName && !tool.name.startsWith("archestra__"),
+            (tool) => !tool.catalogId && !tool.name.startsWith("archestra__"),
         );
 
     const hasAutoDiscoveredTools = () => autoDiscoveredTools().length > 0;
