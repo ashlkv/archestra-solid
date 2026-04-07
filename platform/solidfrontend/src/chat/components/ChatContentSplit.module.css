@@ -1,4 +1,4 @@
-.conversation-split {
+.chat-content-split {
     height: 100%;
     grid-template-rows: 1fr 10rem;
 }

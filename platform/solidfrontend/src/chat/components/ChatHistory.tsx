@@ -1,25 +1,19 @@
-import { useSearchParams } from "@solidjs/router";
+import { useLocation, useNavigate } from "@solidjs/router";
 import { createSignal, For, type JSX, Show, splitProps } from "solid-js";
-import { ChevronDown, ChevronRight, Ellipsis, Loader2, Pencil, Trash2 } from "@/icons";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from "@/primitives/DropdownMenu";
 import { useConversations, useDeleteConversation, useUpdateConversation } from "@/chat/chat.query";
 import { getConversationDisplayTitle } from "@/chat/chat-utils";
+import { ChevronDown, ChevronRight, Ellipsis, Loader2, Pencil, Trash2 } from "@/icons";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/primitives/DropdownMenu";
 import type { ConversationListItem } from "@/types";
 import styles from "./ChatHistory.module.css";
 
 const VISIBLE_COUNT = 10;
 const MAX_TITLE_LENGTH = 30;
 
-export function ChatHistory(
-    props: { class?: string } & JSX.HTMLAttributes<HTMLDivElement>,
-): JSX.Element {
+export function ChatHistory(props: { class?: string } & JSX.HTMLAttributes<HTMLDivElement>): JSX.Element {
     const [local, rest] = splitProps(props, ["class", "children"]);
-    const [searchParams, setSearchParams] = useSearchParams();
+    const navigate = useNavigate();
+    const location = useLocation();
     const { data: conversations, query } = useConversations(undefined as undefined);
     const { submit: deleteConversation } = useDeleteConversation();
     const { submit: updateConversation } = useUpdateConversation();
@@ -28,19 +22,22 @@ export function ChatHistory(
     const [editingId, setEditingId] = createSignal<string | undefined>(undefined, { name: "editingId" });
     const [editingTitle, setEditingTitle] = createSignal("", { name: "editingTitle" });
 
-    const currentConversationId = () => searchParams.conversation as string | undefined;
+    const currentChatId = () => {
+        const match = location.pathname.match(/^\/chat\/(.+)/);
+        return match?.[1];
+    };
 
     const allChats = () => conversations() ?? [];
     const visibleChats = () => (showAll() ? allChats() : allChats().slice(0, VISIBLE_COUNT));
     const hiddenCount = () => Math.max(0, allChats().length - VISIBLE_COUNT);
 
-    const onSelectConversation = (id: string) => {
-        setSearchParams({ conversation: id });
+    const onSelectChat = (id: string) => {
+        navigate(`/chat/${id}`);
     };
 
-    const onStartEdit = (conversation: ConversationListItem) => {
-        const title = getConversationDisplayTitle(conversation.title, undefined);
-        setEditingId(conversation.id);
+    const onStartEdit = (chat: ConversationListItem) => {
+        const title = getConversationDisplayTitle(chat.title, undefined);
+        setEditingId(chat.id);
         setEditingTitle(title);
     };
 
@@ -59,8 +56,8 @@ export function ChatHistory(
 
     const onDelete = (id: string) => {
         deleteConversation(id);
-        if (currentConversationId() === id) {
-            setSearchParams({ conversation: undefined });
+        if (currentChatId() === id) {
+            navigate("/chat");
         }
     };
 
@@ -81,18 +78,18 @@ export function ChatHistory(
 
             <Show when={allChats().length > 0}>
                 <For each={visibleChats()}>
-                    {(conversation) => (
+                    {(chat) => (
                         <ChatHistoryItem
-                            conversation={conversation}
-                            isActive={currentConversationId() === conversation.id}
-                            isEditing={editingId() === conversation.id}
+                            chat={chat}
+                            isActive={currentChatId() === chat.id}
+                            isEditing={editingId() === chat.id}
                             editingTitle={editingTitle()}
-                            onSelect={() => onSelectConversation(conversation.id)}
-                            onStartEdit={() => onStartEdit(conversation)}
-                            onSaveEdit={() => onSaveEdit(conversation.id)}
+                            onSelect={() => onSelectChat(chat.id)}
+                            onStartEdit={() => onStartEdit(chat)}
+                            onSaveEdit={() => onSaveEdit(chat.id)}
                             onCancelEdit={onCancelEdit}
                             onEditingTitleChange={setEditingTitle}
-                            onDelete={() => onDelete(conversation.id)}
+                            onDelete={() => onDelete(chat.id)}
                         />
                     )}
                 </For>
@@ -119,7 +116,7 @@ export function ChatHistory(
 // ---------------------------------------------------------------------------
 
 function ChatHistoryItem(props: {
-    conversation: ConversationListItem;
+    chat: ConversationListItem;
     isActive: boolean;
     isEditing: boolean;
     editingTitle: string;
@@ -131,7 +128,7 @@ function ChatHistoryItem(props: {
     onDelete: () => void;
 }): JSX.Element {
     const displayTitle = () => {
-        const title = getConversationDisplayTitle(props.conversation.title, undefined);
+        const title = getConversationDisplayTitle(props.chat.title, undefined);
         return title.length > MAX_TITLE_LENGTH ? `${title.slice(0, MAX_TITLE_LENGTH)}...` : title;
     };
 
@@ -141,10 +138,7 @@ function ChatHistoryItem(props: {
     };
 
     return (
-        <div
-            class={`${styles.item} ${props.isActive ? styles.active : ""}`}
-            data-label={`Chat: ${props.conversation.id}`}
-        >
+        <div class={`${styles.item} ${props.isActive ? styles.active : ""}`} data-label={`Chat: ${props.chat.id}`}>
             <Show when={props.isEditing}>
                 <input
                     class={styles["edit-input"]}

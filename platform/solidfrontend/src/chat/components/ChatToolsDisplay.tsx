@@ -5,10 +5,6 @@ import {
     MCP_SERVER_TOOL_NAME_SEPARATOR,
 } from "@shared";
 import { createEffect, createSignal, For, type JSX, on, Show } from "solid-js";
-import { Loader2, Plus, X } from "@/icons";
-import { Button } from "@/primitives/Button";
-import { Dialog, DialogContent, DialogTrigger } from "@/primitives/Dialog";
-import { Popover, PopoverContent, PopoverTrigger } from "@/primitives/Popover";
 import {
     useConversationEnabledTools,
     useProfileToolsWithIds,
@@ -20,12 +16,16 @@ import {
     getPendingActions,
     type PendingToolAction,
 } from "@/chat/pending-tool-state";
+import { Loader2, Plus, X } from "@/icons";
+import { Button } from "@/primitives/Button";
+import { Dialog, DialogContent, DialogTrigger } from "@/primitives/Dialog";
+import { Popover, PopoverContent, PopoverTrigger } from "@/primitives/Popover";
 import type { ChatToolItem } from "@/types";
 import styles from "./ChatToolsDisplay.module.css";
 
-export function ChatToolsDisplay(props: { agentId: string; conversationId?: string }): JSX.Element {
+export function ChatToolsDisplay(props: { agentId: string; chatId?: string }): JSX.Element {
     const { data: profileToolsData, query: profileQuery } = useProfileToolsWithIds(() => props.agentId);
-    const { data: enabledToolsData } = useConversationEnabledTools(() => props.conversationId ?? "");
+    const { data: enabledToolsData } = useConversationEnabledTools(() => props.chatId ?? "");
     const { submit: updateEnabledTools } = useUpdateConversationEnabledTools();
 
     const [pendingActions, setPendingActions] = createSignal<PendingToolAction[]>([], { name: "pendingActions" });
@@ -36,9 +36,9 @@ export function ChatToolsDisplay(props: { agentId: string; conversationId?: stri
     // Load pending actions when context changes
     createEffect(
         on(
-            () => [props.agentId, props.conversationId] as const,
-            function loadPendingActionsOnContextChange([agentId, conversationId]) {
-                if (!conversationId) {
+            () => [props.agentId, props.chatId] as const,
+            function loadPendingActionsOnContextChange([agentId, chatId]) {
+                if (!chatId) {
                     setPendingActions(getPendingActions(agentId));
                 } else {
                     setPendingActions([]);
@@ -62,11 +62,11 @@ export function ChatToolsDisplay(props: { agentId: string; conversationId?: stri
     // Compute current enabled tool IDs
     const currentEnabledToolIds = (): string[] => {
         const data = enabledToolsData();
-        if (props.conversationId && data?.hasCustomSelection) {
+        if (props.chatId && data?.hasCustomSelection) {
             return data.enabledToolIds;
         }
         const base = defaultEnabledToolIds();
-        if (!props.conversationId && pendingActions().length > 0) {
+        if (!props.chatId && pendingActions().length > 0) {
             return applyPendingActions(base, pendingActions());
         }
         return base;
@@ -94,43 +94,43 @@ export function ChatToolsDisplay(props: { agentId: string; conversationId?: stri
 
     // Enable/disable handlers
     const handleEnableTool = (toolId: string) => {
-        if (!props.conversationId) {
+        if (!props.chatId) {
             const action: PendingToolAction = { type: "enable", toolId };
             addPendingAction(action, props.agentId);
             setPendingActions((prev) => [...prev, action]);
             return;
         }
-        updateEnabledTools({ conversationId: props.conversationId, toolIds: [...currentEnabledToolIds(), toolId] });
+        updateEnabledTools({ conversationId: props.chatId, toolIds: [...currentEnabledToolIds(), toolId] });
     };
 
     const handleDisableTool = (toolId: string) => {
-        if (!props.conversationId) {
+        if (!props.chatId) {
             const action: PendingToolAction = { type: "disable", toolId };
             addPendingAction(action, props.agentId);
             setPendingActions((prev) => [...prev, action]);
             return;
         }
         updateEnabledTools({
-            conversationId: props.conversationId,
+            conversationId: props.chatId,
             toolIds: currentEnabledToolIds().filter((id) => id !== toolId),
         });
     };
 
     const handleEnableAll = (toolIds: string[]) => {
-        if (!props.conversationId) {
+        if (!props.chatId) {
             const action: PendingToolAction = { type: "enableAll", toolIds };
             addPendingAction(action, props.agentId);
             setPendingActions((prev) => [...prev, action]);
             return;
         }
         updateEnabledTools({
-            conversationId: props.conversationId,
+            conversationId: props.chatId,
             toolIds: [...new Set([...currentEnabledToolIds(), ...toolIds])],
         });
     };
 
     const handleDisableAll = (toolIds: string[]) => {
-        if (!props.conversationId) {
+        if (!props.chatId) {
             const action: PendingToolAction = { type: "disableAll", toolIds };
             addPendingAction(action, props.agentId);
             setPendingActions((prev) => [...prev, action]);
@@ -138,7 +138,7 @@ export function ChatToolsDisplay(props: { agentId: string; conversationId?: stri
         }
         const toRemove = new Set(toolIds);
         updateEnabledTools({
-            conversationId: props.conversationId,
+            conversationId: props.chatId,
             toolIds: currentEnabledToolIds().filter((id) => !toRemove.has(id)),
         });
     };
