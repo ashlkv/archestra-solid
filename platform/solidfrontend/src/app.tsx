@@ -5,6 +5,7 @@ import { Suspense } from "solid-js";
 import { FixedLayout } from "~/primitives/FixedLayout";
 import { ToastRegion } from "~/primitives/Toast";
 import Theme from "~/Theme";
+import { ChatContextProvider } from '~/chat/ChatContext';
 
 export default function App() {
     return (
@@ -13,10 +14,12 @@ export default function App() {
             <Router
                 root={(props) => (
                     <MetaProvider>
-                        <Title>SolidStart - Basic</Title>
-                        <FixedLayout>
-                            <Suspense>{props.children}</Suspense>
-                        </FixedLayout>
+                        <ChatContextProvider>
+                            <Title>SolidStart - Basic</Title>
+                            <FixedLayout>
+                                <Suspense>{props.children}</Suspense>
+                            </FixedLayout>
+                        </ChatContextProvider>
                     </MetaProvider>
                 )}
             >

@@ -1,7 +1,7 @@
 import type { SupportedProvider } from "@shared";
 import { useParams } from "@solidjs/router";
 import type { UIMessage } from "ai";
-import { createEffect, createSignal, type JSX, on, Show } from "solid-js";
+import { createEffect, createSignal, type JSX, on, onCleanup, onMount, Show } from "solid-js";
 import { useConversation } from "@/chat/chat.query";
 import { useChatModels } from "@/chat/chat-models.query";
 import { AgentSettings } from "@/chat/components/AgentSettings";
@@ -17,9 +17,11 @@ import { useAgents } from "@/lib/agent.query";
 import { Column } from "@/primitives/Column";
 import { Panel } from "@/primitives/Panel";
 import { Scrollable } from "@/primitives/Scrollable";
+import { useChatContext } from '~/chat/ChatContext';
 
 export default function ActiveChatPage(): JSX.Element {
     const params = useParams<{ chatId: string }>();
+    const { scheduleCleanup, cancelCleanup, getChat } = useChatContext()
 
     const [agentId, setAgentId] = createSignal<string | undefined>(undefined, { name: "agentId" });
     const [selectedModel, setSelectedModel] = createSignal<string>("", { name: "selectedModel" });
@@ -60,8 +62,8 @@ export default function ActiveChatPage(): JSX.Element {
                     setSelectedApiKeyId(chatData.chatApiKeyId);
                 }
 
-                const session = createChat({
-                    conversationId: params.chatId,
+                const session = getChat({
+                    id: params.chatId,
                     initialMessages: (chatData.messages as UIMessage[]) ?? [],
                     onError: (error) => {
                         console.error("[ActiveChatPage] Stream error:", error);
@@ -90,6 +92,13 @@ export default function ActiveChatPage(): JSX.Element {
     };
 
     const ready = () => !!chatSession();
+
+    onMount(function scheduleChatCleanup() {
+        cancelCleanup(params.chatId);
+    });
+    onCleanup(function scheduleChatCleanup() {
+        scheduleCleanup(params.chatId);
+    })
 
     return (
         <ChatSplit>

@@ -20,7 +20,7 @@ import {
     generateId,
     type UIMessage,
 } from "ai";
-import { createSignal, onCleanup } from "solid-js";
+import { createSignal } from "solid-js";
 
 // ---------------------------------------------------------------------------
 // SolidJS ChatState implementation
@@ -139,7 +139,7 @@ export interface ChatSession {
 
 export interface CreateChatOptions {
     /** Conversation ID — used as chat ID in the transport */
-    conversationId: string;
+    id: string;
     /** API endpoint (defaults to "/api/chat") */
     api?: string;
     /** Initial messages to populate (e.g. from backend) */
@@ -167,7 +167,7 @@ export function createChat(options: CreateChatOptions): ChatSession {
     const [error, setError] = createSignal<Error | undefined>(undefined, { name: "error" });
 
     const chat = new SolidChat({
-        id: options.conversationId,
+        id: options.id,
         messages: options.initialMessages,
         generateId,
         transport: new DefaultChatTransport({
@@ -184,10 +184,6 @@ export function createChat(options: CreateChatOptions): ChatSession {
         setMessages,
         setStatus,
         setError,
-    });
-
-    onCleanup(() => {
-        chat.stop();
     });
 
     return {
