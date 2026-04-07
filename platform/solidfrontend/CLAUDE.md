@@ -41,6 +41,16 @@ Whenever you are asked to port UI, port it from `../frontend`. It also has Tanst
 - Do not use `createMemo` unless you have really expensive calculations (e.g. aggregating thousands of items)
 - For derived values from props, use a simple function wrapper: `const columns = () => props.columns ?? [3, 7]`
 - Never create JSX at module level - wrap in functions: `const ICONS = { foo: () => <Icon /> }` not `{ foo: <Icon /> }`
+- Name `createEffect` callbacks with named functions to describe their purpose. Arrow functions cannot be named, so use `function` keyword:
+  ```tsx
+  // Good
+  createEffect(function syncTextFromProps() { ... });
+  createEffect(on(signal, function autoSelectFirst(value) { ... }));
+
+  // Avoid
+  createEffect(() => { ... });
+  createEffect(on(signal, (value) => { ... }));
+  ```
 
 **Comments**:
 - Avoid "what" comments that describe what code does

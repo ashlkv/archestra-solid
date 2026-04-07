@@ -33,7 +33,7 @@ export function ApiKeySelector(props: {
     createEffect(
         on(
             () => [keys(), props.currentProvider, props.selectedKeyId] as const,
-            ([keyList, provider, currentKeyId]) => {
+            function autoSelectProviderKey([keyList, provider, currentKeyId]) {
                 if (props.autoSelect === false) return;
                 if (!keyList.length || currentKeyId) return;
 

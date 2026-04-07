@@ -42,7 +42,7 @@ export default function ChatPage(): JSX.Element {
     createEffect(
         on(
             () => agents(),
-            (agentList) => {
+            function autoSelectFirstAgent(agentList) {
                 if (agentId() || !agentList?.length) return;
                 setAgentId(agentList[0].id);
             },
@@ -53,7 +53,7 @@ export default function ChatPage(): JSX.Element {
     createEffect(
         on(
             () => chatModels(),
-            (modelList) => {
+            function autoSelectFirstModel(modelList) {
                 if (selectedModel() || !modelList?.length) return;
                 setSelectedModel(modelList[0].id);
             },
@@ -72,14 +72,14 @@ export default function ChatPage(): JSX.Element {
         return chatModels()?.find((m) => m.id === model)?.provider;
     };
 
-    // ----- Active conversation: load and set up chat session -----
-
     const conversation = useConversation(() => conversationId() ?? "");
 
+    // When a conversation loads, apply its saved agent/model/key to page selectors
+    // and create a chat session with the conversation's message history.
     createEffect(
         on(
             () => conversation.data(),
-            (conversationData) => {
+            function initializeFromConversation(conversationData) {
                 const currentConversationId = conversationId();
                 if (!conversationData || !currentConversationId) return;
 
@@ -113,7 +113,7 @@ export default function ChatPage(): JSX.Element {
 
     // ----- Initial mode: create conversation then navigate -----
 
-    const onInitialSubmit = async (text: string) => {
+    const onStart = async (text: string) => {
         const selectedAgentId = agentId();
         if (!selectedAgentId) return;
 
@@ -148,7 +148,7 @@ export default function ChatPage(): JSX.Element {
         }
     };
 
-    const onActiveSubmit = (text: string) => {
+    const onContinue = (text: string) => {
         chatSession()?.sendMessage(text);
     };
 
@@ -162,7 +162,7 @@ export default function ChatPage(): JSX.Element {
 
         return {
             visible: hasActiveConversation || !currentConversationId,
-            onSubmit: hasActiveConversation ? onActiveSubmit : onInitialSubmit,
+            onSubmit: hasActiveConversation ? onContinue : onStart,
             onStop: hasActiveConversation ? onStop : undefined,
             status: hasActiveConversation ? chatSession()?.status() ?? "ready" : creating() ? "submitted" : "ready",
             disabled: hasActiveConversation ? false : !agentId(),

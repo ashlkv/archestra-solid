@@ -89,7 +89,7 @@ export function Sidebar(props: { class?: string }): JSX.Element {
     const location = useLocation();
     const [collapsed, setCollapsed] = createSignal(true, { name: "sidebarCollapsed" });
 
-    createEffect(() => {
+    createEffect(function restoreCollapsedState() {
         if (typeof window === "undefined") return;
         const stored = window.localStorage.getItem(SIDEBAR_COLLAPSED_STORAGE_KEY);
         if (stored === "false") {

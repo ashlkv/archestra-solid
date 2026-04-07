@@ -33,7 +33,7 @@ export function SessionsTable(props: SessionsTableProps): JSX.Element {
 
     // Collapse when the router navigates to the base path (e.g. sidebar click).
     // replaceState changes don't trigger this since the router is unaware of them.
-    createEffect(() => {
+    createEffect(function collapseOnBaseNavigation() {
         if (location.pathname === LLM_PROXY_BASE || location.pathname === `${LLM_PROXY_BASE}/`) {
             setExpandedSessionId(undefined);
         }

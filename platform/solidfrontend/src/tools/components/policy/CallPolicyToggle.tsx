@@ -28,7 +28,7 @@ export function CallPolicyToggle(props: {
     const [pendingAction, setPendingAction] = createSignal<PolicyAction | null>(null, { name: "pendingAction" });
     const { submission, submit } = useSaveCallPolicy(props.policyId ?? "");
 
-    createEffect(() => {
+    createEffect(function syncSelectedFromProps() {
         setSelected(props.value);
     });
 

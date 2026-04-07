@@ -42,7 +42,7 @@ export function ToolTable(props: {
     createEffect(
         on(
             () => props.initialSelectedIds?.(),
-            (ids) => {
+            function syncSelectionFromParent(ids) {
                 setSelectedIds(ids ?? new Set<string>());
             },
         ),

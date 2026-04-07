@@ -52,7 +52,7 @@ function SessionExpandedContent(props: Props): JSX.Element {
 
     const { data: interactions, query: interactionsQuery } = useInteractions(interactionsParams);
 
-    createEffect(() => {
+    createEffect(function notifyPendingState() {
         props.onPendingChange?.(interactionsQuery.pending);
     });
 

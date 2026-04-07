@@ -45,7 +45,7 @@ export function EditableText(props: {
     const tag = () => props.tag ?? "div";
     const displayText = () => actualText() || props.placeholder || "";
 
-    createEffect(() => {
+    createEffect(function syncTextFromProps() {
         if (props.text !== undefined) {
             const nextText = props.text ?? "";
 
@@ -55,7 +55,7 @@ export function EditableText(props: {
         }
     });
 
-    createEffect(() => {
+    createEffect(function exposeApiRef() {
         props.apiRef?.({
             focus: () => inputElement?.focus(),
             isCaretAtFirstLine: () => isCaretAtFirstLine(),

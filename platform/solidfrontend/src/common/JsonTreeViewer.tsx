@@ -22,7 +22,7 @@ export function JsonTreeViewer(props: {
     createEffect(
         on(
             () => props.expandGeneration,
-            (generation, previousGeneration) => {
+            function expandAllNodes(generation, previousGeneration) {
                 if (generation === undefined || generation === previousGeneration) return;
                 const paths = collectPaths(props.data, "$");
                 const next = new Map<string, boolean>();
@@ -37,7 +37,7 @@ export function JsonTreeViewer(props: {
     createEffect(
         on(
             () => props.collapseGeneration,
-            (generation, previousGeneration) => {
+            function collapseAllNodes(generation, previousGeneration) {
                 if (generation === undefined || generation === previousGeneration) return;
                 const paths = collectPaths(props.data, "$");
                 const next = new Map<string, boolean>();

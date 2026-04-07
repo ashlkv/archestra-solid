@@ -91,7 +91,7 @@ export function ModelSelector(props: {
     let modelListRef: HTMLDivElement | undefined;
 
     createEffect(
-        on(open, (isOpen) => {
+        on(open, function scrollToSelectedModel(isOpen) {
             if (isOpen) {
                 requestAnimationFrame(() => {
                     const selected = modelListRef?.querySelector('[data-selected="true"]');

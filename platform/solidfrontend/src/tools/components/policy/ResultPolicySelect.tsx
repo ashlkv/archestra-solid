@@ -18,7 +18,7 @@ export function ResultPolicySelect(props: {
     const [loading, setLoading] = createSignal(false, { name: "loading" });
     const { submission, submit } = useSaveResultPolicy(props.policyId ?? "");
 
-    createEffect(() => {
+    createEffect(function syncSelectedFromProps() {
         setSelected(props.value);
     });
 

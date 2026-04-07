@@ -31,7 +31,7 @@ export function AgentToolsEditor(props: {
     });
 
     // Pin catalogs that have assigned tools so they persist even when all tools are deselected
-    createEffect(() => {
+    createEffect(function pinAssignedCatalogs() {
         const ids = new Set<string>();
         for (const tool of props.agentTools) {
             if (tool.catalogId) ids.add(tool.catalogId);

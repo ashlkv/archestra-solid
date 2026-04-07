@@ -37,7 +37,7 @@ export function ChatToolsDisplay(props: { agentId: string; conversationId?: stri
     createEffect(
         on(
             () => [props.agentId, props.conversationId] as const,
-            ([agentId, conversationId]) => {
+            function loadPendingActionsOnContextChange([agentId, conversationId]) {
                 if (!conversationId) {
                     setPendingActions(getPendingActions(agentId));
                 } else {

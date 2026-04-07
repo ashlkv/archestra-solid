@@ -30,7 +30,7 @@ export function TextInput(props: {
     const value = () => (props.value !== undefined ? String(props.value) : "");
     const wrap = () => shouldWrapTextInput({ format: props.format, kind: props.kind, multiline: props.multiline });
 
-    createEffect(() => {
+    createEffect(function trackLineCount() {
         if (wrapperElement && wrap()) {
             const updateLineCount = () => {
                 const field = wrapperElement?.querySelector('[data-label="Editable textarea"]') as HTMLTextAreaElement | null;
